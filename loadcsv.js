@@ -6,13 +6,15 @@ data.then(function(data) {
   let frame = container.selectAll("div")
   .data(data)
   .join("div")
-  .attr("class", "frame")
+  // .attr("class", "frame")
+  .attr("class", function(_, i) { return "frame" + (i === 0 ? ' highlighted' : ''); }) // Add 'highlighted' class to the first frame
+
   // .attr("id", function(_, i) {"frame-" + (i+1)})
 
   frame.append("img")
   .attr("class", "card-img-top")
   .attr("src", function(d) {
-    let path = "https://gradim.fh-potsdam.de/omeka-s/files/smaller/" + d.id + ".jpg";
+    let path = "https://gradim.fh-potsdam.de/omeka-s/files/tiny/" + d.id + ".jpg";
       return path;
       console.log(path + filename)
   })

@@ -10,7 +10,6 @@ function handleScroll(containerId, elementSelector) {
   const elements = document.querySelectorAll(elementSelector);
 
   let closestElement = elements[0];
-  // let closestElement = null;
   let closestDistance = Infinity;
 
   // Iterate over each element
@@ -39,22 +38,32 @@ function handleScroll(containerId, elementSelector) {
 
     // SyncScroll function inside handleScroll
     function syncScroll(containerId, elementSelector, index) {
-      if (closestElement.classList.contains('chrono-link')) {
+      let targetContainerId, targetElementSelector;
 
-        let frameArray = Array.from(document.querySelectorAll('.frame'));
-        frameArray.forEach(frame => {
-          if (frame.classList.contains('highlighted') && frameArray.indexOf(frame) != closestIndex) {
-            let frameIndex = frameArray.indexOf(frame)
-            if (frameIndex != closestIndex) {
-              document.getElementById('left-side').scrollTop = document.querySelectorAll('.frame')[closestIndex].offsetTop;
-          }
-        }
-        })
-        }
+      if (closestElement.classList.contains('chrono-link')) {
+        targetContainerId = 'left-side';
+        targetElementSelector = '.frame';
+      } else if (closestElement.classList.contains('frame')) {
+        targetContainerId = 'right-side';
+        targetElementSelector = '.chrono-link';
       }
-    syncScroll(containerId, elementSelector, closestIndex);
+
+      const targetElements = document.querySelectorAll(targetElementSelector);
+      const targetElement = targetElements[closestIndex];
+      const targetOffsetTop = targetElement.offsetTop;
+
+      document.getElementById(targetContainerId).scrollTo({
+        top: targetOffsetTop,
+        behavior: 'smooth'
+      });
+
+      closestElement = targetElement;
     }
+
+    // Call syncScroll with the index
+    syncScroll(containerId, elementSelector, closestIndex);
   }
+}
 
 // Attach the event listener to the scroll event for #right-side
 document.getElementById('right-side').addEventListener('scroll', () => handleScroll('right-side', '.chrono-link'));
