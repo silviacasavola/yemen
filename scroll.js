@@ -9,7 +9,8 @@ function handleScroll(containerId, elementSelector) {
   let scrollPos = document.getElementById(containerId).scrollTop;
   const elements = document.querySelectorAll(elementSelector);
 
-  let closestElement = null;
+  let closestElement = elements[0];
+  // let closestElement = null;
   let closestDistance = Infinity;
 
   // Iterate over each element
@@ -33,32 +34,27 @@ function handleScroll(containerId, elementSelector) {
   if (closestElement !== null) {
     closestElement.classList.add('highlighted');
 
-    // SyncScroll function inside handleScroll
-    function syncScroll(containerId, elementSelector) {
+    // Get the index of closestElement in the elements array
     const closestIndex = Array.from(elements).indexOf(closestElement);
 
-    if (closestIndex)
+    // SyncScroll function inside handleScroll
+    function syncScroll(containerId, elementSelector, index) {
+      if (closestElement.classList.contains('chrono-link')) {
 
-      const highlightedFrame = document.querySelector('.frame.highlighted');
-      const highlightedChronoLink = document.querySelector('.chrono-link.highlighted');
-
-      // Scroll containers to the highlighted elements
-      const textContainer = document.getElementById('text-container');
-      const leftSideContainer = document.getElementById('left-side');
-
-      if (highlightedChronoLink !== null) {
-        textContainer.scrollTop = highlightedChronoLink.offsetTop - textContainer.offsetTop;
+        let frameArray = Array.from(document.querySelectorAll('.frame'));
+        frameArray.forEach(frame => {
+          if (frame.classList.contains('highlighted') && frameArray.indexOf(frame) != closestIndex) {
+            let frameIndex = frameArray.indexOf(frame)
+            if (frameIndex != closestIndex) {
+              document.getElementById('left-side').scrollTop = document.querySelectorAll('.frame')[closestIndex].offsetTop;
+          }
+        }
+        })
+        }
       }
-
-      if (highlightedFrame !== null) {
-        leftSideContainer.scrollTop = highlightedFrame.offsetTop - leftSideContainer.offsetTop;
-      }
+    syncScroll(containerId, elementSelector, closestIndex);
     }
-
-    // Call syncScroll
-    syncScroll(containerId, elementSelector);
   }
-}
 
 // Attach the event listener to the scroll event for #right-side
 document.getElementById('right-side').addEventListener('scroll', () => handleScroll('right-side', '.chrono-link'));
