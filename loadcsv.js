@@ -14,7 +14,7 @@ data.then(function(data) {
   frame.append("img")
   .attr("class", "card-img-top")
   .attr("src", function(d) {
-    let path = "https://gradim.fh-potsdam.de/omeka-s/files/tiny/" + d.id + ".jpg";
+    let path = "https://gradim.fh-potsdam.de/omeka-s/files/small/" + d.id + ".jpg";
       return path;
       console.log(path + filename)
   })

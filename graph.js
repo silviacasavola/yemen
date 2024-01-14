@@ -22,6 +22,12 @@ function setup() {
   // MAP CHRONO FILTER LINKS POSITION RELATIVELY TO THE TEXT CONTAINER
   personLinks.forEach(personLink => {
     mapAndAddShape(personLink, 'person');
+  }
+
+  // Add event listener for scrolling on the right-side container
+  document.getElementById('right-side').addEventListener('scroll', () => {
+    let scrollPos = document.getElementById('right-side').scrollTop;
+    mappedPos = map(scrollPos, 0, document.getElementById('right-side').scrollHeight - window.innerHeight, 0, height - 10);
   });
 }
 
@@ -40,16 +46,16 @@ function draw() {
   }
 
   // DRAW RECTANGLE SYNCHED TO SCROLL POSITION
-  let scrollPos = document.getElementById('right-side').scrollTop;
-  mappedPos = map(scrollPos, 0, document.getElementById('right-side').scrollHeight - window.innerHeight, 0, height - 10);
   fill(0);
   rect(0, mappedPos, width, 10);
 
   // Change cursor if mouse is over the scroll rect
-if (mouseX >= 0 && mouseX <= width && mouseY >= mappedPos && mouseY <= mappedPos + 10) {
-  cursor(HAND) } else { cursor(ARROW) }
+  if (mouseX >= 0 && mouseX <= width && mouseY >= mappedPos && mouseY <= mappedPos + 10) {
+    cursor(HAND);
+  } else {
+    cursor(ARROW);
+  }
 }
-
 
 function mousePressed() {
   // Check if the mouse is pressed and over the rectangle
@@ -59,7 +65,9 @@ function mousePressed() {
   }
 }
 
-function mouseReleased() { dragging = false }
+function mouseReleased() {
+  dragging = false;
+}
 
 function mouseDragged() {
   // If dragging, update the rectangle's position based on mousY

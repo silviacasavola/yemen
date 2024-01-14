@@ -1,54 +1,44 @@
 // Add the pallozzo span to each chrono-link
 const chronolinks = document.querySelectorAll('.chrono-link');
 chronolinks.forEach(chronolink => {
-  let linkcontent = chronolink.innerHTML;
-  chronolink.innerHTML = linkcontent + ' <span class="pallozzo">●</span>';
+  chronolink.innerHTML += ' <span class="pallozzo">●</span>';
 });
 
+let lastHighlightedElement = null;
+
 function handleScroll(containerId, elementSelector) {
-  let scrollPos = document.getElementById(containerId).scrollTop;
+  const container = document.getElementById(containerId);
   const elements = document.querySelectorAll(elementSelector);
 
   let closestElement = elements[0];
   let closestDistance = Infinity;
 
-  // Iterate over each element
-  elements.forEach(element => {
-    const elementRect = element.getBoundingClientRect();
-    const distance = Math.abs(elementRect.top); // Use Math.abs to get absolute distance
+  let elementFound = false; // Flag to check if any element is found within the specified range
 
-    // Check if the element is the closest based on top edge
-    if (distance < closestDistance) {
+  elements.forEach(element => {
+    const distance = element.getBoundingClientRect().top;
+
+    if (distance > 0 && distance < 50 && distance < closestDistance) {
       closestElement = element;
       closestDistance = distance;
+      elementFound = true; // Set the flag to true when an element is found within the range
     }
   });
 
-  // Remove 'highlighted' class from all elements
-  elements.forEach(element => {
-    element.classList.remove('highlighted');
-  });
+  // Only remove the class if an element is found within the specified range
+  if (elementFound) {
+    elements.forEach(element => {
+      element.classList.toggle('highlighted', element === closestElement);
+    });
 
-  // Add 'highlighted' class to the closest element
-  if (closestElement !== null) {
-    closestElement.classList.add('highlighted');
+    lastHighlightedElement = closestElement;
 
-    // Get the index of closestElement in the elements array
-    const closestIndex = Array.from(elements).indexOf(closestElement);
+    if (closestElement) {
+      const closestIndex = Array.from(elements).indexOf(closestElement);
+      const targetContainerId = closestElement.classList.contains('chrono-link') ? 'left-side' : 'right-side';
+      const targetElementSelector = closestElement.classList.contains('chrono-link') ? '.frame' : '.chrono-link';
 
-    // SyncScroll function inside handleScroll
-    function syncScroll(containerId, elementSelector, index) {
-      let targetContainerId, targetElementSelector;
-
-      if (closestElement.classList.contains('chrono-link')) {
-        targetContainerId = 'left-side';
-        targetElementSelector = '.frame';
-      } else if (closestElement.classList.contains('frame')) {
-        targetContainerId = 'right-side';
-        targetElementSelector = '.chrono-link';
-      }
-
-      const targetElements = document.querySelectorAll(targetElementSelector);
+      const targetElements = Array.from(document.querySelectorAll(targetElementSelector));
       const targetElement = targetElements[closestIndex];
       const targetOffsetTop = targetElement.offsetTop;
 
@@ -57,19 +47,24 @@ function handleScroll(containerId, elementSelector) {
         behavior: 'smooth'
       });
 
-      closestElement = targetElement;
+      // Add 'highlighted' class to the target element and remove it from its siblings
+      targetElements.forEach((target, index) => {
+        target.classList.toggle('highlighted', index === closestIndex);
+      });
     }
-
-    // Call syncScroll with the index
-    syncScroll(containerId, elementSelector, closestIndex);
+  } else if (lastHighlightedElement) {
+    // Keep the last highlighted element
+    elements.forEach(element => {
+      element.classList.toggle('highlighted', element === lastHighlightedElement);
+    });
   }
 }
 
-// Attach the event listener to the scroll event for #right-side
-document.getElementById('right-side').addEventListener('scroll', () => handleScroll('right-side', '.chrono-link'));
+// Attach the event listener to the wheel event for #right-side
+document.getElementById('right-side').addEventListener('wheel', () => handleScroll('right-side', '.chrono-link'));
 
-// Attach the event listener to the scroll event for #left-side
-document.getElementById('left-side').addEventListener('scroll', () => handleScroll('left-side', '.frame'));
+// Attach the event listener to the wheel event for #left-side
+document.getElementById('left-side').addEventListener('wheel', () => handleScroll('left-side', '.frame'));
 
 // Initial state
 handleScroll('right-side', '.chrono-link');

@@ -45,17 +45,20 @@ for (const [index, page] of pages.entries()) {
 
   spans.forEach(span => {
     span.addEventListener('click', () => {
-      console.log("oh")
       const clickedInnerHTML = span.innerHTML;
+      span.classList.toggle('selected', true)
 
       spans.forEach(otherSpan => {
+
         const parentpage = otherSpan.parentElement.parentElement;
 
         if (parentpage) {
           if (otherSpan.innerHTML === clickedInnerHTML) {
             parentpage.classList.toggle('hidden', false);
+            otherSpan.classList.toggle('selected', true);
           } else {
             parentpage.classList.toggle('hidden', true);
+            otherSpan.classList.toggle('selected', false);
           }
         }
       });
