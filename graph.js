@@ -20,15 +20,15 @@ function setup() {
   });
 
   // MAP CHRONO FILTER LINKS POSITION RELATIVELY TO THE TEXT CONTAINER
-  personLinks.forEach(personLink => {
-    mapAndAddShape(personLink, 'person');
-  }
+  // personLinks.forEach(personLink => {
+  //   mapAndAddShape(personLink, 'person');
+  // })
 
   // Add event listener for scrolling on the right-side container
-  document.getElementById('right-side').addEventListener('scroll', () => {
-    let scrollPos = document.getElementById('right-side').scrollTop;
-    mappedPos = map(scrollPos, 0, document.getElementById('right-side').scrollHeight - window.innerHeight, 0, height - 10);
-  });
+  // document.getElementById('right-side').addEventListener('scroll', () => {
+  //   let scrollPos = document.getElementById('right-side').scrollTop;
+  //   mappedPos = map(scrollPos, 0, document.getElementById('right-side').scrollHeight - window.innerHeight, 0, height - 10);
+  // });
 }
 
 function draw() {
@@ -57,35 +57,35 @@ function draw() {
   }
 }
 
-function mousePressed() {
-  // Check if the mouse is pressed and over the rectangle
-  if (mouseX >= 0 && mouseX <= width && mouseY >= mappedPos && mouseY <= mappedPos + 10) {
-    dragging = true;
-    offsetY = mouseY - mappedPos;
-  }
-}
-
-function mouseReleased() {
-  dragging = false;
-}
-
-function mouseDragged() {
-  // If dragging, update the rectangle's position based on mousY
-  if (dragging) {
-    mappedPos = mouseY - offsetY;
-    mappedPos = constrain(mappedPos, 0, height - 10);
-    let scrollValue = map(mappedPos, 0, height - 10, 0, document.getElementById('right-side').scrollHeight - window.innerHeight);
-    document.getElementById('right-side').scrollTop = scrollValue;
-  }
-}
+// function mousePressed() {
+//   // Check if the mouse is pressed and over the rectangle
+//   if (mouseX >= 0 && mouseX <= width && mouseY >= mappedPos && mouseY <= mappedPos + 10) {
+//     dragging = true;
+//     offsetY = mouseY - mappedPos;
+//   }
+// }
+//
+// function mouseReleased() {
+//   dragging = false;
+// }
+//
+// function mouseDragged() {
+//   // If dragging, update the rectangle's position based on mousY
+//   if (dragging) {
+//     mappedPos = mouseY - offsetY;
+//     mappedPos = constrain(mappedPos, 0, height - 10);
+//     let scrollValue = map(mappedPos, 0, height - 10, 0, document.getElementById('right-side').scrollHeight - window.innerHeight);
+//     document.getElementById('right-side').scrollTop = scrollValue;
+//   }
+// }
 
 function mapAndAddShape(link, type) {
   const rect = link.getBoundingClientRect();
   const containerRect = document.getElementById('text-container').getBoundingClientRect();
   const mappedX = map(rect.left - containerRect.left, 0, containerRect.width, 0, width);
   const mappedY = map(rect.top - containerRect.top, 0, containerRect.height, 0, height);
-  const size = type === 'chrono' ? 7 : 7; // Adjust size for different types
-  const fillColor = type === 'chrono' ? [255, 0, 0] : [0, 0, 255]; // Adjust color for different types
+  const size = type === 'chrono' ? 6 : 6; // Adjust size for different types
+  const fillColor = type === 'chrono' ? [0] : [0, 0, 255]; // Adjust color for different types
 
   shapes.push({ x: mappedX, y: mappedY, type, size, fillColor });
 }

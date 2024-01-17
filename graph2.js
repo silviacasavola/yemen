@@ -44,6 +44,7 @@ function draw() {
     const rectHeight = map(pageRect.height, 0, containerRect.height, 0, height);
 
     const y = totalHeight;
+    strokeWeight(0.5)
     rect(0, y, rectWidth, rectHeight);
 
     totalHeight += rectHeight;

@@ -132,5 +132,5 @@ img {
 .filter-link.selected {
   color: white;
   background-color: black;
-  padding: 0.1em;
+  /* padding: 0.1em; */
 }

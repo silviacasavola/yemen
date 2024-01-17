@@ -1,6 +1,6 @@
 const people = ['Jean'];
 const places = ['Beit Sinan', 'Sanaa'];
-const keywords = ['schechita', 'khat'];
+const keywords = ['shechita', 'qat'];
 
 const pages = Array.from(document.getElementsByClassName('page-text'));
 
