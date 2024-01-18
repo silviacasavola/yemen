@@ -20,6 +20,7 @@ data.then(function (data) {
     if (imageUrls.length > 1) {
       // Create a div inside the frame for the carousel
       let carouselDiv = frame.append("div").attr("id", `carousel-${i}`).attr("class", "carousel slide");
+      carouselDiv.attr("data-bs-interval", false);
 
       let carouselInner = carouselDiv.append("div").attr("class", "carousel-inner");
 
@@ -28,19 +29,24 @@ data.then(function (data) {
         .selectAll("div")
         .data(imageUrls)
         .join("div")
-        .attr("class", function (_, j) {
-          return "carousel-item" + (j === 0 ? " active" : "");
-        });
+        .attr("class", function (url, j) {
+        // Check if the image's ID matches d.id, add "active" class if true
+        return "carousel-item" + (url === d.id ? " active" : "");
+      });
 
-      // Update the code here to set the src attribute for each image
-      carouselItems
-        .append("img")
-        .attr("class", "d-block w-100")
-        .attr("src", function (url) {return `https://gradim.fh-potsdam.de/omeka-s/files/small/` + url + `.jpg`})
-        .attr("id", function (url) {return url;})
-        .on("error", function () {
-          d3.select(this).remove();
-        });
+// Update the code here to set the src attribute for each image
+carouselItems
+  .append("img")
+  .attr("class", "d-block w-100")
+  .attr("src", function (url) {
+    return `https://gradim.fh-potsdam.de/omeka-s/files/small/` + url + `.jpg`;
+  })
+  .attr("id", function (url) {
+    return url;
+  })
+  .on("error", function () {
+    d3.select(this).remove();
+  });
 
       // Add carousel controls
       carouselDiv.append("button").attr("class", "carousel-control-prev").attr("type", "button").attr("data-bs-target", `#carousel-${i}`).attr("data-bs-slide", "prev").html("<span class='carousel-control-prev-icon' aria-hidden='true'></span><span class='visually-hidden'>Previous</span>");
