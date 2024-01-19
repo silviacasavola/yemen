@@ -1,6 +1,7 @@
 const people = ['Jean', 'Myriam'];
 const places = ['Beit Sinan', 'Sanaa'];
 const keywords = ['shechita', 'qat'];
+
 const pages = Array.from(document.getElementsByClassName('page-text'));
 
 for (const [index, page] of pages.entries()) {
@@ -13,7 +14,7 @@ for (const [index, page] of pages.entries()) {
   const pageId = "page-" + (index + 1);
   pageContainer.id = pageId;
 
-  // ADD PAGE INDEX
+// ADD PAGE INDEX
   const newDiv = document.createElement('div');
   newDiv.className = 'page-number';
   newDiv.innerHTML = 'pg. ' + (index + 1);
@@ -38,13 +39,11 @@ for (const [index, page] of pages.entries()) {
   });
 
   page.innerHTML = pageContent;
-}
 
-// ADD CLICK EVENT LISTENERS TO THE LINK
-const filterLinks = document.querySelectorAll('.filter-link');
-const selectionIndicatorsContainer = document.getElementById("selection-indicators-container");
+  // ADD CLICK EVENT LISTENERS TO THE LINK
+  const filterlinks = document.querySelectorAll('.filter-link');
 
-filterLinks.forEach(flink => {
+  filterlinks.forEach(flink => {
   flink.addEventListener('click', () => {
     const clickedInnerHTML = flink.innerHTML;
 
@@ -56,16 +55,16 @@ filterLinks.forEach(flink => {
     selectionIndicator.className = 'selection-indicator';
     selectionIndicator.innerHTML = clickedInnerHTML + ' X';
 
-    // Append the selection indicator to the specified container
-    selectionIndicatorsContainer.appendChild(selectionIndicator);
+    // Append the selection indicator to a container (e.g., document.body)
+    document.getElementById("selection-indicators-container").appendChild(selectionIndicator);
 
     // Iterate over all filter links to decide visibility
-    filterLinks.forEach(otherFlink => {
+    filterlinks.forEach(otherFlink => {
       const parentPage = otherFlink.closest('.page');
 
       if (parentPage) {
         if (otherFlink.innerHTML === clickedInnerHTML) {
-          otherFlink.classList.add('selected', flink.classList.contains('selected'));
+          otherFlink.classList.toggle('selected', flink.classList.contains('selected'));
         } else {
           otherFlink.classList.remove('selected');
         }
@@ -74,7 +73,7 @@ filterLinks.forEach(flink => {
 
     // Determine visibility of pages based on selected filter links
     const pagesWithSelectedLinks = new Set();
-    filterLinks.forEach(link => {
+    filterlinks.forEach(link => {
       if (link.classList.contains('selected')) {
         const parentPage = link.closest('.page');
         if (parentPage) {
@@ -94,51 +93,35 @@ filterLinks.forEach(flink => {
   });
 });
 
-function resetclick() {
-  const hiddenPages = document.querySelectorAll('.page.hidden');
 
-  hiddenPages.forEach(hiddenPage => {
+
+  const hiddenPages = document.getElementsByClassName('page hidden');
+
+  function resetclick() {
+  Array.from(hiddenPages).forEach(hiddenPage => {
+    // Add click event listener to each hidden page
     hiddenPage.addEventListener('click', () => {
       hiddenPage.classList.remove('hidden');
       hiddenPage.classList.add('shown');
     });
   });
 }
+}
+
 
 function highlightFilter(checkbox) {
   let classname = checkbox.value + "-link";
-  let elements = document.getElementsByClassName(classname);
+    let elements = document.getElementsByClassName(classname);
 
-  if (checkbox.checked) {
-    // If the checkbox is checked, add the 'selectable' class to the elements
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].classList.add('selectable');
+    if (checkbox.checked) {
+      // If the checkbox is checked, add the 'selectable' class to the elements
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.add('selectable');
+      }
+    } else {
+      // If the checkbox is not checked, remove the 'selectable' class from the elements
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.remove('selectable');
+      }
     }
-  } else {
-    // If the checkbox is not checked, remove the 'selectable' class from the elements
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].classList.remove('selectable');
-    }
-  }
 }
-
-// Event delegation for removing selection indicators
-selectionIndicatorsContainer.addEventListener('click', (event) => {
-  const selectionIndicator = event.target.closest('.selection-indicator');
-
-  if (selectionIndicator) {
-    // Remove the class 'hidden' from all elements with the class 'page'
-    pages.forEach(page => {
-      page.classList.remove('hidden');
-    });
-
-    // Remove the class 'selected' from all elements with the class 'filter-link'
-    const allFilterLinks = document.querySelectorAll('.filter-link');
-    allFilterLinks.forEach(link => {
-      link.classList.remove('selected');
-    });
-
-    // Remove the selection-indicator itself
-    selectionIndicator.remove();
-  }
-});

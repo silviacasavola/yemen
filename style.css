@@ -129,8 +129,43 @@ img {
 
 .frame.highlighted .photo-pallozzo {color: var(--orange)}
 
-.filter-link.selected {
-  color: white;
-  background-color: black;
+.filter-link.selected, .filter-link.selected:hover, .filter-link.selectable.selected {
+  color: white;  background-color: black;
   /* padding: 0.1em; */
 }
+
+.filter-link:hover, .filter-link.selectable {
+  background-color: var(--grey);
+  color: black;
+}
+
+#filter-highlighter, .selection-indicator {
+  background-color: black;
+  color: white;
+  position: fixed;
+  border-radius: 0.6em;
+  font-size: 0.8em;
+  display: inline-block;
+}
+
+#filter-highlighter {
+  position: fixed;
+  display: flex;
+  bottom: 0; right: 0;
+  margin: var(--margin);
+}
+
+#selection-indicators-container {
+  position: fixed;
+  display: flex;
+  bottom: var(--margin); left: 50vw;
+  margin: var(--margin);
+  /* border: solid; */
+  height:1.4em;
+}
+
+#filter-highlighter input, #filter-highlighter label, #filter-highlighter span, .selection-indicator {
+  padding: 0.3em 0.6em 0.3em 0.6em
+}
+
+.selection-indicator {cursor: pointer}

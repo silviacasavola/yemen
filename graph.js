@@ -20,9 +20,9 @@ function setup() {
   });
 
   // MAP CHRONO FILTER LINKS POSITION RELATIVELY TO THE TEXT CONTAINER
-  // personLinks.forEach(personLink => {
-  //   mapAndAddShape(personLink, 'person');
-  // })
+  personLinks.forEach(personLink => {
+    mapAndAddShape(personLink, 'person');
+  })
 
   // Add event listener for scrolling on the right-side container
   // document.getElementById('right-side').addEventListener('scroll', () => {
