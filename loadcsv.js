@@ -9,9 +9,12 @@ data.then(function (data) {
   // Iterate through each row in the data
   data.forEach(function (d, i) {
     // Create a frame for each row
-    let frame = framesContainer
-      .append("div")
-      .attr("class", "frame" + (i === 0 ? " highlighted" : ""));
+    let frame = framesContainer.append("div")
+
+    let phototitle = frame.append("div").attr("class", "photo-title row")
+    let firstcol1 = phototitle.append("div").attr("class", "first-col").html("<svg><circle cx='50%' cy='50%' r='50%'></circle></svg>")
+    let secondcol = phototitle.append("div").attr("class", "second-col")
+    secondcol.append("p").attr("class", "identifier").html(() => d.id)
 
     // Call generateImageUrls for each entry in the data
     let imageUrls = generateImageUrls(d.shot);
@@ -68,17 +71,22 @@ carouselItems
         });
     }
 
-    let photodetails = frame.append("div")
-      .attr("class", "photo-details row")
+    // Add classes based on the value of d.appears
+    if (d.appears === "yes") {
+      frame.classed("frame connected", true);
+    } else if (d.appears === "no") {
+      frame.classed("frame not-connected", true);
+    }
 
-    let firstcol = photodetails.append("div").attr("class", "photo-pallozzo").html("●")
+    let photodetails = frame.append("div").attr("class", "photo-details row")
 
-    let secondcol = photodetails.append("div").attr("class", "photo-description")
-    secondcol.append("p").attr("class", "identifier").html(() => d.id)
-    secondcol.append("p").html(() => "Date: " + d.date)
+    let firstcol2 = photodetails.append("div").attr("class", "first-col")
 
-    let thirdcol = photodetails.append("div").attr("class", "photo-description")
-    thirdcol.append("p").html(() => "Place: " + d.place)
+    let secondcol2 = photodetails.append("div").attr("class", "second-col")
+    secondcol2.append("p").html(() => "Date: " + d.date)
+
+    let thirdcol2 = photodetails.append("div").attr("class", "third-col")
+    thirdcol2.append("p").html(() => "Place: " + d.place)
   });
 
   function generateImageUrls(inputString) {

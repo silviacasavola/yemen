@@ -1,7 +1,7 @@
 const people = ['Jean', 'Myriam'];
 const places = ['Beit Sinan', 'Sanaa'];
 const keywords = ['shechita', 'qat'];
-const pages = Array.from(document.getElementsByClassName('page-text'));
+const pages = Array.from(document.querySelectorAll('#text-container p'))
 
 for (const [index, page] of pages.entries()) {
   const pageContainer = document.createElement('div');

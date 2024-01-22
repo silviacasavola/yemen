@@ -1,7 +1,7 @@
 // Add the pallozzo span to each chrono-link
 const chronolinks = document.querySelectorAll('.chrono-link');
 chronolinks.forEach(chronolink => {
-  chronolink.innerHTML += ' <span class="pallozzo">●</span>';
+  chronolink.innerHTML += " <svg><circle cx='50%' cy='50%' r='50%'></circle></svg>";
 });
 
 let lastHighlightedElement = null;
@@ -64,7 +64,7 @@ function handleScroll(containerId, elementSelector) {
 document.getElementById('right-side').addEventListener('wheel', () => handleScroll('right-side', '.chrono-link'));
 
 // Attach the event listener to the wheel event for #left-side
-document.getElementById('left-side').addEventListener('wheel', () => handleScroll('left-side', '.frame'));
+document.getElementById('left-side').addEventListener('wheel', () => handleScroll('left-side', '.frame.connected'));
 
 // Initial state
 handleScroll('right-side', '.chrono-link');
