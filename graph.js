@@ -30,11 +30,11 @@ function draw() {
     const constrainedChronoColor = constrain(chronoColorValue, 0, 255);
 
     // Check if the current page contains an element with the class "highlighted"
-    // const highlightedElement = pages[i].querySelector('.highlighted');
-    // if (highlightedElement) {
-    //   // Set a specific color for the highlighted page
-    //   chronoColorValue = color('#FF5C00').levels;
-    // }
+    const highlightedElement = pages[i].querySelector('.highlighted');
+    if (highlightedElement) {
+      // Set a specific color for the highlighted page
+      chronoColorValue = color('#FF5C00').levels;
+    }
 
     fill(chronoColorValue);
     const rectWidth = width;

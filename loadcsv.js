@@ -12,9 +12,8 @@ data.then(function (data) {
     let frame = framesContainer.append("div")
 
     let phototitle = frame.append("div").attr("class", "photo-title row")
-    let firstcol1 = phototitle.append("div").attr("class", "first-col").html("<svg><circle cx='50%' cy='50%' r='50%'></circle></svg>")
-    let secondcol = phototitle.append("div").attr("class", "second-col")
-    secondcol.append("p").attr("class", "identifier").html(() => d.id)
+    let firstcol1 = phototitle.append("div").attr("class", "first-col").html("<div class='circle-container'><svg><circle cx='50%' cy='50%' r='48%'></circle></svg></div>")
+    firstcol1.append("p").attr("class", "identifier").html(() => d.id)
 
     // Call generateImageUrls for each entry in the data
     let imageUrls = generateImageUrls(d.shot);
@@ -75,18 +74,19 @@ carouselItems
     if (d.appears === "yes") {
       frame.classed("frame connected", true);
     } else if (d.appears === "no") {
-      frame.classed("frame not-connected", true);
+      frame.classed("frame not-connected hidden", true)
+      .on('click', function () {
+      d3.select(this).classed('hidden', !d3.select(this).classed('hidden'));
+    });
     }
 
     let photodetails = frame.append("div").attr("class", "photo-details row")
 
     let firstcol2 = photodetails.append("div").attr("class", "first-col")
+    firstcol2.append("p").html(() => "Date: " + d.date)
 
     let secondcol2 = photodetails.append("div").attr("class", "second-col")
-    secondcol2.append("p").html(() => "Date: " + d.date)
-
-    let thirdcol2 = photodetails.append("div").attr("class", "third-col")
-    thirdcol2.append("p").html(() => "Place: " + d.place)
+    secondcol2.append("p").html(() => "Place: " + d.place)
   });
 
   function generateImageUrls(inputString) {

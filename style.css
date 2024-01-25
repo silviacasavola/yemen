@@ -48,7 +48,14 @@ overflow-y: auto;
 overflow-x: hidden;
 }
 
-svg {width: 0.8em; height: 0.8em;}
+
+svg {width: 0.8em; height: 0.8em; transform: translate(0, -10%);}
+/* circle {radius: 49%} */
+.frame svg {margin-right: 2em}
+.frame circle {fill: white}
+.page circle {fill: black;}
+.highlighted circle {fill: var(--orange)}
+.not-connected circle {fill: transparent; stroke: white; stroke-width: 6%; r: 46%}
 
 
 /* RIGHT SIDE */
@@ -159,32 +166,38 @@ img {
   padding: var(--margin);
 }
 
-.frame circle {fill: white}
-.page svg {transform: translate(0, -10%);}
-.page circle {fill: black; r: 48%}
-.highlighted circle {fill: var(--orange)}
-.not-connected circle {fill: transparent; stroke: white; stroke-width: 6%; r: 47%}
 
-
-.frame {padding-bottom: 1em}
-
-/* OPZIONE 1 NOT CONNECTED */
-.not-connected {
-max-height: 2em;
-cursor: pointer;
+.frame {padding-bottom: 2em;
 transition: max-height 1s;
-object-fit: cover;
+max-height: 200vh;
 overflow: hidden;
 }
 
-.not-connected:hover {max-height: 4em}
+.frame.hidden .photo-title, .not-connected .photo-title{cursor: pointer}
+
+.frame img {
+object-fit: cover;
+object-position: top
+}
+
+.frame.hidden {
+max-height: 1.7em;
+background: linear-gradient(180deg, #ffffff 60%, #000000 100%);
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+cursor: pointer;
+}
+
+.frame.hidden:hover {
+  max-height: 3em
+}
+
+
 
 /* PHOTO DESCRIPTION */
+.first-col, .second-col, .title-col {display: inline-flex;}
+.first-col, .second-col {width: 50%}
 
-.first-col {width: 10%}
-.second-col, .third-col {width: 45%}
-
-.frame p {
-  font-size: 0.7em;
-  margin: 0; padding: 0;
-}
+#left-side {font-size: 0.7em;}
+.frame p {  margin: 0; padding: 0;}
