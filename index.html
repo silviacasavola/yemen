@@ -50,9 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return loadScript('filter.js');
       }
     })
+    .then(() => {return loadScript('graph.js'); })
     .then(() => {return loadScript('loadcsv.js');  })
     .then(() => {return loadScript('scroll.js'); })
-    .then(() => {return loadScript('graph.js'); })
     .catch(error => console.error(error));
 });
 

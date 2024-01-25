@@ -105,17 +105,6 @@ function resetclick() {
   });
 }
 
-// function resetclick() {
-//   const hiddenThings = document.querySelectorAll('.hidden');
-//
-//   hiddenThings.forEach(hiddenThing => {
-//     hiddenThing.addEventListener('click', () => {
-//       hiddenThing.classList.remove('hidden');
-//       hiddenThing.classList.add('shown');
-//     });
-//   });
-// }
-
 function highlightFilter(checkbox) {
   let classname = checkbox.value + "-link";
   let elements = document.getElementsByClassName(classname);
