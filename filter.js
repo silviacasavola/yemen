@@ -1,144 +1,368 @@
-const people = ['Jean', 'Myriam'];
-const places = ['Beit Sinan', 'Sanaa'];
-const keywords = ['shechita', 'qat'];
-const pages = Array.from(document.querySelectorAll('#text-container p'))
+// Function to generate combinations of names, surnames, and extras
+function generateNameCombinations(names, surnames, extras) {
+    const shortNameCombinations = [];
+    const longNameCombinations = [];
 
-for (const [index, page] of pages.entries()) {
-  const pageContainer = document.createElement('div');
-  pageContainer.className = 'page';
-  document.getElementById('text-container').appendChild(pageContainer);
-  pageContainer.appendChild(page);
+    names.forEach(name => {
+        surnames.forEach(surname => {
+            shortNameCombinations.push(`${surname}`);
+            longNameCombinations.push(`${name} ${surname}`);
+            longNameCombinations.push(`${surname} ${name}`);
+            longNameCombinations.push(`${surname}, ${name}`);
 
-  // ADD ID
-  const pageId = "page-" + (index + 1);
-  pageContainer.id = pageId;
+            if (extras) {
+                extras.forEach(extra => {
+                    shortNameCombinations.push(`${extra}`);
+                    longNameCombinations.push(`${extra} ${name}`);
+                    longNameCombinations.push(`${extra} ${surname}`);
+                    longNameCombinations.push(`${extra} ${name} ${surname}`);
+                });
+            }
+        });
+    });
 
-  // ADD PAGE INDEX
-  const newDiv = document.createElement('div');
-  newDiv.className = 'page-number';
-  newDiv.innerHTML = 'pg. ' + (index + 1);
-  pageContainer.insertBefore(newDiv, pageContainer.firstChild);
+    names.forEach(name => {
+        shortNameCombinations.push(`${name}`);
+    });
 
-  // ADD FILTER
-  let pageContent = page.innerHTML;
-
-  people.forEach(person => {
-    const regex = new RegExp(`\\b${person}\\b`, 'gi');
-    pageContent = pageContent.replace(regex, `<span class="filter-link person-link">${person}</span>`);
-  });
-
-  places.forEach(place => {
-    const regex = new RegExp(`\\b${place}\\b`, 'gi');
-    pageContent = pageContent.replace(regex, `<span class="filter-link place-link">${place}</span>`);
-  });
-
-  keywords.forEach(keyword => {
-    const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-    pageContent = pageContent.replace(regex, `<span class="filter-link keyword-link">${keyword}</span>`);
-  });
-
-  page.innerHTML = pageContent;
+    // Return both short and long combinations
+    return { shortNameCombinations, longNameCombinations };
 }
 
-// ADD CLICK EVENT LISTENERS TO THE LINK
-const filterLinks = document.querySelectorAll('.filter-link');
-const selectionIndicatorsContainer = document.getElementById("selection-indicators-container");
+// Function to replace people entities in an HTML element
+function replacePeopleInElement(element, jsonData) {
+    if (!element) return;
 
-filterLinks.forEach(flink => {
-  flink.addEventListener('click', () => {
-    const clickedInnerHTML = flink.innerHTML;
+    const people = jsonData.people;
+    if (people && Array.isArray(people)) {
+        people.forEach((person, index) => {
+            if (person && person.firstName && person.lastName) {
+                const nameVariants = person.firstName.split('; ').map(name => name.trim());
+                const surnameVariants = person.lastName.split('; ').map(surname => surname.trim());
+                const extraVariants = person.extra ? person.extra.split('; ').map(extra => extra.trim()) : null;
+                const personId = `person${index}`;
 
-    // Toggle class for the clicked link
-    flink.classList.toggle('selected');
+                // Generate both short and long combinations
+                const { shortNameCombinations, longNameCombinations } = generateNameCombinations(nameVariants, surnameVariants, extraVariants);
 
-    // Create a new div for the selection indicator
-    const selectionIndicator = document.createElement('div');
-    selectionIndicator.className = 'selection-indicator';
-    selectionIndicator.innerHTML = clickedInnerHTML + ' X';
+                // Sort long combinations by length in descending order
+                longNameCombinations.sort((a, b) => b.length - a.length);
 
-    // Append the selection indicator to the specified container
-    selectionIndicatorsContainer.appendChild(selectionIndicator);
+                // Replace each combination in the element
+                longNameCombinations.forEach(combination => {
+                    const regex = new RegExp(`\\b${combination}\\b`, 'gi');
+                    // Create a new element to hold the modified content
+                    const newElement = document.createElement('div');
+                    newElement.innerHTML = element.innerHTML.replace(regex, match => {
+                        return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
+                    });
+                    // Replace the existing content with the modified element
+                    element.innerHTML = newElement.innerHTML;
+                });
 
-    // Iterate over all filter links to decide visibility
-    filterLinks.forEach(otherFlink => {
-      const parentPage = otherFlink.closest('.page');
-
-      if (parentPage) {
-        if (otherFlink.innerHTML === clickedInnerHTML) {
-          otherFlink.classList.add('selected', flink.classList.contains('selected'));
-        } else {
-          otherFlink.classList.remove('selected');
-        }
-      }
-    });
-
-    // Determine visibility of pages based on selected filter links
-    const pagesWithSelectedLinks = new Set();
-    filterLinks.forEach(link => {
-      if (link.classList.contains('selected')) {
-        const parentPage = link.closest('.page');
-        if (parentPage) {
-          pagesWithSelectedLinks.add(parentPage);
-        }
-      }
-    });
-
-    pages.forEach(page => {
-      const pageContainer = page.closest('.page');
-      if (pageContainer) {
-        pageContainer.classList.toggle('hidden', !pagesWithSelectedLinks.has(pageContainer));
-      }
-    });
-
-    resetclick();
-  });
-});
-
-function resetclick() {
-  const hiddenPages = document.querySelectorAll('.page.hidden');
-
-  hiddenPages.forEach(hiddenPage => {
-    hiddenPage.addEventListener('click', () => {
-      hiddenPage.classList.remove('hidden');
-      hiddenPage.classList.add('shown');
-    });
-  });
-}
-
-function highlightFilter(checkbox) {
-  let classname = checkbox.value + "-link";
-  let elements = document.getElementsByClassName(classname);
-
-  if (checkbox.checked) {
-    // If the checkbox is checked, add the 'selectable' class to the elements
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].classList.add('selectable');
+                // Replace short combinations
+                shortNameCombinations.forEach(combination => {
+                    const regex = new RegExp(`\\b${combination}\\b`, 'gi');
+                    // Create a new element to hold the modified content
+                    const newElement = document.createElement('div');
+                    newElement.innerHTML = element.innerHTML.replace(regex, match => {
+                        return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
+                    });
+                    // Replace the existing content with the modified element
+                    if (!element.querySelector('.filter-link')) {
+                    element.innerHTML = newElement.innerHTML;
+                  }
+                });
+          }
+        });
     }
-  } else {
-    // If the checkbox is not checked, remove the 'selectable' class from the elements
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].classList.remove('selectable');
-    }
-  }
 }
 
-// Event delegation for removing selection indicators
-selectionIndicatorsContainer.addEventListener('click', (event) => {
-  const selectionIndicator = event.target.closest('.selection-indicator');
 
-  if (selectionIndicator) {
-    // Remove the class 'hidden' from all elements with the class 'page'
-    pages.forEach(page => {
-      page.classList.remove('hidden');
-    });
+// Function to replace place entities in an HTML element
+function replacePlacesInElement(element, jsonData) {
+    if (!element) return;
 
-    // Remove the class 'selected' from all elements with the class 'filter-link'
-    const allFilterLinks = document.querySelectorAll('.filter-link');
-    allFilterLinks.forEach(link => {
-      link.classList.remove('selected');
-    });
+    const places = jsonData.places;
+    if (places && Array.isArray(places)) {
+        places.forEach((place, index) => {
+            const placeVariants = place.split('; ').map(place => place.trim());
+            const placeId = `place${index}`;
 
-    // Remove the selection-indicator itself
-    selectionIndicator.remove();
-  }
-});
+            placeVariants.forEach(placeVariant => {
+                const regex = new RegExp(`\\b${placeVariant}\\b`, 'gi');
+
+                // Create a new element to hold the modified content
+                const newElement = document.createElement('div');
+                newElement.innerHTML = element.innerHTML.replace(regex, match => {
+                    return `<span class="filter-link place-link" id='${placeId}'>${match}</span>`;
+                });
+
+                // Replace the existing content with the modified element
+                element.innerHTML = newElement.innerHTML;
+            });
+        });
+    }
+}
+
+// Function to replace keyword entities in an HTML element
+function replaceKeywordsInElement(element, jsonData) {
+    if (!element) return;
+
+    const keywords = jsonData.keywords;
+    if (keywords && Array.isArray(keywords)) {
+        keywords.forEach((keyword, index) => {
+            const keywordVariants = keyword.split('; ').map(keyword => keyword.trim());
+            const keywordId = `keyword${index}`;
+
+            keywordVariants.forEach(keywordVariant => {
+                const regex = new RegExp(`\\b${keywordVariant}\\b`, 'gi');
+
+                // Create a new element to hold the modified content
+                const newElement = document.createElement('div');
+                newElement.innerHTML = element.innerHTML.replace(regex, match => {
+                    return `<span class="filter-link keyword-link" id='${keywordId}'>${match}</span>`;
+                });
+
+                // Replace the existing content with the modified element
+                element.innerHTML = newElement.innerHTML;
+            });
+        });
+    }
+}
+
+// Fetch JSON data and replace people entities in elements
+let jsonData; // Define jsonData in the outer scope
+
+fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+        jsonData = data; // Assign fetched JSON data to jsonData
+
+        // Replace people entities in .page elements
+        pages.forEach(page => {
+            replacePeopleInElement(page, jsonData);
+            replacePlacesInElement(page, jsonData);
+            replaceKeywordsInElement(page, jsonData);
+        });
+
+        const nestedLinks = document.querySelectorAll('.filter-link .filter-link');
+            nestedLinks.forEach(span => {
+              span.parentNode.replaceChild(span.firstChild, span);
+            });
+        // Add event listeners after replacing elements
+        addEvent(jsonData);
+    })
+    .catch(error => console.error('Error fetching or parsing JSON:', error));
+
+    function frameReplacement() {
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            jsonData = data;
+            // Replace people entities in .people-col elements
+            const peopleColumns = document.querySelectorAll('.people-col');
+            peopleColumns.forEach(element => {
+                replacePeopleInElement(element, jsonData);
+            });
+
+            const placesColumns = document.querySelectorAll('.place-col');
+            placesColumns.forEach(element => {
+                replacePlacesInElement(element, jsonData);
+            });
+
+            const descriptionColumns = document.querySelectorAll('.description-col');
+            descriptionColumns.forEach(element => {
+                replaceKeywordsInElement(element, jsonData);
+            });
+
+            const nestedLinks = document.querySelectorAll('.filter-link .filter-link');
+                nestedLinks.forEach(span => {
+                  span.parentNode.replaceChild(span.firstChild, span);
+                });
+            // Add event listeners after replacing elements
+            addEvent(jsonData);
+        })
+        .catch(error => console.error('Error fetching or parsing JSON:', error));
+    }
+
+    let filterSelected = false;
+
+    function addEvent(jsonData) {
+      const selectionIndicator = document.getElementById("selection-indicator");
+      const filterLinks = document.querySelectorAll('.filter-link');
+
+      filterLinks.forEach(flink => {
+        flink.addEventListener('click', () => {
+          filterSelected = true;
+          const selectorId = flink.id;
+          selectionIndicator.dataset.selector = selectorId;
+          let officialIdentificator;
+
+          if (flink.classList.contains('person-link')) {
+              const personIndex = parseInt(flink.id.replace('person', ''), 10);
+              if (!isNaN(personIndex) && jsonData.people && jsonData.people[personIndex]) {
+              const selectedPerson = jsonData.people[personIndex];
+              const officialName = selectedPerson.firstName.split('; ').map(name => name.trim())[0]
+              const officialSurname = selectedPerson.lastName.split('; ').map(surname => surname.trim())[0]
+              officialIdentificator = officialName + " " + officialSurname;
+            }
+          }
+
+          if (flink.classList.contains('place-link')) {
+              const placeIndex = parseInt(flink.id.replace('place', ''), 10);
+              if (!isNaN(placeIndex) && jsonData.places && jsonData.places[placeIndex]) {
+              const selectedPlace = jsonData.places[placeIndex]
+              officialIdentificator = selectedPlace.split('; ').map(place => place.trim())[0]
+            }
+          }
+
+          if (flink.classList.contains('keyword-link')) {
+              const keywordIndex = parseInt(flink.id.replace('keyword', ''), 10);
+              if (!isNaN(keywordIndex) && jsonData.keywords && jsonData.keywords[keywordIndex]) {
+              const selectedKeyword = jsonData.keywords[keywordIndex]
+              officialIdentificator = selectedKeyword.split('; ').map(keyword => keyword.trim())[0]
+            }
+          }
+
+          // Append the selection indicator to the specified container
+          selectionIndicator.style.display = "block";
+          selectionIndicator.innerHTML = officialIdentificator + ' X';
+
+          handleClick(jsonData);
+
+          let targetContainer = flink.closest('#left-side') || flink.closest('#text-container');
+          if (targetContainer) {
+              const target = flink.closest('.frame') || flink.closest('.page');
+              const containerRect = targetContainer.getBoundingClientRect();
+              const targetRect = target.getBoundingClientRect();
+              const containerTop = containerRect.top;
+              const targetTop = targetRect.top;
+              let scrollPosition;
+
+              if (targetContainer.id === 'text-container') {
+                  // If the target container is a page, scroll both the page and left side
+                  const frameOffsetTop = target.offsetTop - containerRect.top + targetContainer.scrollTop;
+                  scrollPosition = frameOffsetTop - containerTop;
+                  targetContainer.scrollTo({
+                      top: scrollPosition,
+                      behavior: 'smooth'
+                  });
+                  // Find the closest frame within #left-side and scroll to it
+                  const leftSide = document.getElementById('left-side');
+                  const leftSideFrames = leftSide.querySelectorAll('.frame')
+                  let closestFrame;
+                  let minDistance = Infinity;
+                  leftSideFrames.forEach(frame => {
+                   if (!frame.classList.contains('hidden')) {
+                       const distance = Math.abs(frame.offsetTop - leftSide.scrollTop);
+                       if (distance < minDistance) {
+                    minDistance = distance;
+                    closestFrame = frame;
+
+                    if (closestFrame) {
+                      leftSide.scrollTo({
+                      top: closestFrame.offsetTop,
+                      behavior: 'smooth'
+                    });
+                  }
+                }
+                }
+              })
+              } else {
+                  // If the target container is not a page, scroll only the target container
+                  scrollPosition = targetTop - containerTop + targetContainer.scrollTop - 20;
+                  targetContainer.scrollTo({
+                      top: scrollPosition,
+                      behavior: 'smooth'
+                  });
+              }
+          }
+        });
+      });
+
+      function handleClick(jsonData) {
+
+          const activeId = selectionIndicator.dataset.selector;
+
+          filterLinks.forEach(otherFlink => {
+              if (otherFlink.id === activeId) {
+                otherFlink.classList.add('selected');
+          } else {
+            otherFlink.classList.remove('selected');
+          }
+        })
+
+          // Determine visibility of pages based on selected filter links
+          const selectedLinksContainers = new Set();
+          filterLinks.forEach(link => {
+              if (link.classList.contains('selected')) {
+                  const parentFrame = link.closest('.frame');
+                  const parentPage = link.closest('.page');
+
+                  if (parentFrame) {
+                      selectedLinksContainers.add(parentFrame);
+                  } else if (parentPage) {
+                      selectedLinksContainers.add(parentPage);
+                  }
+              }
+          });
+
+          // Update page visibility based on selected filter links
+          const pages = document.querySelectorAll('.page');
+          pages.forEach(page => {
+                  if (activeId === undefined) {
+                      page.classList.remove('hidden');
+                  } else {
+                      page.classList.toggle('hidden', !selectedLinksContainers.has(page));
+                  }
+          });
+
+          const frames = document.querySelectorAll('.frame');
+          frames.forEach(frame => {
+                  if (activeId === undefined && frame.classList.contains('connected')) {
+                      frame.classList.remove('hidden')
+                  } else {
+                      frame.classList.toggle('hidden', !selectedLinksContainers.has(frame));
+                  }
+          });
+
+          toggleHidden();
+      }
+
+
+      // Event delegation for removing selection indicators
+      selectionIndicator.addEventListener('click', (event) => {
+        selectionIndicator.style.display = "none";
+        selectionIndicator.removeAttribute('data-selector');
+        filterSelected = false;
+          handleClick(jsonData);
+      });
+
+      function toggleHidden() {
+        const hiddenContainers = document.querySelectorAll('.hidden');
+
+        hiddenContainers.forEach(hidden => {
+          hidden.addEventListener('click', () => {
+            hidden.classList.remove('hidden');
+          });
+        });
+      }
+    }
+
+    // function highlightFilter(checkbox) {
+    //   let classname = checkbox.value + "-link";
+    //   let elements = document.getElementsByClassName(classname);
+    //
+    //   if (checkbox.checked) {
+    //     // If the checkbox is checked, add the 'selectable' class to the elements
+    //     for (let i = 0; i < elements.length; i++) {
+    //       elements[i].classList.add('selectable');
+    //     }
+    //   } else {
+    //     // If the checkbox is not checked, remove the 'selectable' class from the elements
+    //     for (let i = 0; i < elements.length; i++) {
+    //       elements[i].classList.remove('selectable');
+    //     }
+    //   }
+    // }

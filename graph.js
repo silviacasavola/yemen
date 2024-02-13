@@ -2,6 +2,8 @@ let dragging = false;
 let offsetY = 0;
 let mappedPos = 0;
 
+// const pages = document.querySelectorAll('.page');
+
 function setup() {
   const container = document.getElementById('graph-container');
   const canvas = createCanvas(container.offsetWidth / 2, container.offsetHeight);
@@ -29,12 +31,14 @@ function draw() {
     let chronoColorValue = map(chronoLinkCount, 0, 4, 217, 0);
     const constrainedChronoColor = constrain(chronoColorValue, 0, 255);
 
+    // console.log(pages)
+
     // Check if the current page contains an element with the class "highlighted"
-    const highlightedElement = pages[i].querySelector('.highlighted');
-    if (highlightedElement) {
+    // const highlightedElement = pages[i].querySelector('.highlighted');
+    // if (highlightedElement) {
       // Set a specific color for the highlighted page
-      chronoColorValue = color('#FF5C00').levels;
-    }
+      // chronoColorValue = color('#FF5C00').levels;
+    // }
 
     fill(chronoColorValue);
     const rectWidth = width;
@@ -48,6 +52,8 @@ function draw() {
     rect(0, y, rectWidth, rectHeight);
 
     totalHeight += rectHeight;
+
+ // console.log("containerRect height = " + containerRect.height + ", pageRect height = " + pageRect.height + ", rectHeight = " + rectHeight)
   }
 
 

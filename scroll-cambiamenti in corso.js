@@ -1,3 +1,5 @@
+
+
 // Add the pallozzo span to each chrono-link
 const chronolinks = document.querySelectorAll('.chrono-link');
 chronolinks.forEach(chronolink => {
@@ -18,15 +20,31 @@ function handleUserScroll() {
 // Attach the event listener to the wheel event for the document to detect any scroll action
 document.addEventListener('wheel', handleUserScroll);
 
+// Function to handle user scrolling
+function handleUserScroll() {
+  userStartedScrolling = true;
+
+  // Remove the event listener after the user has started scrolling
+  document.removeEventListener('wheel', handleUserScroll);
+}
+
+// Attach the event listener to the wheel event for the document to detect any scroll action
+document.addEventListener('wheel', handleUserScroll);
+
 function handleScroll(containerId, elementSelector) {
   const container = document.getElementById(containerId);
   const elements = document.querySelectorAll(elementSelector);
 
+  // Filter out .chrono-link elements that belong to .page or .frame elements that are .hidden
+  const filteredElements = Array.from(elements).filter(element => {
+    const closestPageOrFrame = element.closest('.page, .frame');
+    return !closestPageOrFrame || !closestPageOrFrame.classList.contains('hidden');
+  });
+
   // Only perform scroll behavior if the user has started scrolling
-  if (userStartedScrolling && filterSelected === false) {
-    console.log(filterSelected)
+  if (userStartedScrolling) {
     // Sort the elements based on their distance from the top
-    const sortedElements = Array.from(elements).sort((a, b) => {
+    const sortedElements = filteredElements.sort((a, b) => {
       const distanceA = Math.abs(a.getBoundingClientRect().top);
       const distanceB = Math.abs(b.getBoundingClientRect().top);
       return distanceA - distanceB;
@@ -76,3 +94,36 @@ document.getElementById('left-side').addEventListener('wheel', () => handleScrol
 // Initial state
 handleScroll('right-side', '.chrono-link');
 handleScroll('left-side', '.frame');
+
+function handleFilterSelection(event) {
+  const filterLink = event.target.closest('.filter-link');
+  if (!filterLink) return; // Ignore clicks outside of filter links
+
+  const parentPage = filterLink.closest('.page');
+  const parentFrame = filterLink.closest('.frame');
+
+  if (parentPage) {
+    // Filter out .chrono-link elements that belong to .page or .frame elements that are .hidden
+    const filteredChronoLinks = Array.from(document.querySelectorAll('.chrono-link')).filter(element => {
+      const closestPageOrFrame = element.closest('.page, .frame');
+      return !closestPageOrFrame || !closestPageOrFrame.classList.contains('hidden');
+    });
+
+    // Scroll to the closest element inside "#left-side"
+    handleScroll('left-side', '.frame.connected', filteredChronoLinks);
+  } else if (parentFrame) {
+    // Filter out .chrono-link elements that belong to .page or .frame elements that are .hidden
+    const filteredChronoLinks = Array.from(document.querySelectorAll('.chrono-link')).filter(element => {
+      const closestPageOrFrame = element.closest('.page, .frame');
+      return !closestPageOrFrame || !closestPageOrFrame.classList.contains('hidden');
+    });
+
+    // Scroll to the closest element inside "#text-container"
+    handleScroll('text-container', '.chrono-link', filteredChronoLinks);
+  }
+}
+
+// Attach event listener for filter selection
+document.querySelectorAll('.filter-link').forEach(filterLink => {
+  filterLink.addEventListener('click', handleFilterSelection);
+});

@@ -20,9 +20,10 @@
     <section class="d-inline col-8" id="right-side"><div id="text-container"></div></section>
 
 
-<div id="selection-indicators-container"></div>
+<!-- <div id="selection-indicators-container"></div> -->
+<div id="selection-indicator"></div>
 
-<div id="filter-highlighter">
+<!-- <div id="filter-highlighter">
 <span>Highlight:</span>
 <input type="checkbox" id="filter1" name="filter1" value="person" onchange="highlightFilter(this)">
 <label for="filter1">people</label><br>
@@ -30,7 +31,7 @@
 <label for="filter2">places</label><br>
 <input type="checkbox" id="filter3" name="filter3" value="keyword" onchange="highlightFilter(this)">
 <label for="filter3">keywords</label><br>
-</div>
+</div> -->
 
 <script type="module">import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
@@ -47,11 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('text-container').innerHTML = html;
 
     // Load additional scripts after Markdown content is inserted
-        return loadScript('filter.js');
+        return loadScript('layout.js');
       }
     })
     .then(() => {return loadScript('graph.js'); })
-    .then(() => {return loadScript('loadcsv.js');  })
+    .then(() => {return loadScript('filter.js'); })
+    .then(() => {return loadScript('photostrip.js');  })
     .then(() => {return loadScript('scroll.js'); })
     .catch(error => console.error(error));
 });
