@@ -24,6 +24,7 @@ function handleScroll(containerId, elementSelector) {
 
   // Only perform scroll behavior if the user has started scrolling
   if (userStartedScrolling && filterSelected === false) {
+    console.log(filterSelected)
     // Sort the elements based on their distance from the top
     const sortedElements = Array.from(elements).sort((a, b) => {
       const distanceA = Math.abs(a.getBoundingClientRect().top);
