@@ -43,7 +43,7 @@ function handleScroll(containerId, elementSelector) {
 
       const closestIndex = Array.from(elements).indexOf(closestElement);
       const targetContainerId = closestElement.classList.contains('chrono-link') ? 'left-side' : 'right-side';
-      const targetElementSelector = closestElement.classList.contains('chrono-link') ? '.frame' : '.chrono-link';
+      const targetElementSelector = closestElement.classList.contains('chrono-link') ? '.frame.connected' : '.chrono-link';
       const targetElements = Array.from(document.querySelectorAll(targetElementSelector));
       const targetElement = targetElements[closestIndex];
       const targetOffsetTop = targetElement.offsetTop;
@@ -74,4 +74,4 @@ document.getElementById('left-side').addEventListener('wheel', () => handleScrol
 
 // Initial state
 handleScroll('right-side', '.chrono-link');
-handleScroll('left-side', '.frame');
+handleScroll('left-side', '.frame.connected');
