@@ -1,3 +1,5 @@
+const pages = Array.from(document.querySelectorAll('.page'));
+
 let dragging = false;
 let offsetY = 0;
 let mappedPos = 0;
