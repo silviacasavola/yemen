@@ -19,7 +19,6 @@ function setup() {
 }
 
 function draw() {
-  console.log("ciaone")
   background(220);
 
   // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
