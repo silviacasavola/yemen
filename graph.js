@@ -1,5 +1,3 @@
-console.log("ciaone")
-
 let dragging = false;
 let offsetY = 0;
 let mappedPos = 0;
@@ -19,6 +17,7 @@ function setup() {
 }
 
 function draw() {
+  console.log("ciaone")
   background(220);
 
   // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
