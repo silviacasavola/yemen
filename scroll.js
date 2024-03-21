@@ -1,14 +1,29 @@
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+
 // Add the pallozzo span to each chrono-link
 const chronolinks = document.querySelectorAll('.chrono-link');
-chronolinks.forEach(chronolink => {
-  chronolink.innerHTML += " <svg><circle cx='50%' cy='50%' r='50%'></circle></svg>";
-});
+
+// chronolinks.forEach(chronolink => {
+//   chronolink.innerHTML += "<svg><circle cx='50%' cy='50%' r='50%'></circle></svg>";
+// });
 
 let lastHighlightedElement = null;
 let userStartedScrolling = false;
 
 // Function to handle user scrolling
 function handleUserScroll() {
+  console.log("Sto handlando lo scroll dell'user")
   userStartedScrolling = true;
 
   // Remove the event listener after the user has started scrolling
@@ -19,6 +34,9 @@ function handleUserScroll() {
 document.addEventListener('wheel', handleUserScroll);
 
 function handleScroll(containerId, elementSelector) {
+  // container id : colonna che sta scrollando (testo oppure immagini)
+  // elementSelector: elemento da scrollare
+
   const container = document.getElementById(containerId);
   const elements = document.querySelectorAll(elementSelector);
 
@@ -65,13 +83,16 @@ function handleScroll(containerId, elementSelector) {
     }
   }
 }
+const timeout = 10;
+const debouncedHandleScrollRightSide = debounce(() => handleScroll('right-side', '.chrono-link'), timeout);
+const debouncedHandleScrollLeftSide = debounce(() => handleScroll('left-side', '.frame.connected'), timeout);
 
-// Attach the event listener to the wheel event for #right-side
-document.getElementById('right-side').addEventListener('wheel', () => handleScroll('right-side', '.chrono-link'));
+// Attach the event listener to the wheel event for #right-side with debounce
+document.getElementById('right-side').addEventListener('wheel', debouncedHandleScrollRightSide);
 
-// Attach the event listener to the wheel event for #left-side
-document.getElementById('left-side').addEventListener('wheel', () => handleScroll('left-side', '.frame.connected'));
+// Attach the event listener to the wheel event for #left-side with debounce
+document.getElementById('left-side').addEventListener('wheel', debouncedHandleScrollLeftSide);
 
-// Initial state
+// Initial state - it's usually not necessary to debounce these as they are one-time initializations
 handleScroll('right-side', '.chrono-link');
 handleScroll('left-side', '.frame.connected');

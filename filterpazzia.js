@@ -1,35 +1,33 @@
 // Function to generate combinations of names, surnames, and extras
-function generateCombinations(names, surnames, extras) {
-    const shortCombinations = [];
-    const longCombinations = [];
+function generateNameCombinations(names, surnames, extras) {
+    const shortNameCombinations = [];
+    const longNameCombinations = [];
 
     names.forEach(name => {
         surnames.forEach(surname => {
-            shortCombinations.push(`${surname}`);
-            longCombinations.push(`${name} ${surname}`);
-            longCombinations.push(`${surname} ${name}`);
-            longCombinations.push(`${surname}, ${name}`);
+            shortNameCombinations.push(`${surname}`);
+            longNameCombinations.push(`${name} ${surname}`);
+            longNameCombinations.push(`${surname} ${name}`);
+            longNameCombinations.push(`${surname}, ${name}`);
 
             if (extras) {
                 extras.forEach(extra => {
-                    shortCombinations.push(`${extra}`);
-                    longCombinations.push(`${extra} ${name}`);
-                    longCombinations.push(`${extra} ${surname}`);
-                    longCombinations.push(`${extra} ${name} ${surname}`);
+                    shortNameCombinations.push(`${extra}`);
+                    longNameCombinations.push(`${extra} ${name}`);
+                    longNameCombinations.push(`${extra} ${surname}`);
+                    longNameCombinations.push(`${extra} ${name} ${surname}`);
                 });
             }
         });
     });
 
     names.forEach(name => {
-        shortCombinations.push(`${name}`);
+        shortNameCombinations.push(`${name}`);
     });
 
     // Return both short and long combinations
-    return { shortCombinations, longCombinations };
+    return { shortNameCombinations, longNameCombinations };
 }
-
-let allFramesGenerated = false;
 
 // Function to replace people entities in an HTML element
 function replacePeopleInElement(element, jsonData) {
@@ -45,13 +43,13 @@ function replacePeopleInElement(element, jsonData) {
                 const personId = `person${index}`;
 
                 // Generate both short and long combinations
-                const { shortCombinations, longCombinations } = generateCombinations(nameVariants, surnameVariants, extraVariants);
+                const { shortNameCombinations, longNameCombinations } = generateNameCombinations(nameVariants, surnameVariants, extraVariants);
 
                 // Sort long combinations by length in descending order
-                longCombinations.sort((a, b) => b.length - a.length);
+                longNameCombinations.sort((a, b) => b.length - a.length);
 
                 // Replace each combination in the element
-                longCombinations.forEach(combination => {
+                longNameCombinations.forEach(combination => {
                     const regex = new RegExp(`\\b${combination}\\b`, 'gi');
                     // Create a new element to hold the modified content
                     const newElement = document.createElement('div');
@@ -63,7 +61,7 @@ function replacePeopleInElement(element, jsonData) {
                 });
 
                 // Replace short combinations
-                shortCombinations.forEach(combination => {
+                shortNameCombinations.forEach(combination => {
                     const regex = new RegExp(`\\b${combination}\\b`, 'gi');
                     // Create a new element to hold the modified content
                     const newElement = document.createElement('div');
@@ -142,7 +140,6 @@ fetch('data.json')
         jsonData = data; // Assign fetched JSON data to jsonData
 
         // Replace people entities in .page elements
-        const pages = document.querySelectorAll('.page');
         pages.forEach(page => {
             replacePeopleInElement(page, jsonData);
             replacePlacesInElement(page, jsonData);
@@ -189,23 +186,16 @@ fetch('data.json')
         .catch(error => console.error('Error fetching or parsing JSON:', error));
     }
 
-    let selectionIndicatorCounter = 0; // Counter for unique IDs
+    let filterSelected = false;
 
     function addEvent(jsonData) {
-      const selectionIndicatorsContainer = document.getElementById("selection-indicators-container");
+      const selectionIndicator = document.getElementById("selection-indicator");
       const filterLinks = document.querySelectorAll('.filter-link');
 
       filterLinks.forEach(flink => {
         flink.addEventListener('click', () => {
+          filterSelected = true;
           const selectorId = flink.id;
-
-          // Remove existing selection indicators with the same selectorId
-          const existingIndicators = document.querySelectorAll(`.selection-indicator[data-selector="${selectorId}"]`);
-          existingIndicators.forEach(indicator => indicator.remove());
-
-          // Create a new div for the selection indicator with a unique ID
-          const selectionIndicator = document.createElement('div');
-          selectionIndicator.className = 'selection-indicator';
           selectionIndicator.dataset.selector = selectorId;
           let officialIdentificator;
 
@@ -236,30 +226,75 @@ fetch('data.json')
           }
 
           // Append the selection indicator to the specified container
+          selectionIndicator.style.display = "block";
           selectionIndicator.innerHTML = officialIdentificator + ' X';
-          selectionIndicatorsContainer.appendChild(selectionIndicator);
 
           handleClick(jsonData);
+
+          let targetContainer = event.target.closest('#left-side') || event.target.closest('#text-container');
+          if (targetContainer) {
+              const containerRect = targetContainer.getBoundingClientRect();
+              const containerTop = containerRect.top;
+
+              const target = flink.closest('.frame') || flink.closest('.page');
+              const targetRect = target.getBoundingClientRect();
+              const targetTop = targetRect.top;
+
+              let scrollPosition;
+
+              if (targetContainer.id === 'text-container') {
+                  console.log(targetContainer);
+                  console.log(containerTop)
+
+                  const frameOffsetTop = target.offsetTop - containerTop + targetContainer.scrollTop;
+                  scrollPosition = frameOffsetTop - containerTop;
+                  targetContainer.scrollTo({
+                      top: scrollPosition,
+                      behavior: 'smooth'
+                  });
+                  // Find the closest frame within #left-side and scroll to it
+                  const leftSide = document.getElementById('left-side');
+                  const leftSideFrames = leftSide.querySelectorAll('.frame')
+                  let closestFrame;
+                  let minDistance = Infinity;
+                  leftSideFrames.forEach(frame => {
+                   if (!frame.classList.contains('hidden')) {
+                       const distance = Math.abs(frame.offsetTop - leftSide.scrollTop);
+                       if (distance < minDistance) {
+                    minDistance = distance;
+                    closestFrame = frame;
+
+                    if (closestFrame) {
+                      leftSide.scrollTo({
+                      top: closestFrame.offsetTop,
+                      behavior: 'smooth'
+                    });
+                  }
+                }
+                }
+              })
+              } else {
+                  // If the target container is not a page, scroll only the target container
+                  scrollPosition = targetTop - containerTop + targetContainer.scrollTop - 20;
+                  targetContainer.scrollTo({
+                      top: scrollPosition,
+                      behavior: 'smooth'
+                  });
+              }
+          }
         });
       });
 
       function handleClick(jsonData) {
-          const currentIndicators = document.querySelectorAll(`.selection-indicator`);
-          const accumulatedFilters = new Set();
+          const activeId = selectionIndicator.dataset.selector;
 
-          currentIndicators.forEach(currentIndicator => {
-              const activeId = currentIndicator.dataset.selector;
-
-              filterLinks.forEach(otherFlink => {
-                  if (otherFlink.id === activeId) {
-                      accumulatedFilters.add(otherFlink); // Add filter link to accumulated set
-                  }
-              });
-          });
-
-          accumulatedFilters.forEach(filterLink => {
-              filterLink.classList.add('selected');
-          });
+          filterLinks.forEach(otherFlink => {
+              if (otherFlink.id === activeId) {
+                otherFlink.classList.add('selected');
+          } else {
+            otherFlink.classList.remove('selected');
+          }
+        })
 
           // Determine visibility of pages based on selected filter links
           const selectedLinksContainers = new Set();
@@ -276,31 +311,22 @@ fetch('data.json')
               }
           });
 
-          // Remove 'selected' class from corresponding filter links not in the accumulated set
-          filterLinks.forEach(link => {
-              if (!accumulatedFilters.has(link)) {
-                  link.classList.remove('selected');
-              }
-          });
-
           // Update page visibility based on selected filter links
           const pages = document.querySelectorAll('.page');
           pages.forEach(page => {
-                  if (currentIndicators.length !== 0) {
-                      page.classList.toggle('hidden', !selectedLinksContainers.has(page));
-                  } else {
+                  if (activeId === undefined) {
                       page.classList.remove('hidden');
-                      page.classList.remove('shown');
+                  } else {
+                      page.classList.toggle('hidden', !selectedLinksContainers.has(page));
                   }
           });
 
           const frames = document.querySelectorAll('.frame');
           frames.forEach(frame => {
-                  if (currentIndicators.length !== 0) {
-                      frame.classList.toggle('hidden', !selectedLinksContainers.has(frame));
+                  if (activeId === undefined && frame.classList.contains('connected')) {
+                      frame.classList.remove('hidden')
                   } else {
-                      frame.classList.remove('hidden');
-                      frame.classList.remove('shown');
+                      frame.classList.toggle('hidden', !selectedLinksContainers.has(frame));
                   }
           });
 
@@ -309,17 +335,11 @@ fetch('data.json')
 
 
       // Event delegation for removing selection indicators
-      selectionIndicatorsContainer.addEventListener('click', (event) => {
-        const selectionIndicator = event.target.closest('.selection-indicator');
-
-        if (selectionIndicator) {
-          const selectorId = selectionIndicator.dataset.selector;
-
-          selectionIndicator.remove();
-
-          // Update page visibility based on selected filter links
+      selectionIndicator.addEventListener('click', (event) => {
+        selectionIndicator.style.display = "none";
+        selectionIndicator.removeAttribute('data-selector');
+        filterSelected = false;
           handleClick(jsonData);
-        }
       });
 
       function toggleHidden() {
@@ -328,27 +348,24 @@ fetch('data.json')
         hiddenContainers.forEach(hidden => {
           hidden.addEventListener('click', () => {
             hidden.classList.remove('hidden');
-            hidden.classList.add('shown');
           });
         });
       }
     }
 
-
-
-    function highlightFilter(checkbox) {
-      let classname = checkbox.value + "-link";
-      let elements = document.getElementsByClassName(classname);
-
-      if (checkbox.checked) {
-        // If the checkbox is checked, add the 'selectable' class to the elements
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].classList.add('selectable');
-        }
-      } else {
-        // If the checkbox is not checked, remove the 'selectable' class from the elements
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].classList.remove('selectable');
-        }
-      }
-    }
+    // function highlightFilter(checkbox) {
+    //   let classname = checkbox.value + "-link";
+    //   let elements = document.getElementsByClassName(classname);
+    //
+    //   if (checkbox.checked) {
+    //     // If the checkbox is checked, add the 'selectable' class to the elements
+    //     for (let i = 0; i < elements.length; i++) {
+    //       elements[i].classList.add('selectable');
+    //     }
+    //   } else {
+    //     // If the checkbox is not checked, remove the 'selectable' class from the elements
+    //     for (let i = 0; i < elements.length; i++) {
+    //       elements[i].classList.remove('selectable');
+    //     }
+    //   }
+    // }

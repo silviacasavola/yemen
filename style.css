@@ -75,7 +75,7 @@ svg {width: 0.8em; height: 0.8em;
 
 .page {
   overflow: hidden;
-  white-space: pre-line;
+  /* white-space: pre-line; */
   transition: max-height 1s;
   width: 100%;
   display: flex;
