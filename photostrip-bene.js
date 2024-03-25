@@ -15,11 +15,10 @@ dataPromise1.then(function (data1) {
       // Call generateImageUrls for each entry in the data
       let imageUrls = generateImageUrls(d.shot);
 
-      for (let i = 0; i <= imageUrls.length; i++) {
+      if (imageUrls.length) {
+        // If there's only one URL, create a single img element
 
-      let innerframe = frame.append("div").attr("class", "innerframe");
-
-        let titlerow = innerframe.append("div").attr("class", "photo-title");
+        let titlerow = frame.append("div").attr("class", "photo-title");
         let pallo = titlerow
           .append("div")
           .attr("class", "title-col")
@@ -28,20 +27,20 @@ dataPromise1.then(function (data1) {
           );
         let name = titlerow.append("p").attr("class", "title-col");
 
-        innerframe
+        frame
           .append("img")
           .attr("class", "card-img-top")
           .attr("src", function () {
-            return `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${imageUrls[` + i + `]}.jpg`;
+            return `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${imageUrls[0]}.jpg`;
           })
           .attr("id", function () {
-            return imageUrls[i];
+            return imageUrls[0];
           })
           .on("error", function () {
             d3.select(this).remove();
           });
 
-        let photodetails = innerframe.append("div").attr("class", "photo-details");
+        let photodetails = frame.append("div").attr("class", "photo-details");
         let descriptioncol = photodetails
           .append("div")
           .attr("class", "info-col description-col");
