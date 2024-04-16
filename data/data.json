@@ -1,0 +1,51 @@
+{
+    "people": [
+        {
+            "firstName": ["Frédéric", "Frederic"],
+            "lastName": ["Brenner"],
+            "extra": [""]
+        },
+
+        {
+            "firstName": ["Miryam", "Myriam"],
+            "lastName": ["Tangi"],
+            "extra": [""]
+        },
+
+        { 
+            "firstName": ["Linda"], 
+            "lastName": ["Stern"], 
+            "extra": [""] 
+        },
+
+        {
+            "firstName": ["Jean"],
+            "lastName": ["Lambert"],
+            "extra": ["the old rat"]
+        },
+
+        {
+            "firstName": ["Abdul"],
+            "lastName": ["Wasser", "Quasser"],
+            "extra": ["sheik", "sheik Sinan", "Sheik"]
+        },
+
+        {
+            "firstName": ["Abdul"],
+            "lastName": ["Wahab", "Quarad", "Warad", "Warab"],
+            "extra": [""]
+        }
+    ],
+
+    "places": ["Beit Sinan", "Sanaa"],
+    "keywords": [
+        "shechita",
+        "khat; qat",
+        "basket",
+        "hooka",
+        "janbiya",
+        "pottery",
+        "study",
+        "tanur"
+    ]
+}

@@ -1,108 +1,104 @@
-const pages = Array.from(document.querySelectorAll('.page'));
+// Define the setupGraph function
+export function setupGraph() {
+    const pagedivs = Array.from(document.querySelectorAll('.page'));
+    let totalPageHeight;
 
-let dragging = false;
-let offsetY = 0;
-let mappedPos = 0;
+    // Initialize p5.js sketch
+    const sketch = new p5((p) => {
+        let dragging = false;
+        let offsetY = 0;
+        let mappedPos = 0;
 
-// const pages = document.querySelectorAll('.page');
+        p.setup = function() {
+            const canvas = p.createCanvas(p.windowWidth / 12, p.windowHeight);
+            canvas.parent(document.getElementById('graph-column'));
 
-function setup() {
-  const container = document.getElementById('graph-container');
-  const canvas = createCanvas(container.offsetWidth / 2, container.offsetHeight);
-  canvas.parent('graph-container');
+            const containerRect = document.getElementById('text-column').getBoundingClientRect();
+            totalPageHeight = pagedivs.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
 
-  // Add an event listener for the scroll event on the text container
-  document.getElementById('right-side').addEventListener('scroll', () => {
-    // Update mappedPos based on the scroll position
-    mappedPos = map(document.getElementById('right-side').scrollTop, 0, document.getElementById('right-side').scrollHeight - window.innerHeight, 0, height - 10);
-  });
-}
+            // Add an event listener for the scroll event on the text container
+            document.getElementById('text-column').addEventListener('scroll', () => {
+                mappedPos = p.map(document.getElementById('text-column').scrollTop, 0, document.getElementById('text-column').scrollHeight - window.innerHeight, 0, p.height - 10);
+            });
+        };
 
-function draw() {
-  background(220);
+        p.draw = function() {
+            p.background(220);
 
-  // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
-  let totalHeight = 0;
+            // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
+            let totalHeight = 0;
+            p.strokeWeight(0.5);
 
-  for (let i = 0; i < pages.length; i++) {
-    // Get the number of chrono links and filter links elements in the current page
-    const chronoLinks = pages[i].querySelectorAll('.chrono-link');
-    const chronoLinkCount = chronoLinks.length;
+            let yPos = 0;
 
-    // Map chronoLinkCount to a color value
-    let chronoColorValue = map(chronoLinkCount, 0, 4, 217, 0);
-    const constrainedChronoColor = constrain(chronoColorValue, 0, 255);
+            for (let i = 0; i < pagedivs.length; i++) {
+                const chronoLinks = pagedivs[i].querySelectorAll('.chrono-link');
+                const chronoLinkCount = chronoLinks.length;
+                // Drawing code for each page
+                let chronoColorValue = p.map(chronoLinkCount, 0, 4, 217, 0);
+                const constrainedChronoColor = p.constrain(chronoColorValue, 0, 255);
+                // console.log(constrainedChronoColor)
+                p.fill(constrainedChronoColor);
 
-    // console.log(pages)
+                const pageRect = pagedivs[i].getBoundingClientRect();
+                const rectHeight = p.map(pageRect.height, 0, totalPageHeight, 0, p.height);
 
-    // Check if the current page contains an element with the class "highlighted"
-    // const highlightedElement = pages[i].querySelector('.highlighted');
-    // if (highlightedElement) {
-      // Set a specific color for the highlighted page
-      // chronoColorValue = color('#FF5C00').levels;
-    // }
+                p.strokeWeight(0.5);
+                p.stroke(255)
+                p.rect(0, yPos, p.width, rectHeight);
 
-    fill(chronoColorValue);
-    const rectWidth = width;
+                yPos += rectHeight;
+            }
 
-    const containerRect = document.getElementById('text-container').getBoundingClientRect();
-    const pageRect = pages[i].getBoundingClientRect();
-    const rectHeight = map(pageRect.height, 0, containerRect.height, 0, height);
+            // Display page number while dragging the rectangle
+            if (dragging) {
+                let currentPage = parseInt(p.map(mappedPos, 0, p.height - 10, 0, pagedivs.length)) + 1;
+                p.fill(0);
+                p.textSize(16);
+                p.textAlign(p.CENTER, p.BOTTOM);
+                p.text(`Page ${currentPage}`, p.width / 2, mappedPos - 5);
+            }
 
-    const y = totalHeight;
-    strokeWeight(0.5)
-    rect(0, y, rectWidth, rectHeight);
+            // Draw a rectangle synced to the scroll position
+            p.push();
+            p.fill(0, 0, 255);
+            p.noStroke();
+            p.rect(0, mappedPos, p.width, 10);
+            p.pop();
 
-    totalHeight += rectHeight;
+            // Change cursor if the mouse is over the scroll rect
+            if (p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= mappedPos && p.mouseY <= mappedPos + 10) {
+                p.cursor(p.HAND);
+            } else {
+                p.cursor(p.ARROW);
+            }
+        };
 
- // console.log("containerRect height = " + containerRect.height + ", pageRect height = " + pageRect.height + ", rectHeight = " + rectHeight)
-  }
+        p.mousePressed = function() {
+            // Check if the mouse is pressed and over the rectangle
+            if (p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= mappedPos && p.mouseY <= mappedPos + 10) {
+                dragging = true;
+                offsetY = p.mouseY - mappedPos;
+            }
+        };
 
+        p.mouseReleased = function() {
+            dragging = false;
+        };
 
-    // Display page number while dragging the rectangle
-    if (dragging) {
-      let currentPage = int(map(mappedPos, 0, height - 10, 0, pages.length)) + 1;
-      fill(0);
-      textSize(16);
-      textAlign(CENTER, BOTTOM);
-      text(`Page ${currentPage}`, width / 2, mappedPos - 5);
-    }
+        p.mouseDragged = function() {
+            // If dragging, update the rectangle's position based on the mouseY
+            if (dragging) {
+                mappedPos = p.mouseY - offsetY;
+                mappedPos = p.constrain(mappedPos, 0, p.height - 10);
+                let scrollValue = p.map(mappedPos, 0, p.height - 10, 0, document.getElementById('text-column').scrollHeight - window.innerHeight);
+                document.getElementById('text-column').scrollTop = scrollValue;
+                // handleScroll('text-column', '.chrono-link')
+            }
+        };
 
-  // Draw a rectangle synced to the scroll position
-  push();
-  fill(0, 0, 255);
-  noStroke();
-  rect(0, mappedPos, width, 10);
-  pop();
-
-  // Change cursor if the mouse is over the scroll rect
-  if (mouseX >= 0 && mouseX <= width && mouseY >= mappedPos && mouseY <= mappedPos + 10) {
-    cursor(HAND);
-  } else {
-    cursor(ARROW);
-  }
-}
-
-function mousePressed() {
-  // Check if the mouse is pressed and over the rectangle
-  if (mouseX >= 0 && mouseX <= width && mouseY >= mappedPos && mouseY <= mappedPos + 10) {
-    dragging = true;
-    offsetY = mouseY - mappedPos;
-  }
-}
-
-function mouseReleased() {
-  dragging = false;
-}
-
-function mouseDragged() {
-  // If dragging, update the rectangle's position based on the mouseY
-  if (dragging) {
-    mappedPos = mouseY - offsetY;
-    mappedPos = constrain(mappedPos, 0, height - 10);
-    let scrollValue = map(mappedPos, 0, height - 10, 0, document.getElementById('right-side').scrollHeight - window.innerHeight);
-    document.getElementById('right-side').scrollTop = scrollValue;
-
-    handleScroll('right-side', '.chrono-link')
-  }
+        p.windowResized = function() {
+            p.resizeCanvas(p.windowWidth / 12, p.windowHeight);
+        };
+    });
 }
