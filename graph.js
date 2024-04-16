@@ -1,6 +1,6 @@
 // Define the setupGraph function
 export function setupGraph() {
-    const pagedivs = Array.from(document.querySelectorAll('.page'));
+    const pages = Array.from(document.querySelectorAll('.page'));
     let totalPageHeight;
 
     // Initialize p5.js sketch
@@ -14,7 +14,7 @@ export function setupGraph() {
             canvas.parent(document.getElementById('graph-column'));
 
             const containerRect = document.getElementById('text-column').getBoundingClientRect();
-            totalPageHeight = pagedivs.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
+            totalPageHeight = pages.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
 
             // Add an event listener for the scroll event on the text container
             document.getElementById('text-column').addEventListener('scroll', () => {
@@ -31,8 +31,8 @@ export function setupGraph() {
 
             let yPos = 0;
 
-            for (let i = 0; i < pagedivs.length; i++) {
-                const chronoLinks = pagedivs[i].querySelectorAll('.chrono-link');
+            for (let i = 0; i < pages.length; i++) {
+                const chronoLinks = pages[i].querySelectorAll('.chrono-link');
                 const chronoLinkCount = chronoLinks.length;
                 // Drawing code for each page
                 let chronoColorValue = p.map(chronoLinkCount, 0, 4, 217, 0);
@@ -40,7 +40,7 @@ export function setupGraph() {
                 // console.log(constrainedChronoColor)
                 p.fill(constrainedChronoColor);
 
-                const pageRect = pagedivs[i].getBoundingClientRect();
+                const pageRect = pages[i].getBoundingClientRect();
                 const rectHeight = p.map(pageRect.height, 0, totalPageHeight, 0, p.height);
 
                 p.strokeWeight(0.5);
@@ -52,7 +52,7 @@ export function setupGraph() {
 
             // Display page number while dragging the rectangle
             if (dragging) {
-                let currentPage = parseInt(p.map(mappedPos, 0, p.height - 10, 0, pagedivs.length)) + 1;
+                let currentPage = parseInt(p.map(mappedPos, 0, p.height - 10, 0, pages.length)) + 1;
                 p.fill(0);
                 p.textSize(16);
                 p.textAlign(p.CENTER, p.BOTTOM);

@@ -36,3 +36,5 @@ export async function loadAndDisplayPages(text, parentId) {
 
     return true;
 }
+
+const pages = Array.from(document.querySelectorAll('.page'))
