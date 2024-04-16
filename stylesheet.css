@@ -37,8 +37,9 @@ body {
 .layout-column {
     width: 100%;
     height: 100%;
-    overflow: scroll;
+    overflow-y: scroll;
   -ms-overflow-style: none;
+  overflow-x: hidden;
 }
 
 .layout-column::-webkit-scrollbar {
@@ -117,10 +118,29 @@ body {
 }
 
 /* IMAGES COLUMN */
+.outer-frame {
+flex-wrap: nowrap;
+white-space: no-wrap;
+overflow-x: auto;
+width: 100%;
+display: flex;
+scroll-snap-type: x mandatory;
+-ms-overflow-style: none;
+}
+
+.outer-frame::-webkit-scrollbar {
+display: none;
+}
+
 .frame {
+  /* flex: 0 0 auto; */
   padding: var(--margin);
   overflow: hidden;
   height: auto;
+  min-width:31.5vw;
+  max-width:31.5vw;
+  display: inline-block;
+  scroll-snap-align: start;
 }
 
 .title-bar {

@@ -56,6 +56,6 @@ function computeNameCombinations(name, surname, extra) {
 
 for (let people of entities.people) {
     let nameCombinations = computeNameCombinations(people.firstName, people.lastName, people.extra);
-    console.log(nameCombinations);
+    // console.log(nameCombinations);
 
 }

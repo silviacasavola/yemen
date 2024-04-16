@@ -48,28 +48,23 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
     let fragment = document.createDocumentFragment();
 
     records.forEach((record) => {
-        let outerFrame = utils.createElement('div', 'outer-frame');
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
+        let metadata = ids.map((id) =>
+            utils.getMetadataFromId(metadataMain, id)
+        );
+        metadata = metadata.filter((metadata) => metadata !== undefined);
 
-        for (let i = 0; i < ids.length; i++) {
-            // Get metadata for the current id
-            let currentMetadata = utils.getMetadataFromId(metadataMain, ids[i]);
+        let frame_element = createFrameElement(
+            metadata[0].Title,
+            `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${ids[0]}.jpg`,
+            metadata[0].Description,
+            metadata[0].metaDepictedPeople,
+            record.place,
+            record.appears == 'yes' ? '' : 'disconnected'
+        );
 
-            if (currentMetadata) {
-                let frame_element = createFrameElement(
-                    currentMetadata.Title,
-                    `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${ids[i]}.jpg`,
-                    currentMetadata.Description,
-                    currentMetadata.metaDepictedPeople,
-                    record.place,
-                    record.appears == 'yes' ? '' : 'disconnected'
-                );
-                outerFrame.appendChild(frame_element);
-            }
-        }
-
-        fragment.appendChild(outerFrame);
+        fragment.appendChild(frame_element);
     });
 
     parentElement.appendChild(fragment);
