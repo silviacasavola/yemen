@@ -13,8 +13,6 @@ export function setupGraph() {
             const canvas = p.createCanvas(p.windowWidth / 12, p.windowHeight);
             canvas.parent(document.getElementById('graph-column'));
 
-            const containerRect = document.getElementById('text-column').getBoundingClientRect();
-            totalPageHeight = pages.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
 
             // Add an event listener for the scroll event on the text container
             document.getElementById('text-column').addEventListener('scroll', () => {
@@ -23,6 +21,9 @@ export function setupGraph() {
         };
 
         p.draw = function() {
+            const containerRect = document.getElementById('text-column').getBoundingClientRect();
+            totalPageHeight = pages.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
+
             p.background(220);
 
             // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
