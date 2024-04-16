@@ -26,7 +26,7 @@ body, html {
     overflow: hidden;
     max-width: 100vw;
     max-height: 100vh;
-    transform: translate(17%, 0);
+    /* transform: translate(17%, 0); */
 }
 
 body {
@@ -293,7 +293,7 @@ transform:translate(0, 2%)
 }
 
 #images-column {
-    font-size: calc(var(--font-size)*0.8);
+    font-size: calc(var(--font-size)*0.7);
     line-height: 1.4em;
     font-family: "Arial";
 }

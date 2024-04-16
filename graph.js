@@ -43,8 +43,8 @@ export function setupGraph() {
                 const pageRect = pages[i].getBoundingClientRect();
                 const rectHeight = p.map(pageRect.height, 0, totalPageHeight, 0, p.height);
 
-                p.strokeWeight(0.5);
-                p.stroke(255)
+                p.strokeWeight(0.4);
+                // p.stroke(255)
                 p.rect(0, yPos, p.width, rectHeight);
 
                 yPos += rectHeight;
