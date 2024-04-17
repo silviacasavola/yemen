@@ -1,22 +1,18 @@
 import * as utils from './utils.js';
 
-let allFramesGenerated = false;
-
 function createFrameElement(title, url, desc, people, place, status) {
     let frameElement = utils.createElement('div', `frame ${status}`);
 
-    if (status === "disconnected") {
-      frameElement.classList.add("hidden")
-    }
-
     let titleBarElement = utils.createElement('div', 'title-bar');
-    titleBarElement.append(
+      titleBarElement.append(
         utils.createElement('span', `dot ${status}`),
         utils.createElement('div', 'title', title)
-    );
+      );
 
+    let imageContainer = utils.createElement('div', `img-container`);
     let imageElement = document.createElement('img');
     imageElement.src = url;
+    imageContainer.append(imageElement)
 
     let descriptionrow;
     let placerow;
@@ -44,7 +40,7 @@ function createFrameElement(title, url, desc, people, place, status) {
         utils.createElement('div', 'metadata-cell', people)
       );
 
-    frameElement.append(titleBarElement, imageElement, metadataLayoutElement);
+    frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
 
     return frameElement;
 }
@@ -54,32 +50,30 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
     let fragment = document.createDocumentFragment();
 
     records.forEach((record) => {
+        let outerFrame = utils.createElement('div', 'outer-frame scrollactivator');
+
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
-        let metadata = ids.map((id) =>
-            utils.getMetadataFromId(metadataMain, id)
-        );
-        metadata = metadata.filter((metadata) => metadata !== undefined);
 
-        let frame_element = createFrameElement(
-            metadata[0].Title,
-            `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${ids[0]}.jpg`,
-            metadata[0].Description,
-            metadata[0].metaDepictedPeople,
-            record.place,
-            record.appears == 'yes' ? '' : 'disconnected'
-        );
+        for (let i = 0; i < ids.length; i++) {
+            // Get metadata for the current id
+            let currentMetadata = utils.getMetadataFromId(metadataMain, ids[i]);
 
-        fragment.appendChild(frame_element);
+            if (currentMetadata) {
+                let frame_element = createFrameElement(
+                    currentMetadata.Title,
+                    `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${ids[i]}.jpg`,
+                    currentMetadata.Description,
+                    currentMetadata.metaDepictedPeople,
+                    record.place,
+                    record.appears == 'yes' ? '' : 'disconnected'
+                );
+                outerFrame.appendChild(frame_element);
+            }
+        }
+
+        fragment.appendChild(outerFrame);
     });
 
     parentElement.appendChild(fragment);
-
-
-      allFramesGenerated = true;
-
-      if (allFramesGenerated) {
-        toggleHidden();
-        frameReplacement();
-      }
 }

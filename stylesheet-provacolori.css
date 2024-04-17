@@ -6,12 +6,11 @@
 
   --grey: #E0E0E0;
   --grey-on-black: #767676;
-  /* --grey: rgba(0,0,0, 0.1); */
-  /* --grey-on-black: rgba(255,255,255, 0.1); */
   --white: #FBFBFB;
-  --orange: #FF5C00;
-  --brown: #A49686;
-  /* --orange: #EFEE3D; */
+  --orange: #EE2921;
+  --brown: #9D6238;
+  --blue: #6D9CD2;
+  /* --yellow: #EFEE3D; */
 
   --border: solid 1px;
 }
@@ -58,7 +57,6 @@ body {
     max-width: 33.3333333333vw;
     background: #0a0a0a;
     color: white;
-    scroll-snap-type: y mandatory;
 }
 
 #graph-column {
@@ -126,7 +124,7 @@ background: linear-gradient(180deg, #BEBEBE 0%, #F8F8F8 33.17%);
     background-color: #AEAEAE;
 }
 
-.dot.active, .active .dot{
+.dot.active {
     background-color: var(--orange);
 }
 
@@ -141,17 +139,21 @@ background: linear-gradient(180deg, #BEBEBE 0%, #F8F8F8 33.17%);
 
 /* IMAGES COLUMN */
 
-.outer-frame {
-height: 100vh;
-max-height: 100vh;
+.frame-container {
 width: 100%;
-margin: 0; padding: 0;
+overflow: hidden;
+height: auto;
+position: relative;
+}
+
+.outer-frame {
+flex-wrap: nowrap;
+white-space: no-wrap;
 overflow-x: auto;
+width: 100%;
+display: flex;
 scroll-snap-type: x mandatory;
 -ms-overflow-style: none;
-display: flex;
-flex-wrap: nowrap;
-scroll-snap-align: start;
 }
 
 .outer-frame::-webkit-scrollbar {
@@ -163,52 +165,27 @@ display: none;
   padding: var(--margin);
   overflow: hidden;
   height: auto;
-  min-width:31.4vw;
-  max-width:31.4vw;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: space-between;
+  min-width:31.5vw;
+  max-width:31.5vw;
+  display: inline-block;
   scroll-snap-align: start;
-  /* height: 100vh; */
-  max-height: 100vh;
+  transition: max-height 1s;
+  max-height: 200vh;
 }
 
-.title-bar {
-display: inline-flex;
-column-gap: var(--margin);
-text-transform: uppercase;
-}
+.title-bar {display: flex;
+column-gap: var(--margin)}
 
 .title {
   /* padding-left: calc(var(--margin)*1.5); */
   text-transform: uppercase;
 }
 
-.img-container {
-  display: inline-flex;
-  flex-wrap: nowrap;
+.frame img {
   padding: var(--margin) 0 var(--margin) 0;
   width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  align-items: center;
-  justify-content: center; /* Center the image horizontally and vertically */
-  text-align: center;
-  position: relative; /* Added */
-  overflow: hidden; /* Added */
 }
 
-.img-container img {
-  max-width: 100%;
-  max-height: 100%;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.metadata-layout {display: inline-block;}
 .metadata-row {display: flex}
 .metadata-cell {
   display: inline-block;
@@ -312,7 +289,7 @@ font-size: 0.8em;
   width: 58.3333333333vw;
   height: 5vh;
   padding: var(--margin);
-  background-color: var(--white);
+  background-color: var(--blue);
     column-count: 3; /* Set the number of columns */
     column-gap: 20px; /* Set the gap between columns */
     transition: bottom 1s;
@@ -350,7 +327,6 @@ transform:translate(0, 2%)
     font-size: calc(var(--font-size)*0.7);
     line-height: 1.4em;
     font-family: "Arial";
-    scroll-snap-type: y mandatory;
 }
 
 .note {

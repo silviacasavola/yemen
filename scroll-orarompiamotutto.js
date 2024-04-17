@@ -1,6 +1,6 @@
 function getDotPositions(parent) {
     const parentElement = document.getElementById(parent.id);
-    let allDots = Array.from(parentElement.querySelectorAll('.scrollactivator'));
+    let allDots = Array.from(parentElement.querySelectorAll('span.dot'));
     let connected = allDots.filter(
         (d) => !d.classList.contains('disconnected')
     );
@@ -43,7 +43,7 @@ function getSourceAndTargetContainers(event) {
 }
 
 function findMatchingDot(container, index) {
-    let allDots = Array.from(container.querySelectorAll('.scrollactivator'));
+    let allDots = Array.from(container.querySelectorAll('span.dot'));
     let connectedDots = allDots.filter(
         (dot) => !dot.classList.contains('disconnected')
     );
@@ -51,7 +51,7 @@ function findMatchingDot(container, index) {
 }
 
 function highlightDot(container, dot) {
-    let allDots = Array.from(container.querySelectorAll('.scrollactivator'));
+    let allDots = Array.from(container.querySelectorAll('span.dot'));
     allDots.forEach((dot) => dot.classList.remove('active'));
     dot.classList.add('active');
 }

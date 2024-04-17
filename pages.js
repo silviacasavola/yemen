@@ -26,7 +26,7 @@ function createPageElement(pageContent, index) {
 
 function appendChronoLinkDots(page) {
     const chronoLinkRegex = /<\/span>/g;
-    page = page.replace(chronoLinkRegex, '</span> <span class="dot"></span>');
+    page = page.replace(chronoLinkRegex, '</span> <span class="dot scrollactivator"></span>');
     return page;
 }
 
