@@ -13,13 +13,13 @@ function createPageElement(pageContent, index) {
     pageElement.append(
         utils.createElement('div', 'page-number', `pg. ${index + 1}`),
         utils.createElement('div', 'page-content', pageContent)
-    );
+    )
 
-    if (index %2 === 0) {
-      pageElement.classList.add("pari");
-    } else {
-      pageElement.classList.add("dispari")
-    }
+    // if (index %2 === 0) {
+    //   pageElement.classList.add("pari");
+    // } else {
+    //   pageElement.classList.add("dispari")
+    // }
 
     return pageElement;
 }
