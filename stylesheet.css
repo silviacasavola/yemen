@@ -237,13 +237,13 @@ cursor: pointer;
 .page .filter-link {
   background-color: var(--grey);
   color: black;
-  padding: 0.5px 1px 0.5px 1px;
+  /* padding: 0.5px 1px 0.5px 1px; */
 }
 
 .frame .filter-link {
   background-color: var(--grey-on-black);
   color: black;
-  padding: 0.4px 1px 0.4px 1px;
+  /* padding: 0.4px 1px 0.4px 1px; */
   display: inline-block;
 }
 
