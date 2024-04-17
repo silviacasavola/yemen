@@ -1,7 +1,8 @@
 import * as utils from './utils.js';
+let allFramesGenerated = false;
 
 function createFrameElement(title, url, desc, people, place, status) {
-    let frameElement = utils.createElement('div', `frame ${status}`);
+    let frameElement = utils.createElement('div', `frame`);
 
     let titleBarElement = utils.createElement('div', 'title-bar');
       titleBarElement.append(
@@ -69,11 +70,23 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
                     record.appears == 'yes' ? '' : 'disconnected'
                 );
                 outerFrame.appendChild(frame_element);
+
+              if (record.appears === "no") {
+                  outerFrame.classList.add("disconnected"),
+                  outerFrame.classList.add("hidden")
+              }
             }
         }
-
         fragment.appendChild(outerFrame);
     });
 
     parentElement.appendChild(fragment);
+
+
+          allFramesGenerated = true;
+
+          if (allFramesGenerated) {
+            toggleHidden();
+            frameReplacement();
+          }
 }

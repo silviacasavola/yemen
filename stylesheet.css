@@ -146,12 +146,14 @@ height: 100vh;
 max-height: 100vh;
 width: 100%;
 margin: 0; padding: 0;
+overflow-y: auto;
 overflow-x: auto;
 scroll-snap-type: x mandatory;
 -ms-overflow-style: none;
 display: flex;
 flex-wrap: nowrap;
 scroll-snap-align: start;
+transition: max-height 1s;
 }
 
 .outer-frame::-webkit-scrollbar {
@@ -160,6 +162,7 @@ display: none;
 
 .frame {
   /* flex: 0 0 auto; */
+  margin: 0;
   padding: var(--margin);
   overflow: hidden;
   height: auto;
@@ -170,19 +173,14 @@ display: none;
   align-items: stretch;
   justify-content: space-between;
   scroll-snap-align: start;
-  /* height: 100vh; */
-  max-height: 100vh;
+  height: 95vh;
+  max-height: 95vh;
 }
 
 .title-bar {
 display: inline-flex;
 column-gap: var(--margin);
 text-transform: uppercase;
-}
-
-.title {
-  /* padding-left: calc(var(--margin)*1.5); */
-  text-transform: uppercase;
 }
 
 .img-container {
@@ -234,25 +232,31 @@ margin: 0.5em 0em 0.5em 0em;
 .page.hidden:hover {max-height: 1.5em}
 
 
-.frame.hidden .photo-title, .not-connected .photo-title {cursor: pointer}
+.outer-frame.hidden .photo-title, .not-connected .photo-title {cursor: pointer}
 
-.frame.hidden {
-max-height: 1.7em;
-/* background: linear-gradient(180deg, #ffffff 60%, #000000 100%);
+.outer-frame.hidden {
+max-height: 2em;
+cursor: pointer;
+overflow: hidden;
+background: linear-gradient(180deg, #ffffff 78.12%, rgba(0, 0, 0, 0.00) 100%);
 background-clip: text;
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent; */
-cursor: pointer;
+-webkit-text-fill-color: transparent;
 }
 
-.frame.hidden:hover {
-  max-height: 3em
+.outer-frame.hidden .frame {
+  overflow: hidden;
+}
+
+.outer-frame.hidden:hover {
+  max-height: 5em
 }
 
 
 /* FILTER LINKS */
 .filter-link {
   /* border-radius: 0.4em; */
+  cursor:pointer;
 }
 
 /* .page .filter-link:hover, .page .filter-link.selectable { */

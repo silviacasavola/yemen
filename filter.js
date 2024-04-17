@@ -238,11 +238,11 @@ fetch('data.json')
           selectionIndicator.style.display = "block";
           selectionIndicator.innerHTML = officialIdentificator + ' X';
 
-          handleClick(jsonData);
+          handleClick(jsonData, flink);
         });
       });
 
-      function handleClick(jsonData) {
+      function handleClick(jsonData, flink) {
           const activeId = selectionIndicator.dataset.selector;
 
           filterLinks.forEach(otherFlink => {
@@ -257,7 +257,7 @@ fetch('data.json')
           const selectedLinksContainers = new Set();
           filterLinks.forEach(link => {
               if (link.classList.contains('selected')) {
-                  const parentFrame = link.closest('.frame');
+                  const parentFrame = link.closest('.outer-frame');
                   const parentPage = link.closest('.page');
 
                   if (parentFrame) {
@@ -278,7 +278,7 @@ fetch('data.json')
                   }
           });
 
-          const frames = document.querySelectorAll('.frame');
+          const frames = document.querySelectorAll('.outer-frame');
           frames.forEach(frame => {
                   if (activeId === undefined && frame.classList.contains('connected')) {
                       frame.classList.remove('hidden')
@@ -302,14 +302,14 @@ fetch('data.json')
 
     }
 
-    function thenScroll() {
+    function thenScroll(jsonData, flink) {
 
                 let targetContainer = event.target.closest('#left-side') || event.target.closest('#text-container');
                 if (targetContainer) {
                     const containerRect = targetContainer.getBoundingClientRect();
                     const containerTop = containerRect.top;
 
-                    const target = flink.closest('.frame') || flink.closest('.page');
+                    const target = flink.closest('.outer-frame') || flink.closest('.page');
                     const targetRect = target.getBoundingClientRect();
                     const targetTop = targetRect.top;
 
@@ -327,7 +327,7 @@ fetch('data.json')
                         });
                         // Find the closest frame within #left-side and scroll to it
                         const leftSide = document.getElementById('left-side');
-                        const leftSideFrames = leftSide.querySelectorAll('.frame')
+                        const leftSideFrames = leftSide.querySelectorAll('.outer-frame')
                         let closestFrame;
                         let minDistance = Infinity;
                         leftSideFrames.forEach(frame => {
