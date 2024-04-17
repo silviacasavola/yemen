@@ -173,7 +173,6 @@ fetch('data.json')
 }
 
     function frameReplacement() {
-      console.log("aguagu")
     fetch('data.json')
         .then(response => response.json())
         .then(data => {

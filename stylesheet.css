@@ -51,7 +51,7 @@ body {
 #text-column {
   max-width: 58.33333333333vw;
   background: #F8F8F8;
-  padding: var(--margin) 0 var(--margin) var(--margin);
+  padding: var(--margin) 0 var(--margin) 0;
 }
 
 #images-column {
@@ -64,7 +64,7 @@ body {
   background: #F8F8F8;
     width: 8.33333333333vw;
     overflow: hidden;
-    transform: translate(15%, 0);
+    /* transform: translate(15%, 0); */
     /* width: 8.33333333333vw; */
     /* background: red; */
 }
@@ -109,12 +109,12 @@ background: linear-gradient(180deg, #BEBEBE 0%, #F8F8F8 33.17%);
   cursor: pointer;
 }
 
-.frame-container .dot {
+/* .frame-container .dot {
   position: absolute;
   top: var(--margin);
   left: var(--margin);
   z-index: 100;
-}
+} */
 
 .dot {
     height: var(--font-size);
@@ -230,28 +230,26 @@ cursor: pointer;
 
 /* FILTER LINKS */
 .filter-link {
-  border-radius: 0.4em;
+  /* border-radius: 0.4em; */
 }
 
 /* .page .filter-link:hover, .page .filter-link.selectable { */
 .page .filter-link {
   background-color: var(--grey);
   color: black;
-  padding: 0.1em 0.2em 0.1em 0.2em;
+  padding: 0.5px 1px 0.5px 1px;
 }
-
-
 
 .frame .filter-link {
   background-color: var(--grey-on-black);
   color: black;
-  padding: 0.1em 0.2em 0.1em 0.2em;
+  padding: 0.4px 1px 0.4px 1px;
   display: inline-block;
 }
 
 .filter-link.selected, .filter-link.selected:hover, .page .filter-link.selectable.selected {
   color:black;
-  background-color: var(--yellow);
+  background-color: var(--orange);
 }
 
 #filter-highlighter, #selection-indicator {
@@ -265,7 +263,7 @@ font-size: 0.8em;
 }
 
 #selection-indicator {
-  left: 50vw;
+  left: 49vw;
   cursor: pointer;
   white-space: nowrap;
   display: none;
@@ -281,6 +279,26 @@ font-size: 0.8em;
   padding: 0.3em 0.6em 0.3em 0.6em
 }
 
+
+/* NOTES */
+#notes-container {
+  font-family: "Rhetorik";
+  font-size: calc(var(--font-size)*0.7);
+  position: fixed;
+  bottom: -10vh;
+  left: 41.6666666667vw;
+  width: 58.3333333333vw;
+  height: 5vh;
+  padding: var(--margin);
+  background-color: var(--white);
+    column-count: 3; /* Set the number of columns */
+    column-gap: 20px; /* Set the gap between columns */
+    transition: bottom 1s;
+}
+
+#notes-container.shown {
+  bottom: 0vh;
+}
 
 /* TYPOGRAPHY */
   @font-face {
@@ -310,4 +328,22 @@ transform:translate(0, 2%)
     font-size: calc(var(--font-size)*0.7);
     line-height: 1.4em;
     font-family: "Arial";
+}
+
+.note {
+  height: var(--font-size);
+  width: var(--font-size);
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align:top;
+  background-color: black;
+  text-align: center;
+    font-family: "Arial";
+  color: var(--grey);
+  text-transform: uppercase;
+  font-size: calc(var(--font-size)*0.6);
+  line-height: var(--font-size);
+  transform:translate(0, 20%);
+  margin-left: calc(var(--margin)/2);
+  cursor: pointer;
 }

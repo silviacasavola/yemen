@@ -22,9 +22,72 @@
 
     {"firstName": "Abdul",
     "lastName": "Wahab; Quarad; Warad; Warab",
-    "extra": null}
-  ],
+    "extra": null},
 
-    "places": ["Beit Sinan", "Sanaa"],
-    "keywords": ["shechita", "khat; qat", "basket", "hooka", "janbiya", "pottery", "study", "tanur"]
+      {"firstName": "Salem",
+      "lastName": "Garadi",
+      "extra": null},
+
+      {"firstName": "Pascal",
+      "lastName": null,
+      "extra": null},
+
+      {"firstName": "Amram",
+      "lastName": "Garadi",
+      "extra": null},
+
+      {"firstName": "Yaya; Yehiya; Yehia",
+      "lastName": "Garadi",
+      "extra": null},
+
+      {"firstName": "Suliman; Sleman",
+      "lastName": "Garadi",
+      "extra": null},
+
+      {"firstName": "Ali",
+      "lastName": null,
+      "extra": null}
+    ],
+
+    "places": [
+    "Beit Sinan; Sinan",
+    "Sanaa",
+    "Beit El Aifa; Beil el Aifa; Aïfa",
+    "Wadi Hared",
+    "Al Arjan",
+    "Wadi al Meh",
+    "Beit Hazeb",
+    "Sira",
+    "Wadi Hared",
+    "Arhab",
+    "Sam City",
+    "Raida, Raydah",
+    "Ajar; El Ajar",
+    "Bani Abd"
+],
+
+    "keywords": [
+    "shechita",
+    "khat; qat",
+    "basket; basketry",
+    "hooka; nargila",
+    "janbiya; djambia",
+    "pottery",
+    "study; studying",
+    "tanur; tanurs",
+    "tea",
+    "perfume; perfumes",
+    "dusty",
+    "wonder; dream; magical; spectacle",
+    "qabili; qabilis",
+    "diwan",
+    "friend; friends; friendship; friendships",
+    "mezuza; mezuzas",
+    "tanur; tanurs",
+    "al yaoud; Al Yahudi",
+    "djellaba",
+    "Jews, Jew, Jewish",
+    "souk",
+    "tsitsiot",
+    "meal; meals; lunch; dinner"]
 }

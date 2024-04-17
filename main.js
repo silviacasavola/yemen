@@ -15,7 +15,8 @@ let picsColumn = document.getElementById('images-column');
 
 await pages.loadAndDisplayPages(text, 'text-container').then(() => {
     graph.setupGraph();
-    textReplacement()
+    textReplacement();
+    pages.notesindex();
 });
 
 images.loadAndDisplayImages(records, pictureMetadata, 'images-container');

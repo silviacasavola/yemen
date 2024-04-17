@@ -20,7 +20,7 @@ function createPageElement(pageContent, index) {
     } else {
       pageElement.classList.add("dispari")
     }
-    
+
     return pageElement;
 }
 
@@ -45,3 +45,38 @@ export async function loadAndDisplayPages(text, parentId) {
 }
 
 const pages = Array.from(document.querySelectorAll('.page'))
+
+export function notesindex() {
+    fetch('data/notes.json')
+        .then(response => response.json())
+        .then(data => {
+            const notes = data.notes;
+
+            const textNotes = Array.from(document.querySelectorAll('.note'));
+            for (let i = 0; i < textNotes.length; i++) {
+                textNotes[i].innerHTML = i + 1;
+
+                textNotes[i].addEventListener('click', function() {
+                    const index = i;
+                    const noteContent = notes[index];
+                    const notesContainer = document.getElementById("notes-container");
+                    notesContainer.innerHTML = i+1 + ") " + noteContent;
+
+                    notesContainer.classList.add('shown');
+
+                    // Reset the class after 30 seconds or if the user scrolls
+                    const timeout = setTimeout(() => {
+                        notesContainer.classList.remove('shown');
+                        clearTimeout(timeout);
+                    }, 30000);
+
+                    const scrollHandler = () => {
+                                            notesContainer.classList.remove('shown');
+                                            clearTimeout(timeout);
+                                            window.removeEventListener('scroll', scrollHandler);
+                                        };
+                                        window.addEventListener('scroll', scrollHandler);
+                });
+            }
+        });
+}
