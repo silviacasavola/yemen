@@ -5,45 +5,44 @@ function createFrameElement(title, url, desc, people, place, status) {
     let frameElement = utils.createElement('div', `frame`);
 
     let titleBarElement = utils.createElement('div', 'title-bar');
-      titleBarElement.append(
-        utils.createElement('span', `dot ${status}`),
-        utils.createElement('div', 'title', title)
-      );
+    let infobtn =  utils.createElement('div', 'info-btn', '<span class="piu">( + )</span><span class="meno">( - )</span>');
+
+        infobtn.addEventListener('click', function () {
+          Array.from(document.querySelectorAll('.frame-container')).forEach(container => {
+            if (container.contains(event.target) && !container.classList.contains('showninfo')) {
+              container.classList.add('showninfo');
+            } else {
+              container.classList.remove('showninfo');
+          }
+        })
+      })
+
+    titleBarElement.append(
+    utils.createElement('span', 'title', title),
+    infobtn)
 
     let imageContainer = utils.createElement('div', `img-container`);
     let imageElement = document.createElement('img');
     imageElement.src = url;
     imageContainer.append(imageElement)
 
-    let descriptionrow;
-    let placerow;
-    let peoplerow;
-
     let metadataLayoutElement = utils.createElement('div', 'metadata-layout');
-    metadataLayoutElement.append(
-        descriptionrow = utils.createElement('div', 'description metadata-row'),
-        placerow = utils.createElement('div', 'place metadata-row'),
-        peoplerow = utils.createElement('div', 'people metadata-row')
-    );
 
-    descriptionrow.append(
-        utils.createElement('div', 'metadata-cell', 'DESCRIPTION: '),
-        utils.createElement('div', 'metadata-cell', desc)
-      );
-
-    placerow.append(
-        utils.createElement('div', 'metadata-cell', 'PLACE: '),
-        utils.createElement('div', 'metadata-cell', place)
-      );
-
-    peoplerow.append(
-        utils.createElement('div', 'metadata-cell', 'PEOPLE: '),
-        utils.createElement('div', 'metadata-cell', people)
-      );
+    if (desc) { metadataLayoutElement.append(
+        utils.createElement('span', 'description metadata-row', 'DESCRIPTION: ' + desc + '<br>')
+      )}
+    if (place) { metadataLayoutElement.append(
+        utils.createElement('span', 'place metadata-row', 'PLACE: ' + place + '<br>')
+    )}
+    if (people) { metadataLayoutElement.append(
+        utils.createElement('span', 'people metadata-row', 'PEOPLE: ' + people + '<br>')
+    )}
 
     frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
 
     return frameElement;
+
+
 }
 
 export function loadAndDisplayImages(records, metadataMain, parentId) {
@@ -51,10 +50,24 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
     let fragment = document.createDocumentFragment();
 
     records.forEach((record) => {
-        let outerFrame = utils.createElement('div', 'outer-frame scrollactivator');
+        let frameContainer = utils.createElement('div', 'frame-container');
+        let outerFrame = utils.createElement('div', 'outer-frame')
 
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
+
+      let dotspan = utils.createElement('span', `dot`, records.indexOf(record) + 1);
+        if (record.appears === "no") {
+            frameContainer.classList.add("disconnected"),
+            dotspan.classList.add("disconnected"),
+            frameContainer.classList.add("hidden")
+          }
+      frameContainer.append(outerFrame, dotspan)
+
+      if (ids.length > 1) {frameContainer.append(
+      utils.createElement('div', `corner-sfumato`),
+        utils.createElement('span', `arrow`, '⭢'))
+      }
 
         for (let i = 0; i < ids.length; i++) {
             // Get metadata for the current id
@@ -63,25 +76,19 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
             if (currentMetadata) {
                 let frame_element = createFrameElement(
                     currentMetadata.Title,
-                    `https://gradim.fh-potsdam.de/omeka-s/files/tiny/${ids[i]}.jpg`,
+                    `https://gradim.fh-potsdam.de/omeka-s/files/large/${ids[i]}.jpg`,
                     currentMetadata.Description,
                     currentMetadata.metaDepictedPeople,
                     record.place,
                     record.appears == 'yes' ? '' : 'disconnected'
                 );
                 outerFrame.appendChild(frame_element);
-
-              if (record.appears === "no") {
-                  outerFrame.classList.add("disconnected"),
-                  outerFrame.classList.add("hidden")
-              }
             }
         }
-        fragment.appendChild(outerFrame);
+        fragment.appendChild(frameContainer);
     });
 
     parentElement.appendChild(fragment);
-
 
           allFramesGenerated = true;
 

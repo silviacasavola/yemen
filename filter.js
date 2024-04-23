@@ -199,6 +199,7 @@ fetch('data.json')
 
     function addEvent(jsonData) {
       const selectionIndicator = document.getElementById("selection-indicator");
+      const nameIndicator = document.getElementById("name-selection");
       const filterLinks = document.querySelectorAll('.filter-link');
 
       filterLinks.forEach(flink => {
@@ -234,9 +235,8 @@ fetch('data.json')
             }
           }
 
-          // Append the selection indicator to the specified container
-          selectionIndicator.style.display = "block";
-          selectionIndicator.innerHTML = officialIdentificator + ' X';
+          selectionIndicator.style.display = "flex";
+          nameIndicator.innerHTML = "X " + officialIdentificator;
 
           handleClick(jsonData, flink);
         });
@@ -253,11 +253,17 @@ fetch('data.json')
           }
         })
 
+
+        const selectioncounter = document.getElementById("selection-counter");
+        let wordsSelected = Array.from(document.querySelectorAll('.page .selected'));
+        let imgsSelected = Array.from(document.querySelectorAll('.frame .selected'));
+        selectioncounter.innerHTML = " - " + wordsSelected.length + " mentions - " + imgsSelected.length + " photos";
+
           // Determine visibility of pages based on selected filter links
           const selectedLinksContainers = new Set();
           filterLinks.forEach(link => {
               if (link.classList.contains('selected')) {
-                  const parentFrame = link.closest('.outer-frame');
+                  const parentFrame = link.closest('.frame-container');
                   const parentPage = link.closest('.page');
 
                   if (parentFrame) {
@@ -278,7 +284,7 @@ fetch('data.json')
                   }
           });
 
-          const frames = document.querySelectorAll('.outer-frame');
+          const frames = document.querySelectorAll('.frame-container');
           frames.forEach(frame => {
                   if (activeId === undefined && frame.classList.contains('connected')) {
                       frame.classList.remove('hidden')
@@ -309,7 +315,7 @@ fetch('data.json')
                     const containerRect = targetContainer.getBoundingClientRect();
                     const containerTop = containerRect.top;
 
-                    const target = flink.closest('.outer-frame') || flink.closest('.page');
+                    const target = flink.closest('.frame-container') || flink.closest('.page');
                     const targetRect = target.getBoundingClientRect();
                     const targetTop = targetRect.top;
 
@@ -327,7 +333,7 @@ fetch('data.json')
                         });
                         // Find the closest frame within #left-side and scroll to it
                         const leftSide = document.getElementById('left-side');
-                        const leftSideFrames = leftSide.querySelectorAll('.outer-frame')
+                        const leftSideFrames = leftSide.querySelectorAll('.frame-container')
                         let closestFrame;
                         let minDistance = Infinity;
                         leftSideFrames.forEach(frame => {

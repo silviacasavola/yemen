@@ -1,8 +1,8 @@
 function getDotPositions(parent) {
     const parentElement = document.getElementById(parent.id);
-    let allDots = Array.from(parentElement.querySelectorAll('span.dot'));
+    let allDots = Array.from(parentElement.querySelectorAll('.dot'));
     let connected = allDots.filter(
-        (d) => !d.classList.contains('disconnected') && !d.classList.contains('hidden')
+        (d) => !d.classList.contains('disconnected') || !d.classList.contains('hidden')
     );
     let scrollOffset = parentElement.parentNode.scrollTop;
 
@@ -18,7 +18,6 @@ function getDotPositions(parent) {
 
 function findClosestDot(dotPositions, scrollTop) {
     return dotPositions.reduce((closest, dot, index) => {
-
         const distance = Math.abs(dot.position - scrollTop);
         // UNCOMMENT TO EXCLUDE OUT-OF-VIEWPORT DOTS
         // const distance = dot.position - scrollTop;
@@ -44,26 +43,17 @@ function getSourceAndTargetContainers(event) {
 }
 
 function findMatchingDot(container, index) {
-    let allDots = Array.from(container.querySelectorAll('span.dot'));
+    let allDots = Array.from(container.querySelectorAll('.dot'));
     let connectedDots = allDots.filter(
-        (dot) => !dot.classList.contains('disconnected') && !dot.classList.contains('hidden')
+        (dot) => !dot.classList.contains('disconnected') || !dot.classList.contains('hidden')
     );
     return connectedDots[index];
 }
 
 function highlightDot(container, dot) {
-    let allDots = Array.from(container.querySelectorAll('span.dot'));
+    let allDots = Array.from(container.querySelectorAll('.dot'));
     allDots.forEach((dot) => dot.classList.remove('active'));
     dot.classList.add('active');
-
-    Array.from(document.querySelectorAll('.frame-container')).forEach(container => {
-      if (container.contains(dot)) {
-        container.classList.add('active')
-      } else {container.classList.remove('active')
-    }
-  })
-
-    // dot.closest('.frame-container').classList.add('active');
 }
 
 function scrollToDot(container, dot) {
@@ -82,11 +72,10 @@ export function scrollHandler(event, viewportOffset = 64) {
     if (sourceDot.element.classList.contains('disconnected') || sourceDot.element.classList.contains('hidden')) {
         return;
     }
+
     let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
     scrollToDot(targetContainer, targetDot);
 
     highlightDot(sourceContainer, sourceDot.element);
     highlightDot(targetContainer, targetDot);
 }
-
-// document.querySelectorAll(".title-bar").addEventListener("click", )

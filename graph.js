@@ -62,7 +62,7 @@ export function setupGraph() {
 
             // Draw a rectangle synced to the scroll position
             p.push();
-            p.fill(255, 92, 0);
+            p.fill(164,150,134);
             p.noStroke();
             p.rect(0, mappedPos, p.width, 10);
             p.pop();

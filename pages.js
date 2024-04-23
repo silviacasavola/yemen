@@ -9,30 +9,28 @@ export async function loadText(url) {
 let pageElement;
 
 function createPageElement(pageContent, index) {
-    pageElement = utils.createElement('div', 'page');
-    pageElement.append(
-        utils.createElement('div', 'page-number', `pg. ${index + 1}`),
-        utils.createElement('div', 'page-content', pageContent)
-    )
-
-    // if (index %2 === 0) {
-    //   pageElement.classList.add("pari");
-    // } else {
-    //   pageElement.classList.add("dispari")
-    // }
-
+    pageElement = utils.createElement('div', 'page', `<span class="page-number">pg. ${index + 1}</span> ${pageContent}`);
     return pageElement;
 }
 
 function appendChronoLinkDots(page) {
-    const chronoLinkRegex = /<\/span>/g;
-    page = page.replace(chronoLinkRegex, '</span> <span class="dot scrollactivator"></span>');
-    return page;
+    // const chronoLinkRegex = /<\/span>/g;
+    // page = page.replace(chronoLinkRegex, '</span> <span class="dot"></span>');
+    // return page;
+    //
+    // let dots = document.querySelectorAll('.text-container .dot');
+    // console.log(dots)
+    // dots.innerHTML("ciao")
+    let chronoLinks = document.querySelectorAll('.chrono-link');
+    console.log(chronoLinks)
+    // chronoLinks.append(
+    //   utils.createElement('span', `dot`)
+    // )
 }
 
 export async function loadAndDisplayPages(text, parentId) {
     let pages = text.split('\n\n');
-    pages = pages.map(appendChronoLinkDots);
+    // pages = pages.map(appendChronoLinkDots);
 
     const pagesElements = pages.map(createPageElement);
     let parentElement = document.getElementById(parentId);
@@ -40,6 +38,12 @@ export async function loadAndDisplayPages(text, parentId) {
 
     fragment.append(...pagesElements);
     parentElement.appendChild(fragment);
+
+    let chronoLinks = Array.from(document.querySelectorAll('.chrono-link'));
+
+    chronoLinks.forEach((link) => link.append(
+      utils.createElement('span', `dot`, chronoLinks.indexOf(link) + 1)
+    ))
 
     return true;
 }

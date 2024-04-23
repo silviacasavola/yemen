@@ -1,6 +1,6 @@
 function getDotPositions(parent) {
     const parentElement = document.getElementById(parent.id);
-    let allDots = Array.from(parentElement.querySelectorAll('span.dot'));
+    let allDots = Array.from(parentElement.querySelectorAll('.dot'));
     let connected = allDots.filter(
         (d) => !d.classList.contains('disconnected')
     );
@@ -43,7 +43,7 @@ function getSourceAndTargetContainers(event) {
 }
 
 function findMatchingDot(container, index) {
-    let allDots = Array.from(container.querySelectorAll('span.dot'));
+    let allDots = Array.from(container.querySelectorAll('.dot'));
     let connectedDots = allDots.filter(
         (dot) => !dot.classList.contains('disconnected')
     );
@@ -51,13 +51,14 @@ function findMatchingDot(container, index) {
 }
 
 function highlightDot(container, dot) {
-    let allDots = Array.from(container.querySelectorAll('span.dot'));
+    let allDots = Array.from(container.querySelectorAll('.dot'));
     allDots.forEach((dot) => dot.classList.remove('active'));
     dot.classList.add('active');
 }
 
 function scrollToDot(container, dot) {
     const column = container.parentNode;
+    console.log(dot)
     const position = dot.getBoundingClientRect().top + column.scrollTop;
     column.scrollTo({ top: position - 64, behavior: 'smooth' });
 }
@@ -69,9 +70,9 @@ export function scrollHandler(event, viewportOffset = 64) {
     let sourceDotsPositions = getDotPositions(sourceContainer);
     let sourceDot = findClosestDot(sourceDotsPositions, scrollTop);
 
-    if (sourceDot.element.classList.contains('disconnected')) {
-        return;
-    }
+    // if (sourceDot.element.classList.contains('disconnected')) {
+    //     return;
+    // }
 
     let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
     scrollToDot(targetContainer, targetDot);
