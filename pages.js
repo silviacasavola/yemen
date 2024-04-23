@@ -41,9 +41,13 @@ export async function loadAndDisplayPages(text, parentId) {
 
     let chronoLinks = Array.from(document.querySelectorAll('.chrono-link'));
 
-    chronoLinks.forEach((link) => link.append(
-      utils.createElement('span', `dot`, chronoLinks.indexOf(link) + 1)
-    ))
+    chronoLinks.forEach((link) => {
+    let index = chronoLinks.indexOf(link);
+    link.append(
+      utils.createElement('span', `dot`, index + 1)
+    )
+    // if (index === 0) {link.classList.add('active')}
+  })
 
     return true;
 }

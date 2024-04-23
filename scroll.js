@@ -2,7 +2,7 @@ function getDotPositions(parent) {
     const parentElement = document.getElementById(parent.id);
     let allDots = Array.from(parentElement.querySelectorAll('span.dot'));
     let connected = allDots.filter(
-        (d) => !d.classList.contains('disconnected') && !d.classList.contains('hidden')
+        (d) => !d.classList.contains('disconnected') && !d.classList.contains('hidden') && !d.classList.contains('active')
     );
     let scrollOffset = parentElement.parentNode.scrollTop;
 
@@ -46,8 +46,7 @@ function getSourceAndTargetContainers(event) {
 function findMatchingDot(container, index) {
     let allDots = Array.from(container.querySelectorAll('span.dot'));
     let connectedDots = allDots.filter(
-        (dot) => !dot.classList.contains('disconnected') && !dot.classList.contains('hidden')
-    );
+        (dot) => !dot.classList.contains('disconnected') && !dot.classList.contains('hidden') && !dot.classList.contains('active'))
     return connectedDots[index];
 }
 
@@ -79,14 +78,17 @@ export function scrollHandler(event, viewportOffset = 64) {
     let sourceDotsPositions = getDotPositions(sourceContainer);
     let sourceDot = findClosestDot(sourceDotsPositions, scrollTop);
 
-    if (sourceDot.element.classList.contains('disconnected') || sourceDot.element.classList.contains('hidden')) {
+    if (sourceDot.element.classList.contains('disconnected') && sourceDot.element.classList.contains('hidden') && sourceDot.element.classList.contains('active')) {
         return;
     }
     let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
+
+    if (filterSelected === false) {
     scrollToDot(targetContainer, targetDot);
 
     highlightDot(sourceContainer, sourceDot.element);
     highlightDot(targetContainer, targetDot);
+  }
 }
 
 // document.querySelectorAll(".title-bar").addEventListener("click", )

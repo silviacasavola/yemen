@@ -286,7 +286,7 @@ fetch('data.json')
 
           const frames = document.querySelectorAll('.frame-container');
           frames.forEach(frame => {
-                  if (activeId === undefined && frame.classList.contains('connected')) {
+                  if (activeId === undefined && !frame.classList.contains('disconnected')) {
                       frame.classList.remove('hidden')
                   } else {
                       frame.classList.toggle('hidden', !selectedLinksContainers.has(frame));
@@ -294,7 +294,7 @@ fetch('data.json')
           });
 
           toggleHidden();
-          thenScroll()
+          thenScroll(jsonData, flink)
       }
 
 
@@ -310,7 +310,7 @@ fetch('data.json')
 
     function thenScroll(jsonData, flink) {
 
-                let targetContainer = event.target.closest('#left-side') || event.target.closest('#text-container');
+                let targetContainer = event.target.closest('#images-container') || event.target.closest('#text-container');
                 if (targetContainer) {
                     const containerRect = targetContainer.getBoundingClientRect();
                     const containerTop = containerRect.top;
@@ -322,8 +322,6 @@ fetch('data.json')
                     let scrollPosition;
 
                     if (targetContainer.id === 'text-container') {
-                        console.log(targetContainer);
-                        console.log(containerTop)
 
                         const frameOffsetTop = target.offsetTop - containerTop + targetContainer.scrollTop;
                         scrollPosition = frameOffsetTop - containerTop;
@@ -331,20 +329,20 @@ fetch('data.json')
                             top: scrollPosition,
                             behavior: 'smooth'
                         });
-                        // Find the closest frame within #left-side and scroll to it
-                        const leftSide = document.getElementById('left-side');
-                        const leftSideFrames = leftSide.querySelectorAll('.frame-container')
+                        // Find the closest frame within #images-container and scroll to it
+                        const imgColumn = document.getElementById('images-container');
+                        const imgColumnFrames = imgColumn.querySelectorAll('.frame-container')
                         let closestFrame;
                         let minDistance = Infinity;
-                        leftSideFrames.forEach(frame => {
+                        imgColumnFrames.forEach(frame => {
                          if (!frame.classList.contains('hidden')) {
-                             const distance = Math.abs(frame.offsetTop - leftSide.scrollTop);
+                             const distance = Math.abs(frame.offsetTop - imgColumn.scrollTop);
                              if (distance < minDistance) {
                           minDistance = distance;
                           closestFrame = frame;
 
                           if (closestFrame) {
-                            leftSide.scrollTo({
+                            imgColumn.scrollTo({
                             top: closestFrame.offsetTop,
                             behavior: 'smooth'
                           });

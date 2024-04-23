@@ -41,8 +41,6 @@ function createFrameElement(title, url, desc, people, place, status) {
     frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
 
     return frameElement;
-
-
 }
 
 export function loadAndDisplayImages(records, metadataMain, parentId) {
@@ -56,7 +54,8 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
 
-      let dotspan = utils.createElement('span', `dot`, records.indexOf(record) + 1);
+      let dotspan = utils.createElement('span', `dot`);
+
         if (record.appears === "no") {
             frameContainer.classList.add("disconnected"),
             dotspan.classList.add("disconnected"),
@@ -86,14 +85,26 @@ export function loadAndDisplayImages(records, metadataMain, parentId) {
             }
         }
         fragment.appendChild(frameContainer);
-    });
+
+        if (records.indexOf(record) === 0) {
+        frameContainer.classList.add('active');
+    }
+  })
 
     parentElement.appendChild(fragment);
 
           allFramesGenerated = true;
 
           if (allFramesGenerated) {
+
+      let connected = Array.from(document.querySelectorAll('#images-container .dot')).filter(
+          (d) => !d.classList.contains('disconnected'));
+      connected.forEach((d) => {
+        d.innerHTML = (connected.indexOf(d) + 1)
+      });
+
             toggleHidden();
             frameReplacement();
           }
+
 }
