@@ -178,7 +178,7 @@ fetch('data.json')
         .then(data => {
             jsonData = data;
             // Replace people entities in .people-col elements
-            const metadatacells = document.querySelectorAll('.metadata-cell')
+            const metadatacells = document.querySelectorAll('.metadata-layout')
             metadatacells.forEach(element => {
                 replacePeopleInElement(element, jsonData);
                 replacePlacesInElement(element, jsonData);
@@ -321,45 +321,32 @@ fetch('data.json')
 
                     let scrollPosition;
 
+                    const frameOffsetTop = target.offsetTop - containerTop + targetContainer.scrollTop;
+                    scrollPosition = frameOffsetTop - containerTop;
+                    targetContainer.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+
+                    let columnToScroll; let filtered;
                     if (targetContainer.id === 'text-container') {
-
-                        const frameOffsetTop = target.offsetTop - containerTop + targetContainer.scrollTop;
-                        scrollPosition = frameOffsetTop - containerTop;
-                        targetContainer.scrollTo({
-                            top: scrollPosition,
-                            behavior: 'smooth'
-                        });
-                        // Find the closest frame within #images-container and scroll to it
-                        const imgColumn = document.getElementById('images-container');
-                        const imgColumnFrames = imgColumn.querySelectorAll('.frame-container')
-                        let closestFrame;
-                        let minDistance = Infinity;
-                        imgColumnFrames.forEach(frame => {
-                         if (!frame.classList.contains('hidden')) {
-                             const distance = Math.abs(frame.offsetTop - imgColumn.scrollTop);
-                             if (distance < minDistance) {
-                          minDistance = distance;
-                          closestFrame = frame;
-
-                          if (closestFrame) {
-                            imgColumn.scrollTo({
-                            top: closestFrame.offsetTop,
-                            behavior: 'smooth'
-                          });
-                        }
-                      }
-                      }
-                    })
+                        columnToScroll = document.getElementById('images-column');
+                        filtered = Array.from(columnToScroll.querySelectorAll('.frame-container')).filter((f) => !f.classList.contains('hidden'));
                     } else {
-                        // If the target container is not a page, scroll only the target container
-                        scrollPosition = targetTop - containerTop + targetContainer.scrollTop - 20;
-                        targetContainer.scrollTo({
-                            top: scrollPosition,
-                            behavior: 'smooth'
-                        });
+                        columnToScroll = document.getElementById('text-column');
+                        filtered = Array.from(columnToScroll.querySelectorAll('.page')).filter((f) => !f.classList.contains('hidden'));
                     }
-                }
+
+                    if (filtered.length > 0) {
+                        let filteredRect = filtered[0].getBoundingClientRect();
+                        // filtered[0].classList.add('showninfo');
+                        columnToScroll.scrollTo({
+                            top: filteredRect.top - 64,
+                            behavior: 'smooth'
+                          })
+                        }
     }
+  }
 
     // function highlightFilter(checkbox) {
     //   let classname = checkbox.value + "-link";
