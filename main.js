@@ -19,12 +19,20 @@ await pages.loadAndDisplayPages(text, 'text-container').then(() => {
     pages.notesindex();
 });
 
+// await images.loadAndDisplayImages(records, pictureMetadata, 'images-container').then(() => {
+//   requestAnimationFrame(() => {
+//   images.resizeframes();
+// })
+// });
+
 images.loadAndDisplayImages(records, pictureMetadata, 'images-container');
 
 textColumn.addEventListener('wheel', scroll.scrollHandler);
 picsColumn.addEventListener('wheel', scroll.scrollHandler);
 
 let hiddenContainers;
+
+// images.resizeframes();
 
 ////////////////////////////   WORK IN PROGRESS   /////////////////////////////
 

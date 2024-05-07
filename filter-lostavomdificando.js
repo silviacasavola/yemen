@@ -239,6 +239,10 @@ fetch('data.json')
           nameIndicator.innerHTML = "X " + officialIdentificator;
 
           handleClick(jsonData, flink);
+          const timeout = setTimeout(() => {
+            thenScroll(flink);
+            clearTimeout(timeout);
+          }, 1500);
         });
       });
 
@@ -294,11 +298,6 @@ fetch('data.json')
           });
 
           toggleHidden();
-
-          const timeout = setTimeout(() => {
-            thenScroll(flink);
-            clearTimeout(timeout);
-          }, 1200);
         }
 
       // Event delegation for removing selection indicators
@@ -312,65 +311,46 @@ fetch('data.json')
 
     function thenScroll(flink) {
 
-      let targetContainer;
-      let scrollPosition;
-
-      if (filterSelected === true) {
-        targetContainer = flink.closest('#images-column') || flink.closest('#text-column');
+      if (filterSelected = true) {
+        let targetContainer = flink.closest('#images-column') || flink.closest('#text-container');
         const target = flink.closest('.frame-container') || flink.closest('.page');
-        // target.style.border = "solid red";
-
-        const targetRect = target.getBoundingClientRect();
-        const targetTop = targetRect.top;
-
-        // scrollPosition = targetTop + targetContainer.scrollTop;
-
-        let columnToScroll; let filtered;
-         if (targetContainer.id === 'text-column') {
-                        columnToScroll = document.getElementById('images-column');
-                        filtered = Array.from(columnToScroll.querySelectorAll('.frame-container')).filter((f) => !f.classList.contains('hidden'));
-                        scrollPosition = targetTop + targetContainer.scrollTop;
-                        // filtered[0].classList.add('showninfo');
-         } else if (targetContainer.id === 'images-column') {
-                        columnToScroll = document.getElementById('text-column');
-                        filtered = Array.from(columnToScroll.querySelectorAll('.page')).filter((f) => !f.classList.contains('hidden'));
-                        scrollPosition = targetTop;
-         }
-
-         if (filtered && filtered.length > 0) {
-           // filtered[0].style.border = "solid green";
-             let filteredRect = filtered[0].getBoundingClientRect();
-             columnToScroll.scrollTo({
-                 top: filteredRect.top,
-                 behavior: 'smooth'
-               })
-             }
-
-       targetContainer.scrollTo({
-       top: scrollPosition,
-       behavior: 'smooth'
-      });
-    } else {
-      let dotactive = document.querySelectorAll('.dot.active');
-      console.log(dotactive)
-      dotactive.forEach((da) => {
-        targetContainer = da.closest('#images-column') || da.closest('#text-container');
-        const target = da.closest('.frame-container') || da.closest('.page');
                 const targetRect = target.getBoundingClientRect();
                 const targetTop = targetRect.top;
 
-          // target.style.border = "solid green";
-          // scrollPosition = targetTop+targetContainer.scrollTop;
-          scrollPosition = targetTop-64;
+                let scrollPosition = targetTop + targetContainer.scrollTop;
 
-          console.log(scrollPosition)
+          let columnToScroll; let filtered;
+                    if (targetContainer.id === 'text-container') {
+                        columnToScroll = document.getElementById('images-column');
+                        filtered = Array.from(columnToScroll.querySelectorAll('.frame-container')).filter((f) => !f.classList.contains('hidden'));
+                        // filtered[0].classList.add('showninfo');
+                    } else if (targetContainer.id === 'images-column') {
+                      console.log("eh porco di")
+                        columnToScroll = document.getElementById('text-column');
+                        filtered = Array.from(columnToScroll.querySelectorAll('.page')).filter((f) => !f.classList.contains('hidden'));
+                    }
 
-          targetContainer.scrollTo({
-          top: scrollPosition,
-          behavior: 'smooth'
-          });
-         })
+                    if (filtered.length > 0) {
+                        let filteredRect = filtered[0].getBoundingClientRect();
+                        columnToScroll.scrollTo({
+                            top: filteredRect.top - 64,
+                            behavior: 'smooth'
+                          })
+                        }
+    } else {
+
+        let targetContainer = flink.closest('#images-column') || flink.closest('#text-container');
+        const target = flink.closest('.frame-container') || flink.closest('.page');
+                const targetRect = target.getBoundingClientRect();
+                const targetTop = targetRect.top;
+
+                let scrollPosition = targetTop + targetContainer.scrollTop;
     }
+
+      targetContainer.scrollTo({
+      top: scrollPosition - 64,
+      behavior: 'smooth'
+    });
 }
 
     // function highlightFilter(checkbox) {

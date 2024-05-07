@@ -83,7 +83,7 @@ export function scrollHandler(event, viewportOffset = 64) {
     }
     let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
 
-    if (filterSelected === false) {
+    if (targetDot && filterSelected === false) {
     scrollToDot(targetContainer, targetDot);
 
     highlightDot(sourceContainer, sourceDot.element);
