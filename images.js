@@ -2,41 +2,45 @@ import * as utils from './utils.js';
 let allFramesGenerated = false;
 const maxRetries = 3;
 
-function createFrameElement(title, url, desc, people, place, status) {
+function createFrameElement(title, url, desc, people, place, status, idx) {
     let frameElement = utils.createElement('div', `frame`);
 
     let titleBarElement = utils.createElement('div', 'title-bar');
-    let infobtn =  utils.createElement('div', 'info-btn', '<span class="piu">( ... )</span><span class="meno">( ... )</span>');
+    // let infobtn =  utils.createElement('div', 'info-btn', '<span class="piu">( i )</span><span class="meno">( - )</span>');
 
-        infobtn.addEventListener('click', function () {
-          Array.from(document.querySelectorAll('.frame-container')).forEach(container => {
-            if (container.contains(event.target) && !container.classList.contains('showninfo')) {
-              container.classList.add('showninfo');
-            } else {
-              container.classList.remove('showninfo');
-          }
-        })
-      })
+      //   infobtn.addEventListener('click', function () {
+      //     Array.from(document.querySelectorAll('.frame-container')).forEach(container => {
+      //       if (container.contains(event.target) && !container.classList.contains('showninfo')) {
+      //         container.classList.add('showninfo');
+      //       } else {
+      //         container.classList.remove('showninfo');
+      //     }
+      //   })
+      // })
 
     titleBarElement.append(
     utils.createElement('span', 'title', title),
-    infobtn)
+    // infobtn
+  )
 
     let imageContainer = utils.createElement('div', `img-container`);
     let imageElement = document.createElement('img');
     imageElement.src = url;
+    if (idx !== 0) {
+    imageElement.style.maxHeight = firstImageHeightVh + "vh";
+  }
     imageContainer.append(imageElement)
 
     let metadataLayoutElement = utils.createElement('div', 'metadata-layout');
 
     if (desc) { metadataLayoutElement.append(
-        utils.createElement('span', 'description metadata-row', 'DESCRIPTION: ' + desc + '<br>')
+        utils.createElement('span', 'description metadata-row', '<span class="lil-title">DESCRIPTION:</span> ' + desc + '<br>')
       )}
     if (place) { metadataLayoutElement.append(
-        utils.createElement('span', 'place metadata-row', 'PLACE: ' + place + '<br>')
+        utils.createElement('span', 'place metadata-row', '<span class="lil-title">PLACE:</span> ' + place + '<br>')
     )}
     if (people) { metadataLayoutElement.append(
-        utils.createElement('span', 'people metadata-row', 'PEOPLE: ' + people + '<br>')
+        utils.createElement('span', 'people metadata-row', '<span class="lil-title">PEOPLE:</span> ' + people + '<br>')
     )}
 
     frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
@@ -44,7 +48,11 @@ function createFrameElement(title, url, desc, people, place, status) {
     return frameElement;
 }
 
+let firstImageHeightVh;
+
+// Function to load and display images
 export async function loadAndDisplayImages(records, metadataMain, parentId) {
+
     function loadImage(url) {
         return new Promise((resolve, reject) => {
             const img = new Image();
@@ -80,11 +88,18 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
     let fragment = document.createDocumentFragment();
 
     records.forEach((record) => {
+
+    //   let indexino =
+    //   rows.forEach(function(row, index) {
+    //     console.log("Row index of record", index + 1); // Add 1 to convert from zero-based index to 1-based row number
+    // });
+
         let frameContainer = utils.createElement('div', 'frame-container');
         let outerFrame = utils.createElement('div', 'outer-frame');
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
         let dotspan = utils.createElement('span', `dot`);
+        // console.log(records.indexOf(record))
 
         // Your existing code for setting up frame containers and dots
 
@@ -92,11 +107,12 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
         if (ids.length > 1) {
             frameContainer.append(
-                utils.createElement('div', `corner-sfumato`),
-                // utils.createElement('span', `arrow`, '⭢')
+                // utils.createElement('div', `corner-sfumato`),
+                utils.createElement('span', `arrow`, '⭢')
             );
         }
 
+        let firstImageHeight;
         for (let i = 0; i < ids.length; i++) {
             let currentMetadata = utils.getMetadataFromId(metadataMain, ids[i]);
 
@@ -112,10 +128,17 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                         currentMetadata.Description,
                         currentMetadata.metaDepictedPeople,
                         record.place,
-                        record.appears == 'yes' ? '' : 'disconnected'
+                        record.appears == 'yes' ? '' : 'disconnected',
+                        records.indexOf(record)
                     );
                     outerFrame.appendChild(frame_element);
-                })
+
+                    // Set the height of frameContainer based on the first image's height
+                    if (i === 0) {
+                        firstImageHeightVh = frame_element.querySelector('.img-container img').clientHeight / window.innerHeight * 100; // Convert to vh
+                        // setImageHeights(frame_element, firstImageHeightVh);
+                    }
+                    })
                 .catch((error) => {
                     console.error(`Error loading image ${ids[i]}:`, error);
                     // Handle the error (e.g., show a placeholder image)
@@ -124,8 +147,14 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
         }
         fragment.appendChild(frameContainer);
 
-        if (records.indexOf(record) === 0) {
-            frameContainer.classList.add('active');
+        // if (records.indexOf(record) === 0 ) {
+        //     frameContainer.classList.add('active');
+        // }
+
+        if (record.appears === 'no') {
+          frameContainer.classList.add('disconnected')
+          frameContainer.classList.add('hidden');
+          dotspan.classList.add('disconnected');
         }
     });
 
@@ -146,22 +175,36 @@ function addnumber() {
         connected.forEach((d) => {
           d.innerHTML = (connected.indexOf(d) + 1)
         });
-
-        // resizeyourself()
 }
 
 
-
-    // function resizeyourself() {
-    // console.log(document.querySelectorAll('.frame'))
-    //
-    //         Array.from(document.querySelectorAll('.outer-frame')).forEach((fc) => {
-    //           let imgcnt = Array.from(fc.querySelectorAll('.frame'));
-    //           console.log(imgcnt)
-    //         //   if (imgcnt.length > 0) {
-    //         //   imgcnt.forEach((ic) => {
-    //         //     ic.style.maxHeight = imgcnt[0].offsetHeight + "px";
-    //         //   })
-    //         // }
-    //         });
-    // }
+// Function to update image heights based on the tallest image in each frame-container
+function updateImageHeights() {
+    let frameContainers = document.querySelectorAll('.frame-container');
+    frameContainers.forEach(container => {
+        let outerFrame = container.querySelector('.outer-frame');
+        let firstImage = outerFrame.querySelector('.img-container img');
+        if (firstImage) {
+            let firstImageHeightVh = firstImage.clientHeight / window.innerHeight * 100; // Convert to vh
+            setImageHeights(outerFrame, firstImageHeightVh);
+        }
+    });
+}
+//
+// // Listen for resize event to update image heights
+window.addEventListener('resize', function updateImageHeights() {
+    let frameContainers = document.querySelectorAll('.outer-frame');
+    frameContainers.forEach(container => {
+        let images = Array.from(container.querySelectorAll('img'));
+        if (images) {
+        console.log(images[0].clientHeight)
+        firstImageHeightVh = images[0].clientHeight / window.innerHeight * 100;
+        images.forEach(image => {
+          if (images.indexOf(image) !== 0) {
+        image.style.maxHeight = `${firstImageHeightVh}vh`;
+        image.style.height = `${firstImageHeightVh}vh`;
+      }
+      })
+    }
+  })
+})

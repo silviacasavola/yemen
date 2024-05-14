@@ -88,25 +88,3 @@ export function notesindex() {
             }
         });
 }
-
-Array.from(document.querySelectorAll('.reduceaugment')).forEach((btn) => {
-  btn.addEventListener('click', resizesects)
-})
-
-function resizesects () {
-const sourceColumn = event.target.closest('.layout-column');
-const columns = Array.from(document.querySelectorAll('.layout-column'));
-
-columns.forEach(function(col) {
-if (col.classList.contains("midi")) {
-  col.classList.remove('midi');
-  sourceColumn.classList.add('maxi');
-  if (col !== sourceColumn) {
-      col.classList.add('mini') }
-} else {
-  col.classList.add('midi');
-  col.classList.remove('maxi');
-  col.classList.remove('mini');
-}
-})
-}

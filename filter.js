@@ -254,10 +254,12 @@ fetch('data.json')
         })
 
 
-        const selectioncounter = document.getElementById("selection-counter");
+        const scPhotos = document.getElementById("selection-counter-photo");
+        const scText = document.getElementById("selection-counter-text");
         let wordsSelected = Array.from(document.querySelectorAll('.page .selected'));
         let imgsSelected = Array.from(document.querySelectorAll('.frame .selected'));
-        selectioncounter.innerHTML = " - " + wordsSelected.length + " mentions - " + imgsSelected.length + " photos";
+        scPhotos.innerHTML = imgsSelected.length + " photos";
+        scText.innerHTML = wordsSelected.length + " text mentions";
 
           // Determine visibility of pages based on selected filter links
           const selectedLinksContainers = new Set();

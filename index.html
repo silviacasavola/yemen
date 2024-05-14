@@ -10,34 +10,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   </head>
   <body>
+    <div id="header" class="hidden-header">
+      <span>↩ GraDim READER</span>
+      <span>YEMEN 1986</span>
+      <span>ABOUT</span>
+    </div>
 
-    <div id="images-column" class="layout-column midi">
+    <div id="images-column" class="layout-column">
       <div id="images-container" class="container"></div>
-
-      <div class="reduceaugment"><span class="plusbtn">+</span><span class="minusbtn">–</span></div>
     </div>
     <!-- <div id="graph-column" class="layout-column"></div> -->
-    <div id="text-column"   class="layout-column midi">
+    <div id="text-column"   class="layout-column">
       <div id="text-container" class="container">
           <div id="headline-section">
-            <div style="color: black">BACK</div>
-            <div style="color: black">ABOUT</div>
-            <div id="big-title">Yemen 1986</div>
-              <div>Words and photos:<br>Frédéric Brenner</div>
-              <div>Transcription and editing:<br>Carine Brenner</div>
-              <div>Translation:<br>Helga Abraham</div>
+          <div id="big-title">Yemen 1986</div>
+
+          <!-- <div id="big-title">Yemen</div> -->
+              <!-- <div>Words and photos:<br>Frédéric Brenner</div><br><br>
+              <div>Transcription and editing:<br>Carine Brenner</div><br><br>
+              <div>Translation:<br>Helga Abraham</div> -->
+
+
+      Words and photos:<br>Frédéric Brenner<br><br>
+      Transcription and editing:<br>Carine Brenner<br><br>
+      Translation:<br>Helga Abraham
+  <!-- <div id="big-title">1986</div> -->
         </div>
       </div>
-
-      <div class="reduceaugment"><span class="plusbtn">+</span><span class="minusbtn">–</span></div>
     </div>
     <div id="notes-container">
   </div>
 
     <div id="selection-indicator">
+  <span id="selection-counter-photo"></span>
     <span id="name-selection"></span>
-  <span id="selection-counter"></span></div>
+  <span id="selection-counter-text"></span></div>
   </body>
+
+  <!-- <script>
+  window.addEventListener("scroll", (event) => {
+    console.log("pronto?")
+    // document.getElementById("header").classList.remove('hidden-header');
+  })</script> -->
+
   <script type="module" src="main.js"></script>
 <script src='filter.js'></script>
   <!-- <script type="module" src="graph.js"></script> -->
