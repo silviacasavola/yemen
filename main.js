@@ -14,7 +14,7 @@ let textColumn = document.getElementById('text-column');
 let picsColumn = document.getElementById('images-column');
 
 await pages.loadAndDisplayPages(text, 'text-container').then(() => {
-    // graph.setupGraph();
+    graph.setupGraph();
     textReplacement();
     pages.notesindex();
 });

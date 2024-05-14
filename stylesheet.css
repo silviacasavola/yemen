@@ -12,7 +12,9 @@
   --white: #F8F8F8;
 
   --main-column: 58.3333333333vw;
-  --minor-column: 41.6666666667vw;
+  /* --minor-column: 41.6666666667vw; */
+  /* --minor-column: 40.6666666667vw; */
+  --minor-column: 40.9666666667vw;
 }
 
 /* GENERAL */
@@ -52,6 +54,7 @@ body {
   /* color: var(--dark-grey); */
   font-size: var(--medium-text);
   transition: top 1s;
+  font-style: italic;
 }
 
 /* #header.hidden-header {
@@ -111,7 +114,7 @@ body {
 
 #text-column {
   display: inline-block;
-  margin: var(--margin) 0 var(--margin) 0;
+  margin: 1.6vw 0 var(--margin) 0;
   /* max-width: 33.3333333333vw; */
   max-width: var(--minor-column);
   /* max-width: 40vw; */
@@ -123,13 +126,15 @@ background: var(--white);
 /* max-width: 66.6666666667vw; */
 max-width: var(--main-column);
 /* max-width: 60vw; */
-margin-top: 1vw;
+padding-top: 2vw;
 }
 
 #graph-column {
   background: #F8F8F8;
-    width: 8.33333333333vw;
+    /* width: 8.33333333333vw; */
+    width: 0.7vw;
     overflow: hidden;
+    z-index:20;
     /* transform: translate(15%, 0); */
     /* width: 8.33333333333vw; */
     /* background: red; */
@@ -250,8 +255,8 @@ max-height: 100vh;
   scroll-snap-align: start;
   /* height: 95vh; */
   /* max-height: 100vh; */
-  row-gap: var(--margin);
-  padding-bottom: var(--margin);
+  row-gap: calc(var(--margin)*2/3);
+  /* padding-bottom: var(--margin); */
   transition: max-height 1s, width 1s;
   /* border: solid red; */
   height: min-content;
@@ -354,9 +359,12 @@ transition: max-height 1s;
 }
 
 .frame-container .arrow {
-  position: absolute; top: var(--margin); right: var(--margin);
+  position: absolute; top: var(--margin);
   cursor: pointer;
 }
+
+.arrowleft {right: 3vw; display: none}
+.arrowright {right: var(--margin);}
 
 .hidden .arrow {  display: none; }
 .hidden .info-btn {  display: none; }
@@ -472,21 +480,21 @@ cursor: pointer;}
 
 /* NOTES */
 #notes-container {
-  font-family: "Rhetorik";
+  font-family: "source-code-pro";
   font-size: var(--small-text);
   position: fixed;
   bottom: -10vh;
   /* left: 41.6666666667vw;
   width: 58.3333333333vw; */
   width: 50vw;
-  left: 50vw;
-  height: 5vh;
-  padding: var(--margin);
-  background: linear-gradient(180deg, rgba(248, 248, 248, 0) 0%, var(--white) 50%);
-
-    column-count: 3; /* Set the number of columns */
-    column-gap: 20px; /* Set the gap between columns */
-    transition: bottom 1s;
+  left: var(--main-column);
+  max-height: 5vh;
+  padding: calc(var(--margin)*2) var(--margin) var(--margin) var(--margin);
+  background: linear-gradient(rgba(248, 248, 248, 0) 0%, var(--white) 30%);
+  column-count: 2;
+  column-gap: 20px;
+  transition: bottom 1s;
+  vertical-align: text-bottom;
 }
 
 #notes-container.shown {

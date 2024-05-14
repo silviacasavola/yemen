@@ -27,6 +27,7 @@ function createFrameElement(title, url, desc, people, place, status, idx) {
     let imageElement = document.createElement('img');
     imageElement.src = url;
     if (idx !== 0) {
+      // console.log("heyo" + firstImageHeightVh)
     imageElement.style.maxHeight = firstImageHeightVh + "vh";
   }
     imageContainer.append(imageElement)
@@ -105,11 +106,38 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
         frameContainer.append(outerFrame, dotspan);
 
+
         if (ids.length > 1) {
-            frameContainer.append(
-                // utils.createElement('div', `corner-sfumato`),
-                utils.createElement('span', `arrow`, '⭢')
-            );
+            let arrowleft =  utils.createElement('span', `arrow arrowleft`, '←')
+            let arrowright =  utils.createElement('span', `arrow arrowright`, '→')
+            outerFrame.append(arrowleft, arrowright);
+            let scrollxpos = 0;
+            let parentframe;
+            let parentwidth;
+
+            arrowright.addEventListener("click", function(event) {
+            parentframe = event.target.closest('.outer-frame');
+            parentwidth = parentframe.getBoundingClientRect().width;
+            scrollxpos = scrollxpos + parentwidth + 100;
+            horizontalscroll(parentframe, scrollxpos)
+           })
+
+           arrowleft.addEventListener("click", function(event) {
+           parentframe = event.target.closest('.outer-frame');
+           parentwidth = parentframe.getBoundingClientRect().width;
+           scrollxpos = scrollxpos - parentwidth - 100;
+           horizontalscroll(parentframe, scrollxpos)
+          })
+
+          function horizontalscroll(parentframe, scrollxpos) {
+            console.log(scrollxpos)
+            parentframe.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+            if (scrollxpos < parentwidth) {
+              arrowleft.style.display = "none"
+            } else {
+              arrowleft.style.display = "block"
+            }
+          }
         }
 
         let firstImageHeight;
@@ -129,7 +157,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                         currentMetadata.metaDepictedPeople,
                         record.place,
                         record.appears == 'yes' ? '' : 'disconnected',
-                        records.indexOf(record)
+                        [i]
                     );
                     outerFrame.appendChild(frame_element);
 
@@ -165,7 +193,8 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
     if (allFramesGenerated) {
       toggleHidden();
       frameReplacement();
-      addnumber()
+      addnumber();
+      updateImageHeights();
     }
 }
 

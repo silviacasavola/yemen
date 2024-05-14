@@ -24,7 +24,7 @@ export function setupGraph() {
             const containerRect = document.getElementById('text-column').getBoundingClientRect();
             totalPageHeight = pages.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
 
-            p.background(220);
+            p.background(248,248,248);
 
             // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
             let totalHeight = 0;
@@ -39,13 +39,15 @@ export function setupGraph() {
                 let chronoColorValue = p.map(chronoLinkCount, 0, 4, 217, 0);
                 const constrainedChronoColor = p.constrain(chronoColorValue, 0, 255);
                 // console.log(constrainedChronoColor)
-                p.fill(constrainedChronoColor);
+                // p.fill(constrainedChronoColor);
+                // p.fill(224,224,224);
+                p.fill(248,248,248);
 
                 const pageRect = pages[i].getBoundingClientRect();
                 const rectHeight = p.map(pageRect.height, 0, totalPageHeight, 0, p.height);
 
                 p.strokeWeight(0.4);
-                // p.stroke(255)
+                p.stroke(88, 88, 88);
                 p.rect(0, yPos, p.width, rectHeight);
 
                 yPos += rectHeight;
@@ -62,7 +64,7 @@ export function setupGraph() {
 
             // Draw a rectangle synced to the scroll position
             p.push();
-            p.fill(164,150,134);
+            p.fill(0);
             p.noStroke();
             p.rect(0, mappedPos, p.width, 10);
             p.pop();
