@@ -35,12 +35,13 @@ export function setupGraph() {
             for (let i = 0; i < pages.length; i++) {
                 const chronoLinks = pages[i].querySelectorAll('.chrono-link');
                 const chronoLinkCount = chronoLinks.length;
-                // Drawing code for each page
-                let chronoColorValue = p.map(chronoLinkCount, 0, 4, 217, 0);
-                const constrainedChronoColor = p.constrain(chronoColorValue, 0, 255);
+
+                // let chronoColorValue = p.map(chronoLinkCount, 0, 4, 217, 0);
+                // const constrainedChronoColor = p.constrain(chronoColorValue, 0, 255);
                 // console.log(constrainedChronoColor)
                 // p.fill(constrainedChronoColor);
                 // p.fill(224,224,224);
+                
                 p.fill(248,248,248);
 
                 const pageRect = pages[i].getBoundingClientRect();

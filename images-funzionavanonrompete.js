@@ -2,13 +2,26 @@ import * as utils from './utils.js';
 let allFramesGenerated = false;
 const maxRetries = 3;
 
-function createFrameElement(title, url, desc, people, place, status, idx, length, outerFrame) {
+function createFrameElement(title, url, desc, people, place, status, idx, length) {
     let frameElement = utils.createElement('div', `frame`);
 
     let titleBarElement = utils.createElement('div', 'title-bar');
+    // let infobtn =  utils.createElement('div', 'info-btn', '<span class="piu">( i )</span><span class="meno">( - )</span>');
+
+      //   infobtn.addEventListener('click', function () {
+      //     Array.from(document.querySelectorAll('.frame-container')).forEach(container => {
+      //       if (container.contains(event.target) && !container.classList.contains('showninfo')) {
+      //         container.classList.add('showninfo');
+      //       } else {
+      //         container.classList.remove('showninfo');
+      //     }
+      //   })
+      // })
 
     titleBarElement.append(
-    utils.createElement('span', 'title', title)
+    utils.createElement('span', 'title', title),
+    utils.createElement('span', 'photonum', "(" + (Number(idx)+1) + "/" + (length+1) + ")")
+    // infobtn
   )
 
     let imageContainer = utils.createElement('div', `img-container`);
@@ -31,36 +44,6 @@ function createFrameElement(title, url, desc, people, place, status, idx, length
     if (people) { metadataLayoutElement.append(
         utils.createElement('span', 'people metadata-row', '<span class="lil-title">PEOPLE:</span> ' + people + '<br>')
     )}
-
-
-    if (length > 1) {
-        let scrollHandles = utils.createElement('div', 'scroll-handles');
-
-        let arrowleft = utils.createElement('span', `arrow arrowleft`, '←');
-        let arrowright = utils.createElement('span', `arrow arrowright`, '→');
-        let photonum = utils.createElement('span', 'photonum', "(" + (Number(idx)+1) + "/" + length + ")");
-        scrollHandles.append(arrowleft, photonum, arrowright)
-
-        if (Number(idx) === 0) { arrowleft.style.display = "none" }
-
-        if (Number(idx) === (length-1)) { arrowright.style.display = "none" }
-
-        let scrollxpos = 0;
-        // let parentwidth = outerFrame.getBoundingClientRect().width + 100;
-
-        arrowright.addEventListener("click", function(event) {
-          console.log("hello world")
-        // scrollxpos = outerFrame.scrollLeft + parentwidth;
-        // outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        })
-
-        arrowleft.addEventListener("click", function(event) {
-          console.log("please")
-        // scrollxpos = outerFrame.scrollLeft - parentwidth;
-        // outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        })
-        metadataLayoutElement.append(scrollHandles)
-    }
 
     frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
 
@@ -124,6 +107,38 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
         frameContainer.append(outerFrame, dotspan);
 
+
+        if (ids.length > 1) {
+            let arrowleft =  utils.createElement('span', `arrow arrowleft`, '←')
+            let arrowright =  utils.createElement('span', `arrow arrowright`, '→')
+            outerFrame.append(arrowleft, arrowright);
+            let scrollxpos = 0;
+            // let parentwidth;
+            // console.log(parentwidth)
+
+            arrowright.addEventListener("click", function(event) {
+            scrollxpos = scrollxpos + outerFrame.getBoundingClientRect().width + 100;
+            console.log(scrollxpos)
+            outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+           })
+
+           arrowleft.addEventListener("click", function(event) {
+           scrollxpos = scrollxpos - outerFrame.getBoundingClientRect().width - 100;
+           outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+          })
+
+          outerFrame.addEventListener("scroll", function(event) {
+            scrollxpos = outerFrame.scrollLeft;
+            if (scrollxpos < outerFrame.getBoundingClientRect().width) {
+              console.log("what?")
+              console.log(scrollxpos)
+              arrowleft.style.display = "none"
+            } else {
+              arrowleft.style.display = "block"
+            }
+          })
+        }
+
         let firstImageHeight;
         for (let i = 0; i < ids.length; i++) {
             let currentMetadata = utils.getMetadataFromId(metadataMain, ids[i]);
@@ -142,8 +157,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                         record.place,
                         record.appears == 'yes' ? '' : 'disconnected',
                         [i],
-                        ids.length,
-                        outerFrame
+                        ids.length
                     );
                     outerFrame.appendChild(frame_element);
 
