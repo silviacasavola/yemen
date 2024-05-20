@@ -172,13 +172,14 @@ fetch('data.json')
     // .catch(error => console.error('Error fetching or parsing JSON:', error));
 }
 
-    function frameReplacement() {
+function frameReplacement() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
             jsonData = data;
             // Replace people entities in .people-col elements
             const metadatacells = document.querySelectorAll('.metadata-layout')
+
             metadatacells.forEach(element => {
                 replacePeopleInElement(element, jsonData);
                 replacePlacesInElement(element, jsonData);
@@ -191,9 +192,13 @@ fetch('data.json')
                 });
             // Add event listeners after replacing elements
             addEvent(jsonData);
+            attachArrowEventListeners()
         })
         // .catch(error => console.error('Error fetching or parsing JSON:', error));
-    }
+
+        // function findarrows() {
+        // }
+}
 
     let filterSelected = false;
 
@@ -310,6 +315,8 @@ fetch('data.json')
         filterSelected = false;
           handleClick(jsonData);
       });
+
+
     }
 
     function thenScroll(flink) {
@@ -391,3 +398,57 @@ fetch('data.json')
     //     }
     //   }
     // }
+
+    // function attachArrowEventListeners() {
+    //   let scrollHandles = document.querySelectorAll('.scroll-handles');
+    //
+    //   // if (scrollHandles.length < 537) {
+    //   //     attachArrowEventListeners()
+    //   //   } else {
+    //   scrollHandles.forEach(sh => {
+    //     const outerFrame = sh.closest('.outer-frame');
+    //     const arrowR = sh.querySelector('.arrowright')
+    //     const arrowL = sh.querySelector('.arrowleft')
+    //
+    //     arrowR.addEventListener("click", function(event) {
+    //       const framewidth = outerFrame.getBoundingClientRect().width + 5;
+    //       const currentScrollX = outerFrame.scrollLeft;
+    //       const scrollxpos = currentScrollX + framewidth;
+    //       outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+    //     });
+    //
+    //     arrowL.addEventListener("click", function(event) {
+    //       const framewidth = outerFrame.getBoundingClientRect().width + 5;
+    //       const currentScrollX = outerFrame.scrollLeft;
+    //       const scrollxpos = currentScrollX - framewidth;
+    //       outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+    //     });
+    //   })
+    //  }
+
+    function attachArrowEventListeners() {
+      let scrollHandles = document.querySelectorAll('.scroll-handles');
+
+      // if (scrollHandles.length < 537) {
+      //     attachArrowEventListeners()
+      //   } else {
+      scrollHandles.forEach(sh => {
+        const outerFrame = sh.closest('.outer-frame');
+
+        const arrows = sh.querySelectorAll('.arrow')
+        arrows.forEach(arrow => {
+          arrow.addEventListener("click", function(event) {
+            const framewidth = outerFrame.getBoundingClientRect().width + 5;
+            const currentScrollX = outerFrame.scrollLeft;
+            let scrollpos = 0;
+
+            if (arrow.classList.contains('arrowright')) {
+          scrollxpos = currentScrollX + framewidth;
+          } else if (arrow.classList.contains('arrowleft')) {
+          scrollxpos = currentScrollX - framewidth;
+        }
+            outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+          });
+        })
+      })
+     }

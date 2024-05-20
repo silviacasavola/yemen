@@ -31,55 +31,6 @@ function createFrameElement(title, url, desc, people, place, status, idx, length
     if (people) { metadataLayoutElement.append(
         utils.createElement('span', 'people metadata-row', '<span class="lil-title">PEOPLE:</span> ' + people + '<br>')
     )}
-
-
-    if (length > 1) {
-        let scrollHandles = utils.createElement('div', 'scroll-handles');
-
-        let arrowleft = utils.createElement('span', `arrow arrowleft`, '←');
-        let arrowright = utils.createElement('span', `arrow arrowright`, '→');
-        let photonum = utils.createElement('span', 'photonum', "(" + (Number(idx)+1) + "/" + length + ")");
-
-        if (Number(idx) === 0) { arrowleft.style.display = "none" }
-        if (Number(idx) === (length-1)) { arrowright.style.display = "none" }
-
-        arrowright.addEventListener("click", function(event) {
-          console.log("dioporco")
-        })
-        // let scrollxpos = 0;
-        // let parentwidth = outerFrame.getBoundingClientRect().width + 5;
-
-        // arrowright.addEventListener("click", function(event) {
-        //   let currentScrollX = outerFrame.scrollLeft;
-        //   scrollxpos = currentScrollX + parentwidth;
-        //   console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-        //   outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        // })
-        //
-        // arrowleft.addEventListener("click", function(event) {
-        // scrollxpos = outerFrame.scrollLeft - parentwidth;
-        // console.log(scrollxpos)
-        // outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        // })
-
-        // let scrollxpos = 0;
-        // let currentScrollX;
-        // let parentwidth;;
-        //
-        // arrowright.addEventListener("click", function(event) {
-        //   console.log("diobono")
-        //   // parentwidth = outerFrame.getBoundingClientRect().width + 5;
-        //   // currentScrollX = outerFrame.scrollLeft;
-        //   // scrollxpos = currentScrollX + parentwidth;
-        //   // console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-        //   // outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        // })
-
-
-        scrollHandles.append(arrowleft, photonum, arrowright)
-        metadataLayoutElement.append(scrollHandles)
-    }
-
     frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
 
     return frameElement;
@@ -152,23 +103,23 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                         currentMetadata.metaDepictedPeople,
                         record.place,
                         record.appears == 'yes' ? '' : 'disconnected',
-                        [i],
+                        i,
                         ids.length,
                         outerFrame
                     );
-                    // .then(() => {console.log(outerFrame)});
-                    outerFrame.appendChild(frame_element)
+                    outerFrame.appendChild(frame_element);
 
                     // Set the height of frameContainer based on the first image's height
                     if (i === 0) {
                         firstImageHeightVh = frame_element.querySelector('.img-container img').clientHeight / window.innerHeight * 100;
                     }
+
+                    attachArrowEventListeners(frame_element, i, ids.length);
                     })
                 .catch((error) => {
                     console.error(`Error loading image ${ids[i]}:`, error);
                 });
             }
-            // attachArrowEventListeners(outerFrame)
         }
 
         fragment.appendChild(frameContainer);
@@ -186,8 +137,6 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
           frameContainer.classList.add('hidden');
           dotspan.classList.add('disconnected');
         }
-
-        // attachArrowEventListeners(outerFrame);
     }
 
     parentElement.appendChild(fragment);
@@ -196,10 +145,9 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
     if (allFramesGenerated) {
       toggleHidden();
-      // frameReplacement();
+      frameReplacement();
       addnumber();
       updateImageHeights();
-      // attachArrowEventListeners();
     }
 }
 
@@ -224,7 +172,7 @@ function updateImageHeights() {
         }
     });
 }
-
+//
 // // Listen for resize event to update image heights
 window.addEventListener('resize', function updateImageHeights() {
     let frameContainers = document.querySelectorAll('.outer-frame');
@@ -243,39 +191,69 @@ window.addEventListener('resize', function updateImageHeights() {
   })
 })
 
-//  function attachArrowEventListeners() {
-//   // console.log(outerFrame)
-//     const parents = document.querySelectorAll('img');
-//
-//     // console.log(parents)
-//
-//     // for (let parent of parents) {
-//       // console.log(parent)
-//     // const arrowleft = parent.querySelectorAll('img');
-//     // const arrowright = parent.querySelectorAll('.frame .metadata-layout .arrowright');
-//     // const parentwidth = parent.getBoundingClientRect().width + 5;
-//
-//     // if (arrowleft) {
-//       // console.log(arrowleft)
-//     // arrowright.addEventListener("click", function(event) {
-//     //     const currentScrollX = outerFrame.scrollLeft;
-//     //     const scrollxpos = currentScrollX + parentwidth;
-//     //     console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-//     //     outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-//     // });
-//     //
-//     // arrowleft.addEventListener("click", function(event) {
-//     //     const currentScrollX = outerFrame.scrollLeft;
-//     //     const scrollxpos = currentScrollX - parentwidth;
-//     //     console.log(`Left arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-//     //     outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-//     // });
-//   // } else {
-//     // console.log("please let's go")
-//         // If arrows are not found, retry after a short delay
-//         // setTimeout(() => {
-//         //     attachArrowEventListeners(outerFrame);
-//         // }, 1000); // Retry after 1 second
-//     // }
-//   // }
-// }
+
+function attachArrowEventListeners(frame_element, i, length) {
+        if (length > 1) {
+
+          let metadata = frame_element.querySelector('.metadata-layout');
+          let scrollHandles = utils.createElement('div', 'scroll-handles');
+
+          let arrowleft = utils.createElement('span', `arrow arrowleft`, '←');
+          let arrowright = utils.createElement('span', `arrow arrowright`, '→');
+          let photonum = utils.createElement('span', 'photonum', "(" + (i+1) + "/" + length + ")");
+
+          if (i === 0) { arrowleft.style.display = "none" }
+          if (i === (length-1)) { arrowright.style.display = "none" }
+
+          // let scrollxpos = 0;
+          let outerFrame = frame_element.closest('.outer-frame')
+
+          let parentwidth = outerFrame.getBoundingClientRect().width + 5;
+
+          let currentScrollX = 0;
+          let scrollxpos = 0;
+
+          arrowright.addEventListener("click", function(event) {
+            currentScrollX = outerFrame.scrollLeft;
+            scrollxpos = currentScrollX + parentwidth;
+              console.log(scrollxpos)
+            outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+          })
+
+          arrowleft.addEventListener("click", function(event) {
+          currentScrollX = outerFrame.scrollLeft;
+          scrollxpos = outerFrame.scrollLeft - parentwidth;
+            console.log(scrollxpos)
+          outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+          })
+
+          scrollHandles.append(arrowleft, photonum, arrowright)
+          metadata.append(scrollHandles)
+      }
+    }
+
+  //   const arrowleft = outerFrame.querySelector('.frame .metadata-layout .arrowleft');
+  //   const arrowright = outerFrame.querySelector('.frame .metadata-layout .arrowright');
+  //   const parentwidth = outerFrame.getBoundingClientRect().width + 5;
+  //   console.log(arrowright)
+  //
+  //   if (arrowleft && arrowright) {
+  //   arrowright.addEventListener("click", function(event) {
+  //       const currentScrollX = outerFrame.scrollLeft;
+  //       const scrollxpos = currentScrollX + parentwidth;
+  //       console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
+  //       outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+  //   });
+  //
+  //   arrowleft.addEventListener("click", function(event) {
+  //       const currentScrollX = outerFrame.scrollLeft;
+  //       const scrollxpos = currentScrollX - parentwidth;
+  //       console.log(`Left arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
+  //       outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+  //   });
+  // } else {
+  //       // If arrows are not found, retry after a short delay
+  //       setTimeout(() => {
+  //           attachArrowEventListeners(outerFrame);
+  //       }, 1000); // Retry after 1 second
+  //   }

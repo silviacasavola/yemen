@@ -1,6 +1,7 @@
 import * as pages from './pages.js';
 import * as images from './images.js';
 import * as scroll from './scroll.js';
+import * as filter from './scroll.js';
 import * as graph from './graph.js';
 
 //////////////////////////////////   MAIN   ///////////////////////////////////
@@ -25,7 +26,10 @@ await pages.loadAndDisplayPages(text, 'text-container').then(() => {
 // })
 // });
 
-images.loadAndDisplayImages(records, pictureMetadata, 'images-container');
+await images.loadAndDisplayImages(records, pictureMetadata, 'images-container').then(() => {
+  frameReplacement();
+  // images.attachArrowEventListeners();
+})
 
 textColumn.addEventListener('wheel', scroll.scrollHandler);
 picsColumn.addEventListener('wheel', scroll.scrollHandler);
