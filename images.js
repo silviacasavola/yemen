@@ -43,39 +43,6 @@ function createFrameElement(title, url, desc, people, place, status, idx, length
         if (Number(idx) === 0) { arrowleft.style.display = "none" }
         if (Number(idx) === (length-1)) { arrowright.style.display = "none" }
 
-        arrowright.addEventListener("click", function(event) {
-          console.log("dioporco")
-        })
-        // let scrollxpos = 0;
-        // let parentwidth = outerFrame.getBoundingClientRect().width + 5;
-
-        // arrowright.addEventListener("click", function(event) {
-        //   let currentScrollX = outerFrame.scrollLeft;
-        //   scrollxpos = currentScrollX + parentwidth;
-        //   console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-        //   outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        // })
-        //
-        // arrowleft.addEventListener("click", function(event) {
-        // scrollxpos = outerFrame.scrollLeft - parentwidth;
-        // console.log(scrollxpos)
-        // outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        // })
-
-        // let scrollxpos = 0;
-        // let currentScrollX;
-        // let parentwidth;;
-        //
-        // arrowright.addEventListener("click", function(event) {
-        //   console.log("diobono")
-        //   // parentwidth = outerFrame.getBoundingClientRect().width + 5;
-        //   // currentScrollX = outerFrame.scrollLeft;
-        //   // scrollxpos = currentScrollX + parentwidth;
-        //   // console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-        //   // outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-        // })
-
-
         scrollHandles.append(arrowleft, photonum, arrowright)
         metadataLayoutElement.append(scrollHandles)
     }
@@ -177,9 +144,9 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
           utils.createElement('div', `corner-sfumato`)
         )
 
-        // if (records.indexOf(record) === 0 ) {
-        //     frameContainer.classList.add('active');
-        // }
+        if (records.indexOf(record) === 0 ) {
+            frameContainer.classList.add('active');
+        }
 
         if (record.appears === 'no') {
           frameContainer.classList.add('disconnected')
@@ -242,40 +209,3 @@ window.addEventListener('resize', function updateImageHeights() {
     }
   })
 })
-
-//  function attachArrowEventListeners() {
-//   // console.log(outerFrame)
-//     const parents = document.querySelectorAll('img');
-//
-//     // console.log(parents)
-//
-//     // for (let parent of parents) {
-//       // console.log(parent)
-//     // const arrowleft = parent.querySelectorAll('img');
-//     // const arrowright = parent.querySelectorAll('.frame .metadata-layout .arrowright');
-//     // const parentwidth = parent.getBoundingClientRect().width + 5;
-//
-//     // if (arrowleft) {
-//       // console.log(arrowleft)
-//     // arrowright.addEventListener("click", function(event) {
-//     //     const currentScrollX = outerFrame.scrollLeft;
-//     //     const scrollxpos = currentScrollX + parentwidth;
-//     //     console.log(`Right arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-//     //     outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-//     // });
-//     //
-//     // arrowleft.addEventListener("click", function(event) {
-//     //     const currentScrollX = outerFrame.scrollLeft;
-//     //     const scrollxpos = currentScrollX - parentwidth;
-//     //     console.log(`Left arrow clicked: currentScrollX = ${currentScrollX}, scrollxpos = ${scrollxpos}`);
-//     //     outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-//     // });
-//   // } else {
-//     // console.log("please let's go")
-//         // If arrows are not found, retry after a short delay
-//         // setTimeout(() => {
-//         //     attachArrowEventListeners(outerFrame);
-//         // }, 1000); // Retry after 1 second
-//     // }
-//   // }
-// }

@@ -193,11 +193,9 @@ function frameReplacement() {
             // Add event listeners after replacing elements
             addEvent(jsonData);
             attachArrowEventListeners()
+            removeoverlay()
         })
-        // .catch(error => console.error('Error fetching or parsing JSON:', error));
-
-        // function findarrows() {
-        // }
+        .catch(error => console.error('Error fetching or parsing JSON:', error));
 }
 
     let filterSelected = false;
@@ -242,6 +240,12 @@ function frameReplacement() {
 
           selectionIndicator.style.display = "flex";
           nameIndicator.innerHTML = "X " + officialIdentificator;
+
+          flink.classList.add('animated');
+          const animationtimeout = setTimeout(() => {
+            flink.classList.remove('animated');
+            clearTimeout(animationtimeout);
+          }, 4000);
 
           handleClick(jsonData, flink);
         });
@@ -302,10 +306,10 @@ function frameReplacement() {
 
           toggleHidden();
 
-          const timeout = setTimeout(() => {
+          // const timeout = setTimeout(() => {
             thenScroll(flink);
-            clearTimeout(timeout);
-          }, 1200);
+            // clearTimeout(timeout);
+          // }, 2000);
         }
 
       // Event delegation for removing selection indicators
@@ -315,116 +319,71 @@ function frameReplacement() {
         filterSelected = false;
           handleClick(jsonData);
       });
-
-
     }
 
     function thenScroll(flink) {
 
-      let targetContainer;
-      let scrollPosition;
+      let columnToScroll;
+    if (filterSelected === true) {
+        let clickContainer = flink.closest('#images-column') || flink.closest('#text-column');
+        const click = flink.closest('.frame-container') || flink.closest('.page');
 
-      if (filterSelected === true) {
-        targetContainer = flink.closest('#images-column') || flink.closest('#text-column');
-        const target = flink.closest('.frame-container') || flink.closest('.page');
-        // target.style.border = "solid red";
+        // Calculate initial distance from top
+        let initialDistanceFromTop = flink.getBoundingClientRect().top;
 
-        const targetRect = target.getBoundingClientRect();
-        const targetTop = targetRect.top;
+        // Perform your existing operations
+        if (clickContainer.id === 'text-column') {
+            columnToScroll = document.getElementById('images-column');
+        } else if (clickContainer.id === 'images-column') {
+            columnToScroll = document.getElementById('text-column');
+        }
 
-        // scrollPosition = targetTop + targetContainer.scrollTop;
+        // Scroll in the other column
+        let counterpart = columnToScroll.querySelector('.dot.active');
+        let counterRect;
+        if (counterpart) {
+        counterRect = counterpart.closest('.frame-container') || counterpart.closest('.page');
+      }
 
-        let columnToScroll; let filtered;
-         if (targetContainer.id === 'text-column') {
-                        columnToScroll = document.getElementById('images-column');
-                        filtered = Array.from(columnToScroll.querySelectorAll('.frame-container')).filter((f) => !f.classList.contains('hidden'));
-                        scrollPosition = targetTop + targetContainer.scrollTop;
-                        // filtered[0].classList.add('showninfo');
-         } else if (targetContainer.id === 'images-column') {
-                        columnToScroll = document.getElementById('text-column');
-                        filtered = Array.from(columnToScroll.querySelectorAll('.page')).filter((f) => !f.classList.contains('hidden'));
-                        scrollPosition = targetTop;
-         }
+        // Use a timeout to ensure the changes are completed
+        setTimeout(() => {
+            // Calculate the new scroll position
+            const newFlinkRect = flink.getBoundingClientRect();
+            const newScrollPosition = clickContainer.scrollTop + (newFlinkRect.top - initialDistanceFromTop);
 
-         if (filtered && filtered.length > 0) {
-           // filtered[0].style.border = "solid green";
-             let filteredRect = filtered[0].getBoundingClientRect();
-             columnToScroll.scrollTo({
-                 top: filteredRect.top,
-                 behavior: 'smooth'
-               })
-             }
+            // Scroll to the new position
+            clickContainer.scrollTo({
+                top: newScrollPosition,
+                behavior: 'smooth'
+            });
 
-       targetContainer.scrollTo({
-       top: scrollPosition,
-       behavior: 'smooth'
-      });
-    } else {
-      let dotactive = document.querySelectorAll('.dot.active');
-      console.log(dotactive)
-      dotactive.forEach((da) => {
-        targetContainer = da.closest('#images-column') || da.closest('#text-container');
-        const target = da.closest('.frame-container') || da.closest('.page');
-                const targetRect = target.getBoundingClientRect();
-                const targetTop = targetRect.top;
+            if (counterRect) {
+                let counterRectPos = counterRect.getBoundingClientRect();
+                columnToScroll.scrollTo({
+                    top: columnToScroll.scrollTop + counterRectPos.top - 10,
+                    behavior: 'smooth'
+                });
+            }
+        }, 800);  // Adjust the timeout duration as needed
+      } else {
+        let dotactive = document.querySelectorAll('.dot.active');
 
-          // target.style.border = "solid green";
-          // scrollPosition = targetTop+targetContainer.scrollTop;
-          scrollPosition = targetTop-64;
+                dotactive.forEach((da) => {
+                    let columnToScroll = da.closest('#images-column') || da.closest('#text-column');
 
-          console.log(scrollPosition)
+                    setTimeout(() => {
+                        // Calculate the scroll position
+                        let scrollPosition = columnToScroll.scrollTop + da.getBoundingClientRect().top - 10;
 
-          targetContainer.scrollTo({
-          top: scrollPosition,
-          behavior: 'smooth'
-          });
-         })
-    }
-}
-
-    // function highlightFilter(checkbox) {
-    //   let classname = checkbox.value + "-link";
-    //   let elements = document.getElementsByClassName(classname);
-    //
-    //   if (checkbox.checked) {
-    //     // If the checkbox is checked, add the 'selectable' class to the elements
-    //     for (let i = 0; i < elements.length; i++) {
-    //       elements[i].classList.add('selectable');
-    //     }
-    //   } else {
-    //     // If the checkbox is not checked, remove the 'selectable' class from the elements
-    //     for (let i = 0; i < elements.length; i++) {
-    //       elements[i].classList.remove('selectable');
-    //     }
-    //   }
-    // }
-
-    // function attachArrowEventListeners() {
-    //   let scrollHandles = document.querySelectorAll('.scroll-handles');
-    //
-    //   // if (scrollHandles.length < 537) {
-    //   //     attachArrowEventListeners()
-    //   //   } else {
-    //   scrollHandles.forEach(sh => {
-    //     const outerFrame = sh.closest('.outer-frame');
-    //     const arrowR = sh.querySelector('.arrowright')
-    //     const arrowL = sh.querySelector('.arrowleft')
-    //
-    //     arrowR.addEventListener("click", function(event) {
-    //       const framewidth = outerFrame.getBoundingClientRect().width + 5;
-    //       const currentScrollX = outerFrame.scrollLeft;
-    //       const scrollxpos = currentScrollX + framewidth;
-    //       outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-    //     });
-    //
-    //     arrowL.addEventListener("click", function(event) {
-    //       const framewidth = outerFrame.getBoundingClientRect().width + 5;
-    //       const currentScrollX = outerFrame.scrollLeft;
-    //       const scrollxpos = currentScrollX - framewidth;
-    //       outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-    //     });
-    //   })
-    //  }
+                        // Scroll to the new position
+                        columnToScroll.scrollTo({
+                            top: scrollPosition,
+                            behavior: 'smooth'
+                        });
+                    }, 800);
+                })
+            }
+          }
 
     function attachArrowEventListeners() {
       let scrollHandles = document.querySelectorAll('.scroll-handles');
@@ -452,3 +411,32 @@ function frameReplacement() {
         })
       })
      }
+
+function removeoverlay() {
+  let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
+  let overlay = document.getElementById('overlay');
+  if (linksnumber >= 100) {
+  overlay.classList.toggle('removed');
+
+    const overlaytimeout = setTimeout(() => {
+  document.getElementById('overlay').remove();
+      clearTimeout(overlaytimeout);
+    }, 1600);
+}
+}
+         // function highlightFilter(checkbox) {
+         //   let classname = checkbox.value + "-link";
+         //   let elements = document.getElementsByClassName(classname);
+         //
+         //   if (checkbox.checked) {
+         //     // If the checkbox is checked, add the 'selectable' class to the elements
+         //     for (let i = 0; i < elements.length; i++) {
+         //       elements[i].classList.add('selectable');
+         //     }
+         //   } else {
+         //     // If the checkbox is not checked, remove the 'selectable' class from the elements
+         //     for (let i = 0; i < elements.length; i++) {
+         //       elements[i].classList.remove('selectable');
+         //     }
+         //   }
+         // }

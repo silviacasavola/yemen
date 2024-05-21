@@ -13,20 +13,20 @@ function createPageElement(pageContent, index) {
     return pageElement;
 }
 
-function appendChronoLinkDots(page) {
-    // const chronoLinkRegex = /<\/span>/g;
-    // page = page.replace(chronoLinkRegex, '</span> <span class="dot"></span>');
-    // return page;
-    //
-    // let dots = document.querySelectorAll('.text-container .dot');
-    // console.log(dots)
-    // dots.innerHTML("ciao")
-    let chronoLinks = document.querySelectorAll('.chrono-link');
-    console.log(chronoLinks)
-    // chronoLinks.append(
-    //   utils.createElement('span', `dot`)
-    // )
-}
+// function appendChronoLinkDots(page) {
+//     // const chronoLinkRegex = /<\/span>/g;
+//     // page = page.replace(chronoLinkRegex, '</span> <span class="dot"></span>');
+//     // return page;
+//     //
+//     // let dots = document.querySelectorAll('.text-container .dot');
+//     // console.log(dots)
+//     // dots.innerHTML("ciao")
+//     let chronoLinks = document.querySelectorAll('.chrono-link');
+//     // console.log(chronoLinks)
+//     // chronoLinks.append(
+//     //   utils.createElement('span', `dot`)
+//     // )
+// }
 
 export async function loadAndDisplayPages(text, parentId) {
     let pages = text.split('\n\n');
@@ -43,16 +43,26 @@ export async function loadAndDisplayPages(text, parentId) {
 
     chronoLinks.forEach((link) => {
     let index = chronoLinks.indexOf(link);
-    link.append(
-      utils.createElement('span', `dot`, index + 1)
-    )
-    // if (index === 0) {link.classList.add('active')}
+    let dot = utils.createElement('span', `dot`, index + 1);
+    link.append(dot)
+    if (index === 0) {link.classList.add('active')}
   })
 
     return true;
 }
 
 const pages = Array.from(document.querySelectorAll('.page'))
+
+
+// export function clickOnDots() {
+//   let dots = document.querySelectorAll('.chrono-link .dot')
+//   dots.forEach((dot) => {
+//     // dot.style.color = "red"
+//   dot.addEventListener('click', function() {
+//     console.log("porcatroia")
+//   })
+// })
+// }
 
 export function notesindex() {
     fetch('data/notes.json')
@@ -62,7 +72,7 @@ export function notesindex() {
 
             const textNotes = Array.from(document.querySelectorAll('.note'));
             for (let i = 0; i < textNotes.length; i++) {
-                textNotes[i].innerHTML = i + 1;
+                textNotes[i].innerHTML = "&nbsp;" + (i + 1);
 
                 textNotes[i].addEventListener('click', function() {
                     const index = i;

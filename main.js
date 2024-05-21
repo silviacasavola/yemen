@@ -18,6 +18,7 @@ await pages.loadAndDisplayPages(text, 'text-container').then(() => {
     graph.setupGraph();
     textReplacement();
     pages.notesindex();
+    // scroll.attachDotsEventListeners();
 });
 
 // await images.loadAndDisplayImages(records, pictureMetadata, 'images-container').then(() => {
@@ -33,6 +34,8 @@ await images.loadAndDisplayImages(records, pictureMetadata, 'images-container').
 
 textColumn.addEventListener('wheel', scroll.scrollHandler);
 picsColumn.addEventListener('wheel', scroll.scrollHandler);
+// textColumn.addEventListener('scroll', scroll.scrollHandler);
+// picsColumn.addEventListener('scroll', scroll.scrollHandler);
 
 let hiddenContainers;
 

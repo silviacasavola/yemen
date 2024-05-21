@@ -1,3 +1,5 @@
+import { handleP5Scroll } from './scroll.js';
+
 // Define the setupGraph function
 export function setupGraph() {
     const pages = Array.from(document.querySelectorAll('.page'));
@@ -13,7 +15,6 @@ export function setupGraph() {
             const canvas = p.createCanvas(p.windowWidth / 12, p.windowHeight);
             canvas.parent(document.getElementById('graph-column'));
 
-
             // Add an event listener for the scroll event on the text container
             document.getElementById('text-column').addEventListener('scroll', () => {
                 mappedPos = p.map(document.getElementById('text-column').scrollTop, 0, document.getElementById('text-column').scrollHeight - window.innerHeight, 0, p.height - 10);
@@ -24,7 +25,7 @@ export function setupGraph() {
             const containerRect = document.getElementById('text-column').getBoundingClientRect();
             totalPageHeight = pages.reduce((acc, page) => acc + page.getBoundingClientRect().height, 0);
 
-            p.background(248,248,248);
+            p.background(248, 248, 248);
 
             // DRAW RECTANGLES AND SQUARE FOR EACH PAGE
             let totalHeight = 0;
@@ -36,13 +37,7 @@ export function setupGraph() {
                 const chronoLinks = pages[i].querySelectorAll('.chrono-link');
                 const chronoLinkCount = chronoLinks.length;
 
-                // let chronoColorValue = p.map(chronoLinkCount, 0, 4, 217, 0);
-                // const constrainedChronoColor = p.constrain(chronoColorValue, 0, 255);
-                // console.log(constrainedChronoColor)
-                // p.fill(constrainedChronoColor);
-                // p.fill(224,224,224);
-                
-                p.fill(248,248,248);
+                p.fill(248, 248, 248);
 
                 const pageRect = pages[i].getBoundingClientRect();
                 const rectHeight = p.map(pageRect.height, 0, totalPageHeight, 0, p.height);
@@ -88,6 +83,10 @@ export function setupGraph() {
 
         p.mouseReleased = function() {
             dragging = false;
+            let textColumn = document.getElementById('text-column');
+
+            // Trigger the scrollHandler with the mock event
+            handleP5Scroll(textColumn);
         };
 
         p.mouseDragged = function() {
@@ -97,7 +96,6 @@ export function setupGraph() {
                 mappedPos = p.constrain(mappedPos, 0, p.height - 10);
                 let scrollValue = p.map(mappedPos, 0, p.height - 10, 0, document.getElementById('text-column').scrollHeight - window.innerHeight);
                 document.getElementById('text-column').scrollTop = scrollValue;
-                // handleScroll('text-column', '.chrono-link')
             }
         };
 

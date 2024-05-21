@@ -2,7 +2,7 @@ function getDotPositions(parent) {
     const parentElement = document.getElementById(parent.id);
     let allDots = Array.from(parentElement.querySelectorAll('span.dot'));
     let connected = allDots.filter(
-        (d) => !d.classList.contains('disconnected') && !d.classList.contains('hidden') && !d.classList.contains('active')
+        (d) => !d.classList.contains('disconnected') && !d.classList.contains('active')
     );
     let scrollOffset = parentElement.parentNode.scrollTop;
 
@@ -46,7 +46,7 @@ function getSourceAndTargetContainers(event) {
 function findMatchingDot(container, index) {
     let allDots = Array.from(container.querySelectorAll('span.dot'));
     let connectedDots = allDots.filter(
-        (dot) => !dot.classList.contains('disconnected') && !dot.classList.contains('hidden') && !dot.classList.contains('active'))
+        (dot) => !dot.classList.contains('disconnected') && !dot.classList.contains('active'))
     return connectedDots[index];
 }
 
@@ -71,24 +71,86 @@ function scrollToDot(container, dot) {
     column.scrollTo({ top: position - 64, behavior: 'smooth' });
 }
 
-export function scrollHandler(event, viewportOffset = 64) {
-    const scrollTop = this.scrollTop + viewportOffset;
+export function scrollHandler(event) {
+    const scrollTop = this.scrollTop + 64;
 
     let { sourceContainer, targetContainer } = getSourceAndTargetContainers(event);
     let sourceDotsPositions = getDotPositions(sourceContainer);
     let sourceDot = findClosestDot(sourceDotsPositions, scrollTop);
 
-    if (sourceDot.element.classList.contains('disconnected') && sourceDot.element.classList.contains('hidden') && sourceDot.element.classList.contains('active')) {
+    if (sourceDot.element.classList.contains('disconnected') && sourceDot.element.classList.contains('active')) {
         return;
     }
+
     let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
 
-    if (targetDot && filterSelected === false) {
+    if (targetDot) {
+
+    let targetcontainer = targetDot.closest('.frame-container') || targetDot.closest('.page');
+    let sourcecontainer = sourceDot.element.closest('.frame-container') || sourceDot.element.closest('.page');
+
+    if (!targetcontainer.classList.contains('hidden') && !sourcecontainer.classList.contains('hidden')) {
     scrollToDot(targetContainer, targetDot);
+  }
 
     highlightDot(sourceContainer, sourceDot.element);
     highlightDot(targetContainer, targetDot);
   }
+
+  // if (attachedevents === false) {
+      let allDots = Array.from(document.querySelectorAll('.chrono-link .dot'))
+      allDots.forEach(dot => {
+      dot.addEventListener('click', dotClickHandler);
+  });
+  // }
 }
 
-// document.querySelectorAll(".title-bar").addEventListener("click", )
+function dotClickHandler(event) {
+  let textColumn = document.getElementById('text-column');
+  let imagesColumn = document.getElementById('images-column');
+
+  let sourceContainer = textColumn.children[0];
+  let targetContainer = imagesColumn.children[0];
+
+  let allDots = Array.from(sourceContainer.querySelectorAll('span.dot'));
+  let dotIndex = allDots.indexOf(event.target);
+
+  let matchingDot = findMatchingDot(targetContainer, (dotIndex-1));
+
+  if (matchingDot) {
+      scrollToDot(targetContainer, matchingDot);
+      highlightDot(sourceContainer, event.target);
+      highlightDot(targetContainer, matchingDot);
+}
+}
+
+export function handleP5Scroll(element) {
+    const scrollTop = element.scrollTop + 64;
+
+    let sourceContainer = element.children[0];
+    let targetContainerId = element.id === 'text-column' ? 'images-column' : 'text-column';
+    let targetContainer = document.getElementById(targetContainerId).children[0];
+
+    let sourceDotsPositions = getDotPositions(sourceContainer);
+    let sourceDot = findClosestDot(sourceDotsPositions, scrollTop);
+
+    if (sourceDot.element.classList.contains('disconnected') && sourceDot.element.classList.contains('active')) {
+        return; // Skip processing if the dot is disconnected or already active
+    }
+
+    let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
+    console.log(targetDot)
+
+    if (targetDot) {
+        let targetContainerParent = targetDot.closest('.frame-container') || targetDot.closest('.page');
+        let sourceContainerParent = sourceDot.element.closest('.frame-container') || sourceDot.element.closest('.page');
+
+        // Only scroll if both source and target containers are visible
+        if (!targetContainerParent.classList.contains('hidden') && !sourceContainerParent.classList.contains('hidden')) {
+            scrollToDot(targetContainer, targetDot);
+        }
+
+        highlightDot(sourceContainer, sourceDot.element);
+        highlightDot(targetContainer, targetDot);
+    }
+}
