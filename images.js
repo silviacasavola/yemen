@@ -108,13 +108,13 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
             if (currentMetadata) {
                 loadImageWithRetry(
-                    `https://gradim.fh-potsdam.de/omeka-s/files/large/${ids[i]}.jpg`,
+                    `https://gradim.fh-potsdam.de/omeka-s/files/medium/${ids[i]}.jpg`,
                     maxRetries
                 )
                 .then(() => {
                     let frame_element = createFrameElement(
                         currentMetadata.Title,
-                        `https://gradim.fh-potsdam.de/omeka-s/files/large/${ids[i]}.jpg`,
+                        `https://gradim.fh-potsdam.de/omeka-s/files/medium/${ids[i]}.jpg`,
                         currentMetadata.Description,
                         currentMetadata.metaDepictedPeople,
                         record.place,
