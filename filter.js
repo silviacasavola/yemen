@@ -426,6 +426,7 @@ function removeloadingoverlay() {
       clearTimeout(overlaytimeout);
     }, 1600);
 } else {
+  console.log(linsknumber)
   const otheroverlaytimeout = setTimeout(() => {
     removeloadingoverlay()
     clearTimeout(otheroverlaytimeout);

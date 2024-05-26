@@ -72,13 +72,14 @@ export function notesindex() {
 
             const textNotes = Array.from(document.querySelectorAll('.note'));
             for (let i = 0; i < textNotes.length; i++) {
-                textNotes[i].innerHTML = "&nbsp;" + (i + 1);
+                // textNotes[i].innerHTML = "&nbsp;" + (i + 1);
+                textNotes[i].innerHTML = "&nbsp;*";
 
                 textNotes[i].addEventListener('click', function() {
                     const index = i;
                     const noteContent = notes[index];
                     const notesContainer = document.getElementById("notes-container");
-                    notesContainer.innerHTML = i+1 + ") " + noteContent;
+                    notesContainer.innerHTML = "*" + i+1 + "&nbsp;*" + noteContent;
 
                     notesContainer.classList.add('shown');
 
