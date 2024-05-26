@@ -193,7 +193,7 @@ function frameReplacement() {
             // Add event listeners after replacing elements
             addEvent(jsonData);
             attachArrowEventListeners()
-            removeloadingoverlay()
+            removeLoadingOverlay()
         })
         .catch(error => console.error('Error fetching or parsing JSON:', error));
 }
@@ -202,6 +202,7 @@ function frameReplacement() {
 
     function addEvent(jsonData) {
       const selectionIndicator = document.getElementById("selection-indicator");
+      const filterType = document.getElementById("filter-type");
       const nameIndicator = document.getElementById("name-selection");
       const filterLinks = document.querySelectorAll('.filter-link');
 
@@ -219,6 +220,7 @@ function frameReplacement() {
               const officialName = selectedPerson.firstName.split('; ').map(name => name.trim())[0]
               const officialSurname = selectedPerson.lastName.split('; ').map(surname => surname.trim())[0]
               officialIdentificator = officialName + " " + officialSurname;
+              filterType.innerHTML = "filter type: person";
             }
           }
 
@@ -226,7 +228,8 @@ function frameReplacement() {
               const placeIndex = parseInt(flink.id.replace('place', ''), 10);
               if (!isNaN(placeIndex) && jsonData.places && jsonData.places[placeIndex]) {
               const selectedPlace = jsonData.places[placeIndex]
-              officialIdentificator = selectedPlace.split('; ').map(place => place.trim())[0]
+              officialIdentificator = selectedPlace.split('; ').map(place => place.trim())[0];
+              filterType.innerHTML = "filter type: place";
             }
           }
 
@@ -235,6 +238,7 @@ function frameReplacement() {
               if (!isNaN(keywordIndex) && jsonData.keywords && jsonData.keywords[keywordIndex]) {
               const selectedKeyword = jsonData.keywords[keywordIndex]
               officialIdentificator = selectedKeyword.split('; ').map(keyword => keyword.trim())[0]
+              filterType.innerHTML = "filter type: keyword";
             }
           }
 
@@ -412,12 +416,12 @@ function frameReplacement() {
       })
      }
 
-function removeloadingoverlay() {
+function removeLoadingOverlay() {
   console.log("la funzione è partita eh")
 
   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
   let overlay = document.getElementById('overlay');
-  if (linksnumber >= 100) {
+  if (linksnumber && linksnumber > 100) {
   console.log("ci siamo...")
   overlay.classList.toggle('removed');
 
@@ -426,9 +430,10 @@ function removeloadingoverlay() {
       clearTimeout(overlaytimeout);
     }, 1600);
 } else {
-  console.log(linsknumber)
+  console.log("here we go again")
   const otheroverlaytimeout = setTimeout(() => {
-    removeloadingoverlay()
+    removeLoadingOverlay()
+    // frameReplacement()
     clearTimeout(otheroverlaytimeout);
   }, 1000);
 }
