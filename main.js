@@ -7,7 +7,7 @@ import * as graph from './graph.js';
 //////////////////////////////////   MAIN   ///////////////////////////////////
 
 const records = await d3.csv('./data/data.csv');
-const pictureMetadata = await d3.csv('./data/assets_data.csv');
+const pictureMetadata = await d3.csv('./data/YEM_data.csv');
 const entities = await d3.json('./data/data.json');
 const text = await pages.loadText('./data/text.md');
 

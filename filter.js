@@ -430,7 +430,7 @@ function removeLoadingOverlay() {
       clearTimeout(overlaytimeout);
     }, 1600);
 } else {
-  console.log("here we go again")
+  console.log("here we go again" + linksnumber)
   const otheroverlaytimeout = setTimeout(() => {
     removeLoadingOverlay()
     // frameReplacement()

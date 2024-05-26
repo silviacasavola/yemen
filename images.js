@@ -22,9 +22,9 @@ function createFrameElement(title, url, desc, people, place, status, idx, length
 
     let metadataLayoutElement = utils.createElement('div', 'metadata-layout');
 
-    if (desc) { metadataLayoutElement.append(
-        utils.createElement('span', 'description metadata-row', '<span class="lil-title">DESCRIPTION:</span> ' + desc + '<br>')
-      )}
+    // if (desc) { metadataLayoutElement.append(
+    //     utils.createElement('span', 'description metadata-row', '<span class="lil-title">DESCRIPTION:</span> ' + desc + '<br>')
+    //   )}
     if (place) { metadataLayoutElement.append(
         utils.createElement('span', 'place metadata-row', '<span class="lil-title">PLACE:</span> ' + place + '<br>')
     )}
