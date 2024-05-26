@@ -193,7 +193,7 @@ function frameReplacement() {
             // Add event listeners after replacing elements
             addEvent(jsonData);
             attachArrowEventListeners()
-            removeoverlay()
+            removeloadingoverlay()
         })
         .catch(error => console.error('Error fetching or parsing JSON:', error));
 }
@@ -412,16 +412,24 @@ function frameReplacement() {
       })
      }
 
-function removeoverlay() {
+function removeloadingoverlay() {
+  console.log("la funzione è partita eh")
+
   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
   let overlay = document.getElementById('overlay');
   if (linksnumber >= 100) {
+  console.log("ci siamo...")
   overlay.classList.toggle('removed');
 
     const overlaytimeout = setTimeout(() => {
   document.getElementById('overlay').remove();
       clearTimeout(overlaytimeout);
     }, 1600);
+} else {
+  const otheroverlaytimeout = setTimeout(() => {
+    removeloadingoverlay()
+    clearTimeout(otheroverlaytimeout);
+  }, 1000);
 }
 }
          // function highlightFilter(checkbox) {
