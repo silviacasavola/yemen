@@ -61,7 +61,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
         for (let i = 0; i < ids.length; i++) {
             let id = ids[i];
             let currentMetadata = utils.getMetadataFromId(metadataMain, id);
-            console.log(`Processing image id: ${id}, index: ${i}, recordIndex: ${recordIndex}`); // Debug log
+            // console.log(`Processing image id: ${id}, index: ${i}, recordIndex: ${recordIndex}`); // Debug log
 
             if (currentMetadata) {
                 let frameElement = createFrameElement(
@@ -94,8 +94,8 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                         recordIndex: recordIndex // Store the record index for debugging
                     }
                 });
-            } else {
-                console.error(`Metadata not found for image id: ${id} in record ${recordIndex}`);
+            // } else {
+            //     console.error(`Metadata not found for image id: ${id} in record ${recordIndex}`);
             }
         }
 
@@ -106,6 +106,8 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
             let photonum = utils.createElement('span', 'photonum', `(1/${ids.length})`);
             scrollHandles.append(arrowleft, photonum, arrowright);
             titlerow.append(scrollHandles);
+
+            frameContainer.append(utils.createElement('div', 'lateral-blur'));
 
             // Update the metadata array with the photonum element
             metadataArray.filter(meta => meta.outerFrame === outerFrame).forEach(meta => {
@@ -130,9 +132,6 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
             frameContainer.classList.add('disconnected');
             frameContainer.classList.add('hidden');
             dotspan.classList.add('disconnected');
-            console.log(`Frame-container ${recordIndex} is disconnected`);
-        } else {
-            console.log(`Frame-container ${recordIndex} is connected`);
         }
     }
 
@@ -157,14 +156,14 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 function updateTitle(titleElement, title) {
     if (titleElement) {
         titleElement.textContent = title;
-        console.log(`Updated title: ${title}`);
+        // console.log(`Updated title: ${title}`);
     }
 }
 
 function updateMetadata(photonumElement, idx, length) {
     if (photonumElement) {
         photonumElement.textContent = `(${idx + 1}/${length})`; // Displaying 1-based index
-        console.log(`Updated photonum: (${idx + 1}/${length})`);
+        // console.log(`Updated photonum: (${idx + 1}/${length})`);
     }
 }
 
@@ -183,9 +182,9 @@ function updateInformationOnScroll(outerFrame) {
         // Check if frame is within view
         if (frameLeft >= scrollLeft && frameLeft < scrollLeft + outerFrameWidth) {
             visibleFrameIdx = i;
-            frameElement.style.border = '2px solid red'; // Add border to the visible frame
-        } else {
-            frameElement.style.border = ''; // Remove border from non-visible frames
+            // frameElement.style.border = '2px solid red'; // Add border to the visible frame
+        // } else {
+            // frameElement.style.border = ''; // Remove border from non-visible frames
         }
     }
 
@@ -200,7 +199,7 @@ function updateInformationOnScroll(outerFrame) {
             updateTitle(titleElement, metadata.metadata.title);
             updateMetadata(photonumElement, metadata.metadata.idx, metadata.metadata.length);
 
-            console.log(`Scroll - Index: ${visibleFrameIdx}, Length: ${metadata.metadata.length}, RecordIndex: ${metadata.metadata.recordIndex}`); // Debug log
+            // console.log(`Scroll - Index: ${visibleFrameIdx}, Length: ${metadata.metadata.length}, RecordIndex: ${metadata.metadata.recordIndex}`); // Debug log
 
             if (arrowleftElement && arrowrightElement) {
                 arrowleftElement.style.display = (metadata.metadata.idx === 0) ? 'none' : 'inline';
@@ -219,6 +218,7 @@ function addNumber() {
         (d) => !d.classList.contains('disconnected'));
     connected.forEach((d) => {
         d.innerHTML = (connected.indexOf(d) + 1);
+        d.setAttribute('data-dot-id', (connected.indexOf(d) + 1));
     });
 }
 

@@ -124,6 +124,7 @@ function dotClickHandler(event) {
 
     // Find the matching dot in the target container based on the unique identifier
     let matchingDot = targetContainer.querySelector(`span.dot[data-dot-id="${clickedDotId}"]`);
+    console.log(matchingDot)
 
     // If a matching dot is found in the target container, scroll the target container to it and highlight it
     if (matchingDot) {

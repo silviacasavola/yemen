@@ -1,52 +1,17 @@
 {
   "people": [
-    {"firstName": "Frédéric; Frederic ; Frederic",
-    "lastName": "Brenner",
-    "extra": null},
-
-    {"firstName": "Miryam; Myriam",
-    "lastName": "Tangi",
-    "extra": null},
-
-    {"firstName": "Linda",
-    "lastName": "Stern",
-    "extra": null},
-
-    {"firstName": "Jean",
-    "lastName": "Lambert",
-    "extra": "the old rat"},
-
-    {"firstName": "Abdul",
-    "lastName": "Wasser; Quasser",
-    "extra": "sheik; sheik Sinan; Sheik"},
-
-    {"firstName": "Abdul",
-    "lastName": "Wahab; Quarad; Warad; Warab",
-    "extra": null},
-
-      {"firstName": "Salem",
-      "lastName": "Garadi",
-      "extra": null},
-
-      {"firstName": "Pascal",
-      "lastName": null,
-      "extra": null},
-
-      {"firstName": "Amram",
-      "lastName": "Garadi",
-      "extra": null},
-
-      {"firstName": "Yaya; Yehiya; Yehia",
-      "lastName": "Garadi",
-      "extra": null},
-
-      {"firstName": "Suliman; Sleman",
-      "lastName": "Garadi",
-      "extra": null},
-
-      {"firstName": "Ali",
-      "lastName": null,
-      "extra": null}
+    "Frédéric Brenner; Frédéric; Frederic; Frederic Brenner; Brenner, Frédéric; Brenner, Frederic",
+    "Myriam Tangi; Miryam; Myriam; Miryam Tangi; Tangi, Myriam; Myriam Tangi",
+    "Linda Stern; Linda; Stern, Linda",
+    "Jean Lambert; Jean; Lambert, Jean; the old rat",
+    "Abdul Wasser; Abdul Quasser; Quasser; Wasser; Wasser, Abdul; sheik; sheik Sinan; Sheik",
+    "Abdul Wahab; Abdul Quarad; Abdul Warad; Abdul Warab; Wahab, Abdul; Warab, Abdul; Quarad, Abdul",
+    "Salem Garadi; Garadi, Salem",
+    "Pascal",
+    "Amram Garadi; Garadi Amram",
+    "Yehiya Garadi; Yaya Garadi; Yehia Garadi; Yaya; Yehiya; Yehia; Garadi, Yehiya; Garadi, Yehia",
+    "Suliman Garadi; Sleman Garadi; Garadi, Suliman; Garadi, Sleman",
+    "Ali"
     ],
 
     "places": [
@@ -61,7 +26,7 @@
     "Arhab",
     "Sam City",
     "Raida, Raydah",
-    "Ajar; El Ajar",
+    "Ajar; El Ajar; Al Ahjar",
     "Bani Abd"
 ],
 

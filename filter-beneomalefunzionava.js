@@ -12,84 +12,35 @@ function toggleHidden() {
 }
 
 // Function to generate combinations of names, surnames, and extras
-// function generateNameCombinations(names, surnames, extras) {
-//     const shortNameCombinations = [];
-//     const longNameCombinations = [];
-//
-//     names.forEach(name => {
-//         surnames.forEach(surname => {
-//             shortNameCombinations.push(`${surname}`);
-//             longNameCombinations.push(`${name} ${surname}`);
-//             longNameCombinations.push(`${surname} ${name}`);
-//             longNameCombinations.push(`${surname}, ${name}`);
-//
-//             if (extras) {
-//                 extras.forEach(extra => {
-//                     shortNameCombinations.push(`${extra}`);
-//                     longNameCombinations.push(`${extra} ${name}`);
-//                     longNameCombinations.push(`${extra} ${surname}`);
-//                     longNameCombinations.push(`${extra} ${name} ${surname}`);
-//                 });
-//             }
-//         });
-//     });
-//
-//     names.forEach(name => {
-//         shortNameCombinations.push(`${name}`);
-//     });
-//
-//     // Return both short and long combinations
-//     return { shortNameCombinations, longNameCombinations };
-// }
+function generateNameCombinations(names, surnames, extras) {
+    const shortNameCombinations = [];
+    const longNameCombinations = [];
 
-// Function to replace people entities in an HTML element
-// function replacePeopleInElement(element, jsonData) {
-//     if (!element) return;
-//
-//     const people = jsonData.people;
-//     if (people && Array.isArray(people)) {
-//         people.forEach((person, index) => {
-//             if (person && person.firstName && person.lastName) {
-//                 const nameVariants = person.firstName.split('; ').map(name => name.trim());
-//                 const surnameVariants = person.lastName.split('; ').map(surname => surname.trim());
-//                 const extraVariants = person.extra ? person.extra.split('; ').map(extra => extra.trim()) : null;
-//                 const personId = `person${index}`;
-//
-//                 // Generate both short and long combinations
-//                 const { shortNameCombinations, longNameCombinations } = generateNameCombinations(nameVariants, surnameVariants, extraVariants);
-//
-//                 // Sort long combinations by length in descending order
-//                 longNameCombinations.sort((a, b) => b.length - a.length);
-//
-//                 // Replace each combination in the element
-//                 longNameCombinations.forEach(combination => {
-//                     const regex = new RegExp(`\\b${combination}\\b`, 'gi');
-//                     // Create a new element to hold the modified content
-//                     const newElement = document.createElement('div');
-//                     newElement.innerHTML = element.innerHTML.replace(regex, match => {
-//                         return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
-//                     });
-//                     // Replace the existing content with the modified element
-//                     element.innerHTML = newElement.innerHTML;
-//                 });
-//
-//                 // Replace short combinations
-//                 shortNameCombinations.forEach(combination => {
-//                     const regex = new RegExp(`\\b${combination}\\b`, 'gi');
-//                     // Create a new element to hold the modified content
-//                     const newElement = document.createElement('div');
-//                     newElement.innerHTML = element.innerHTML.replace(regex, match => {
-//                         return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
-//                     });
-//                     // Replace the existing content with the modified element
-//                     if (!element.querySelector('.filter-link')) {
-//                     element.innerHTML = newElement.innerHTML;
-//                   }
-//                 });
-//           }
-//         });
-//     }
-// }
+    names.forEach(name => {
+        surnames.forEach(surname => {
+            shortNameCombinations.push(`${surname}`);
+            longNameCombinations.push(`${name} ${surname}`);
+            longNameCombinations.push(`${surname} ${name}`);
+            longNameCombinations.push(`${surname}, ${name}`);
+
+            if (extras) {
+                extras.forEach(extra => {
+                    shortNameCombinations.push(`${extra}`);
+                    longNameCombinations.push(`${extra} ${name}`);
+                    longNameCombinations.push(`${extra} ${surname}`);
+                    longNameCombinations.push(`${extra} ${name} ${surname}`);
+                });
+            }
+        });
+    });
+
+    names.forEach(name => {
+        shortNameCombinations.push(`${name}`);
+    });
+
+    // Return both short and long combinations
+    return { shortNameCombinations, longNameCombinations };
+}
 
 // Function to replace people entities in an HTML element
 function replacePeopleInElement(element, jsonData) {
@@ -98,26 +49,48 @@ function replacePeopleInElement(element, jsonData) {
     const people = jsonData.people;
     if (people && Array.isArray(people)) {
         people.forEach((person, index) => {
-            const personVariants = person.split('; ').map(person => person.trim());
-            const personId = `person${index}`;
+            if (person && person.firstName && person.lastName) {
+                const nameVariants = person.firstName.split('; ').map(name => name.trim());
+                const surnameVariants = person.lastName.split('; ').map(surname => surname.trim());
+                const extraVariants = person.extra ? person.extra.split('; ').map(extra => extra.trim()) : null;
+                const personId = `person${index}`;
 
-            personVariants.sort((a, b) => b.length - a.length);
+                // Generate both short and long combinations
+                const { shortNameCombinations, longNameCombinations } = generateNameCombinations(nameVariants, surnameVariants, extraVariants);
 
-            personVariants.forEach(personVariant => {
-                const regex = new RegExp(`\\b${personVariant}\\b`, 'gi');
+                // Sort long combinations by length in descending order
+                longNameCombinations.sort((a, b) => b.length - a.length);
 
-                // Create a new element to hold the modified content
-                const newElement = document.createElement('div');
-                newElement.innerHTML = element.innerHTML.replace(regex, match => {
-                    return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
+                // Replace each combination in the element
+                longNameCombinations.forEach(combination => {
+                    const regex = new RegExp(`\\b${combination}\\b`, 'gi');
+                    // Create a new element to hold the modified content
+                    const newElement = document.createElement('div');
+                    newElement.innerHTML = element.innerHTML.replace(regex, match => {
+                        return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
+                    });
+                    // Replace the existing content with the modified element
+                    element.innerHTML = newElement.innerHTML;
                 });
 
-                // Replace the existing content with the modified element
-                element.innerHTML = newElement.innerHTML;
-            });
+                // Replace short combinations
+                shortNameCombinations.forEach(combination => {
+                    const regex = new RegExp(`\\b${combination}\\b`, 'gi');
+                    // Create a new element to hold the modified content
+                    const newElement = document.createElement('div');
+                    newElement.innerHTML = element.innerHTML.replace(regex, match => {
+                        return `<span class="filter-link person-link" id='${personId}'>${match}</span>`;
+                    });
+                    // Replace the existing content with the modified element
+                    if (!element.querySelector('.filter-link')) {
+                    element.innerHTML = newElement.innerHTML;
+                  }
+                });
+          }
         });
     }
 }
+
 
 // Function to replace place entities in an HTML element
 function replacePlacesInElement(element, jsonData) {
@@ -206,7 +179,6 @@ function frameReplacement() {
             jsonData = data;
             // Replace people entities in .people-col elements
             const metadatacells = document.querySelectorAll('.metadata-layout')
-            const titlecells = document.querySelectorAll('.frame .title')
 
             metadatacells.forEach(element => {
                 replacePeopleInElement(element, jsonData);
@@ -214,18 +186,14 @@ function frameReplacement() {
                 replaceKeywordsInElement(element, jsonData);
             });
 
-            // titlecells.forEach(element => {
-            //     replaceKeywordsInElement(element, jsonData);
-            // });
-
             const nestedLinks = document.querySelectorAll('.filter-link .filter-link');
                 nestedLinks.forEach(span => {
                   span.parentNode.replaceChild(span.firstChild, span);
                 });
             // Add event listeners after replacing elements
             addEvent(jsonData);
-            // attachArrowEventListeners()
-            removeLoadingOverlay()
+            attachArrowEventListeners()
+            // removeLoadingOverlay()
         })
         .catch(error => console.error('Error fetching or parsing JSON:', error));
 }
@@ -249,7 +217,9 @@ function frameReplacement() {
               const personIndex = parseInt(flink.id.replace('person', ''), 10);
               if (!isNaN(personIndex) && jsonData.people && jsonData.people[personIndex]) {
               const selectedPerson = jsonData.people[personIndex];
-              officialIdentificator = selectedPerson.split('; ').map(person => person.trim())[0];
+              const officialName = selectedPerson.firstName.split('; ').map(name => name.trim())[0]
+              const officialSurname = selectedPerson.lastName.split('; ').map(surname => surname.trim())[0]
+              officialIdentificator = officialName + " " + officialSurname;
               filterType.innerHTML = "filter type: person";
             }
           }
@@ -358,142 +328,118 @@ function frameReplacement() {
     }
 
     function thenScroll(flink) {
-        let columnToScroll;
-        if (filterSelected === true) {
-            let clickContainer = flink.closest('#images-column') || flink.closest('#text-column');
-            const click = flink.closest('.frame-container') || flink.closest('.page');
 
-            // Calculate initial distance from top
-            let initialDistanceFromTop = flink.getBoundingClientRect().top;
+      let columnToScroll;
+    if (filterSelected === true) {
+        let clickContainer = flink.closest('#images-column') || flink.closest('#text-column');
+        const click = flink.closest('.frame-container') || flink.closest('.page');
 
-            if (clickContainer.id === 'text-column') {
-                columnToScroll = document.getElementById('images-column');
-            } else if (clickContainer.id === 'images-column') {
-                columnToScroll = document.getElementById('text-column');
-            }
+        // Calculate initial distance from top
+        let initialDistanceFromTop = flink.getBoundingClientRect().top;
 
-            // Scroll in the other column
-            let counterpart = columnToScroll.querySelector('.dot.active');
-            let counterRect;
-            if (counterpart) {
-                counterRect = counterpart.closest('.frame-container') || counterpart.closest('.page');
-            }
+        // Perform your existing operations
+        if (clickContainer.id === 'text-column') {
+            columnToScroll = document.getElementById('images-column');
+        } else if (clickContainer.id === 'images-column') {
+            columnToScroll = document.getElementById('text-column');
+        }
 
-            // Use a timeout to ensure the changes are completed
-            setTimeout(() => {
-                // Calculate the new scroll position
-                const newFlinkRect = flink.getBoundingClientRect();
-                const newScrollPosition = clickContainer.scrollTop + (newFlinkRect.top - initialDistanceFromTop);
+        // Scroll in the other column
+        let counterpart = columnToScroll.querySelector('.dot.active');
+        let counterRect;
+        if (counterpart) {
+        counterRect = counterpart.closest('.frame-container') || counterpart.closest('.page');
+      }
 
-                // Scroll to the new position
-                clickContainer.scrollTo({
-                    top: newScrollPosition,
+        // Use a timeout to ensure the changes are completed
+        setTimeout(() => {
+            // Calculate the new scroll position
+            const newFlinkRect = flink.getBoundingClientRect();
+            const newScrollPosition = clickContainer.scrollTop + (newFlinkRect.top - initialDistanceFromTop);
+
+            // Scroll to the new position
+            clickContainer.scrollTo({
+                top: newScrollPosition,
+                behavior: 'smooth'
+            });
+
+            if (counterRect) {
+                let counterRectPos = counterRect.getBoundingClientRect();
+                columnToScroll.scrollTo({
+                    top: columnToScroll.scrollTop + counterRectPos.top - 10,
                     behavior: 'smooth'
                 });
+            }
+        }, 800);  // Adjust the timeout duration as needed
+      } else {
+        let dotactive = document.querySelectorAll('.dot.active');
 
-                if (counterRect) {
-                    let counterRectPos = counterRect.getBoundingClientRect();
-                    columnToScroll.scrollTo({
-                        top: columnToScroll.scrollTop + counterRectPos.top - 70,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 1000);  // Adjust the timeout duration as needed
-        } else {
-            const textColumn = document.getElementById('text-column');
-            const imagesColumn = document.getElementById('images-column');
+                dotactive.forEach((da) => {
+                    let columnToScroll = da.closest('#images-column') || da.closest('#text-column');
 
-            const getClosestElement = (container, selector) => {
-                const elements = Array.from(container.querySelectorAll(selector));
-                const viewportTop = container.getBoundingClientRect().top;
-                return elements.reduce((closest, el) => {
-                    const elTop = el.getBoundingClientRect().top;
-                    const distance = Math.abs(elTop - viewportTop);
-                    if (closest === null || distance < closest.distance) {
-                        return { element: el, distance };
-                    }
-                    return closest;
-                }, null).element;
-            };
+                    setTimeout(() => {
+                        // Calculate the scroll position
+                        let scrollPosition = columnToScroll.scrollTop + da.getBoundingClientRect().top - 10;
 
-            // Find the closest .page and .dot to the top of the viewport
-            const closestPage = getClosestElement(textColumn, '.page');
-            const closestDot = getClosestElement(imagesColumn, '.dot');
+                        // Scroll to the new position
+                        columnToScroll.scrollTo({
+                            top: scrollPosition,
+                            behavior: 'smooth'
+                        });
+                    }, 800);
+                })
+            }
+          }
 
-            setTimeout(() => {
-                // Scroll to the closest .page
-                if (closestPage) {
-                  // closestPage.style.border = "solid red";
-                    const pageTop = closestPage.getBoundingClientRect().top + textColumn.scrollTop - 70;
-                    textColumn.scrollTo({
-                        top: pageTop,
-                        behavior: 'smooth'
-                    });
-                }
+    function attachArrowEventListeners() {
+      let scrollHandles = document.querySelectorAll('.scroll-handles');
 
-                // Scroll to the closest .dot
-                if (closestDot) {
-                  // closestDot.style.border = "solid red";
-                    const dotTop = closestDot.getBoundingClientRect().top + imagesColumn.scrollTop - 70;
-                    imagesColumn.scrollTo({
-                        top: dotTop,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 1000);  // Adjust the timeout duration as needed
+      // if (scrollHandles.length < 537) {
+      //     attachArrowEventListeners()
+      //   } else {
+      scrollHandles.forEach(sh => {
+        const outerFrame = sh.closest('.outer-frame');
+
+        const arrows = sh.querySelectorAll('.arrow')
+        arrows.forEach(arrow => {
+          arrow.addEventListener("click", function(event) {
+            const framewidth = outerFrame.getBoundingClientRect().width + 5;
+            const currentScrollX = outerFrame.scrollLeft;
+            let scrollpos = 0;
+
+            if (arrow.classList.contains('arrowright')) {
+          scrollxpos = currentScrollX + framewidth;
+          } else if (arrow.classList.contains('arrowleft')) {
+          scrollxpos = currentScrollX - framewidth;
         }
-    }
+            outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
+          });
+        })
+      })
+     }
 
-
-    // function attachArrowEventListeners() {
-    //   let scrollHandles = document.querySelectorAll('.scroll-handles');
-    //
-    //   // if (scrollHandles.length < 537) {
-    //   //     attachArrowEventListeners()
-    //   //   } else {
-    //   scrollHandles.forEach(sh => {
-    //     const outerFrame = sh.closest('.outer-frame');
-    //
-    //     const arrows = sh.querySelectorAll('.arrow')
-    //     arrows.forEach(arrow => {
-    //       arrow.addEventListener("click", function(event) {
-    //         const framewidth = outerFrame.getBoundingClientRect().width + 5;
-    //         const currentScrollX = outerFrame.scrollLeft;
-    //         let scrollpos = 0;
-    //
-    //         if (arrow.classList.contains('arrowright')) {
-    //       scrollxpos = currentScrollX + framewidth;
-    //       } else if (arrow.classList.contains('arrowleft')) {
-    //       scrollxpos = currentScrollX - framewidth;
-    //     }
-    //         outerFrame.scrollTo({ left: scrollxpos, behavior: 'smooth' });
-    //       });
-    //     })
-    //   })
-    //  }
-
-function removeLoadingOverlay() {
-  console.log("la funzione è partita eh")
-
-  let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
-  let overlay = document.getElementById('overlay');
-  if (linksnumber && linksnumber > 100) {
-  console.log("ci siamo...")
-  overlay.classList.toggle('removed');
-
-    const overlaytimeout = setTimeout(() => {
-  document.getElementById('overlay').remove();
-      clearTimeout(overlaytimeout);
-    }, 1600);
-} else {
-  console.log("here we go again" + linksnumber)
-  const otheroverlaytimeout = setTimeout(() => {
-    removeLoadingOverlay()
-    // frameReplacement()
-    clearTimeout(otheroverlaytimeout);
-  }, 1000);
-}
-}
+// function removeLoadingOverlay() {
+//   console.log("la funzione è partita eh")
+//
+//   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
+//   let overlay = document.getElementById('overlay');
+//   if (linksnumber && linksnumber > 100) {
+//   console.log("ci siamo...")
+//   overlay.classList.toggle('removed');
+//
+//     const overlaytimeout = setTimeout(() => {
+//   document.getElementById('overlay').remove();
+//       clearTimeout(overlaytimeout);
+//     }, 1600);
+// } else {
+//   console.log("here we go again" + linksnumber)
+//   const otheroverlaytimeout = setTimeout(() => {
+//     removeLoadingOverlay()
+//     // frameReplacement()
+//     clearTimeout(otheroverlaytimeout);
+//   }, 1000);
+// }
+// }
          // function highlightFilter(checkbox) {
          //   let classname = checkbox.value + "-link";
          //   let elements = document.getElementsByClassName(classname);

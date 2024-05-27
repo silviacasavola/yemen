@@ -393,8 +393,8 @@ background-clip: text;
 .lateral-blur {
   position: absolute;
   top: 0; right: 0; bottom: 0;
-  width: 3vw;
-  background: linear-gradient(90deg, rgba(248, 248, 248, 0) 60%, var(--white) 95%);
+  width: 5vw;
+  background: linear-gradient(90deg, rgba(248, 248, 248, 0) 70%, var(--white) 95%);
   z-index: 10;
 }
 
@@ -420,11 +420,12 @@ background-clip: text;
   animation-name: filteranimation;
   animation-duration: 0.5s;
   animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 @keyframes filteranimation {
-  0% {background: linear-gradient(var(--white) 0 0); color: black};
-  100% {background: linear-gradient(black 0 0); color: var(--white)}
+  0% {background: var(--white); color: black; background-size: auto calc(var(--large-text)*0.9);}
+  100% {background: black; color: var(--white); background-size: auto calc(var(--large-text)*0.9);}
 }
 
 .page .filter-link {
@@ -462,6 +463,7 @@ flex-direction: column;
 font-size: var(--small-text);
     line-height: 1;
     font-family: 'source-code-pro';
+z-index:50;
 }
 
 #name-selection {
@@ -561,7 +563,7 @@ font-size: var(--small-text);
   background: var(--white);
   font-family: 'source-serif-pro';
   position: fixed;
-  z-index:5;
+  z-index:20;
   display: flex;
   align-items: center;
   text-align: center;
