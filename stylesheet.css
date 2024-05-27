@@ -391,7 +391,15 @@ background-clip: text;
   opacity: 1;
 }
 
-.lateral-blur {
+/* .sfumatura-sinistra {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 5vw;
+  background: linear-gradient(90deg, rgba(248, 248, 248, 0) 70%, var(--white) 95%);
+  z-index: 10;
+} */
+
+.sfumatura-destra {
   position: absolute;
   top: 0; right: 0; bottom: 0;
   width: 5vw;
