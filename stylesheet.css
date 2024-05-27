@@ -57,7 +57,7 @@ body {
   /* color: var(--dark-grey); */
   font-size: var(--medium-text);
   transition: top 1s;
-  font-style: italic;
+  /* font-style: italic; */
 }
 
 #header span:hover {
@@ -508,8 +508,8 @@ z-index:60;
   width: 58.3333333333vw; */
   width: 49.3vw;
   left: var(--main-column);
-  max-height: 5vh;
-  padding: calc(var(--margin)*2) var(--margin) var(--margin) var(--margin);
+  /* max-height: 5vh; */
+  padding: calc(var(--margin)*2) calc(2*var(--margin)/3) var(--margin) var(--margin);
   background: linear-gradient(rgba(248, 248, 248, 0) 0%, var(--white) 30%);
   column-count: 2;
   column-gap: 20px;
