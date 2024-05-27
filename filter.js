@@ -473,12 +473,12 @@ function frameReplacement() {
     //  }
 
 function removeLoadingOverlay() {
-  console.log("la funzione è partita eh")
+  // console.log("la funzione è partita eh")
 
   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
   let overlay = document.getElementById('overlay');
   if (linksnumber && linksnumber > 100) {
-  console.log("ci siamo...")
+  // console.log("ci siamo...")
   overlay.classList.toggle('removed');
 
     const overlaytimeout = setTimeout(() => {
@@ -486,7 +486,7 @@ function removeLoadingOverlay() {
       clearTimeout(overlaytimeout);
     }, 1600);
 } else {
-  console.log("here we go again" + linksnumber)
+  // console.log("here we go again" + linksnumber)
   const otheroverlaytimeout = setTimeout(() => {
     removeLoadingOverlay()
     // frameReplacement()
