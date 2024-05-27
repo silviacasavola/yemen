@@ -476,8 +476,9 @@ function removeLoadingOverlay() {
   // console.log("la funzione è partita eh")
 
   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
+  let imgsnumber = document.querySelectorAll('img').length;
   let overlay = document.getElementById('overlay');
-  if (linksnumber && linksnumber > 100) {
+  if (linksnumber && imgsnumber && linksnumber > 100 && imgsnumber > 100) {
   // console.log("ci siamo...")
   overlay.classList.toggle('removed');
 
