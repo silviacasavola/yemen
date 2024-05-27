@@ -44,6 +44,7 @@ export async function loadAndDisplayPages(text, parentId) {
     chronoLinks.forEach((link) => {
     let index = chronoLinks.indexOf(link);
     let dot = utils.createElement('span', `dot`, index + 1);
+    dot.setAttribute('data-dot-id', index+1);
     link.append(dot)
     if (index === 0) {link.classList.add('active')}
   })

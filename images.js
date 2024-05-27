@@ -1,211 +1,236 @@
 import * as utils from './utils.js';
 let allFramesGenerated = false;
 const maxRetries = 3;
+let firstImageHeightVh;
+let metadataArray = [];
 
-function createFrameElement(title, url, desc, people, place, status, idx, length, outerFrame) {
-    let frameElement = utils.createElement('div', `frame`);
+// Function to create each frame element
+function createFrameElement(title, url, idx, people, place) {
+    let frameElement = utils.createElement('div', 'frame');
 
-    let titleBarElement = utils.createElement('div', 'title-bar');
-
-    titleBarElement.append(
-    utils.createElement('span', 'title', title)
-  )
-
-    let imageContainer = utils.createElement('div', `img-container`);
+    let imgContainer = utils.createElement('div', 'img-container');
     let imageElement = document.createElement('img');
     imageElement.src = url;
-    if (idx !== 0) {
-
-    imageElement.style.maxHeight = firstImageHeightVh + "vh";
-  }
-    imageContainer.append(imageElement)
+    imageElement.className = `image-idx-${idx}`; // Assign class based on idx
+    imageElement.onload = () => {
+        if (!firstImageHeightVh) {
+            firstImageHeightVh = imageElement.clientHeight / window.innerHeight * 100;
+            setImageHeights();
+        }
+    };
+    imgContainer.append(imageElement);
 
     let metadataLayoutElement = utils.createElement('div', 'metadata-layout');
-
-    // if (desc) { metadataLayoutElement.append(
-    //     utils.createElement('span', 'description metadata-row', '<span class="lil-title">DESCRIPTION:</span> ' + desc + '<br>')
-    //   )}
-    if (place) { metadataLayoutElement.append(
-        utils.createElement('span', 'place metadata-row', '<span class="lil-title">PLACE:</span> ' + place + '<br>')
-    )}
-    if (people) { metadataLayoutElement.append(
-        utils.createElement('span', 'people metadata-row', '<span class="lil-title">PEOPLE:</span> ' + people + '<br>')
-    )}
-
-
-    if (length > 1) {
-        let scrollHandles = utils.createElement('div', 'scroll-handles');
-
-        let arrowleft = utils.createElement('span', `arrow arrowleft`, '←');
-        let arrowright = utils.createElement('span', `arrow arrowright`, '→');
-        let photonum = utils.createElement('span', 'photonum', "(" + (Number(idx)+1) + "/" + length + ")");
-
-        if (Number(idx) === 0) { arrowleft.style.display = "none" }
-        if (Number(idx) === (length-1)) { arrowright.style.display = "none" }
-
-        scrollHandles.append(arrowleft, photonum, arrowright)
-        metadataLayoutElement.append(scrollHandles)
+    if (place) {
+        metadataLayoutElement.append(
+            utils.createElement('span', 'place metadata-row', `<span class="lil-title">PLACE:</span> ${place}<br>`)
+        );
+    }
+    if (people) {
+        metadataLayoutElement.append(
+            utils.createElement('span', 'people metadata-row', `<span class="lil-title">PEOPLE:</span> ${people}<br>`)
+        );
     }
 
-    frameElement.append(titleBarElement, imageContainer, metadataLayoutElement);
-
+    frameElement.append(imgContainer, metadataLayoutElement);
     return frameElement;
 }
 
-let firstImageHeightVh;
-
 // Function to load and display images
 export async function loadAndDisplayImages(records, metadataMain, parentId) {
-
-    function loadImage(url) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = (error) => reject(error);
-            img.src = url;
-        });
-    }
-
-    function loadImageWithRetry(url, retries) {
-        return new Promise((resolve, reject) => {
-            let retryCount = 0;
-
-            function load() {
-                loadImage(url)
-                    .then((image) => resolve(image))
-                    .catch((error) => {
-                        retryCount++;
-                        if (retryCount <= retries) {
-                            console.log(`Retrying (${retryCount}/${retries}) for URL: ${url}`);
-                            load();
-                        } else {
-                            reject(new Error(`Failed to load image after ${retries} retries: ${url}`));
-                        }
-                    });
-            }
-
-            load();
-        });
-    }
-
     let parentElement = document.getElementById(parentId);
     let fragment = document.createDocumentFragment();
 
-    for (let record of records) {
+    for (let recordIndex = 0; recordIndex < records.length; recordIndex++) {
+        let record = records[recordIndex];
 
         let frameContainer = utils.createElement('div', 'frame-container');
-
         let outerFrame = utils.createElement('div', 'outer-frame');
+
+        let titlerow = utils.createElement('div', 'title-row');
+        let titleElement = utils.createElement('span', 'title');
+        titlerow.append(titleElement);
+
+        let dotspan = utils.createElement('span', 'dot');
+
+        frameContainer.append(titlerow, outerFrame, dotspan);
+
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
-        let dotspan = utils.createElement('span', `dot`);
 
-        frameContainer.append(outerFrame, dotspan);
-
-        let firstImageHeight;
         for (let i = 0; i < ids.length; i++) {
-            let currentMetadata = utils.getMetadataFromId(metadataMain, ids[i]);
+            let id = ids[i];
+            let currentMetadata = utils.getMetadataFromId(metadataMain, id);
+            console.log(`Processing image id: ${id}, index: ${i}, recordIndex: ${recordIndex}`); // Debug log
 
             if (currentMetadata) {
-                loadImageWithRetry(
-                    `https://gradim.fh-potsdam.de/omeka-s/files/medium/${ids[i]}.jpg`,
-                    maxRetries
-                )
-                .then(() => {
-                    let frame_element = createFrameElement(
-                        currentMetadata.Title,
-                        `https://gradim.fh-potsdam.de/omeka-s/files/medium/${ids[i]}.jpg`,
-                        currentMetadata.Description,
-                        currentMetadata.metaDepictedPeople,
-                        record.place,
-                        record.appears == 'yes' ? '' : 'disconnected',
-                        [i],
-                        ids.length,
-                        outerFrame
-                    );
-                    // .then(() => {console.log(outerFrame)});
-                    outerFrame.appendChild(frame_element)
+                let frameElement = createFrameElement(
+                    currentMetadata.Title,
+                    `https://gradim.fh-potsdam.de/omeka-s/files/large/${id}.jpg`,
+                    i,
+                    currentMetadata.metaDepictedPeople,
+                    record.place
+                );
 
-                    // Set the height of frameContainer based on the first image's height
-                    if (i === 0) {
-                        firstImageHeightVh = frame_element.querySelector('.img-container img').clientHeight / window.innerHeight * 100;
+                if (i === 0) {
+                    titleElement.innerHTML = currentMetadata.Title;
+                }
+
+                // Append the frame element
+                outerFrame.appendChild(frameElement);
+
+                // Store metadata in an array for easy access during scroll
+                metadataArray.push({
+                    element: frameElement,
+                    outerFrame: outerFrame,
+                    titleElement: titleElement,
+                    photonumElement: null, // Placeholder, will be updated later if needed
+                    arrowleftElement: null,
+                    arrowrightElement: null,
+                    metadata: {
+                        title: currentMetadata.Title,
+                        idx: i, // Storing 0-based index
+                        length: ids.length,
+                        recordIndex: recordIndex // Store the record index for debugging
                     }
-                    })
-                .catch((error) => {
-                    console.error(`Error loading image ${ids[i]}:`, error);
                 });
+            } else {
+                console.error(`Metadata not found for image id: ${id} in record ${recordIndex}`);
             }
-            // attachArrowEventListeners(outerFrame)
         }
+
+        if (ids.length > 1) {
+            let scrollHandles = utils.createElement('div', 'scroll-handles');
+            let arrowleft = utils.createElement('span', `arrow arrowleft`, '←');
+            let arrowright = utils.createElement('span', `arrow arrowright`, '→');
+            let photonum = utils.createElement('span', 'photonum', `(1/${ids.length})`);
+            scrollHandles.append(arrowleft, photonum, arrowright);
+            titlerow.append(scrollHandles);
+
+            // Update the metadata array with the photonum element
+            metadataArray.filter(meta => meta.outerFrame === outerFrame).forEach(meta => {
+                meta.photonumElement = photonum;
+                meta.arrowleftElement = arrowleft;
+                meta.arrowrightElement = arrowright;
+            });
+
+            // Add scroll event listener to this outer-frame
+            outerFrame.addEventListener('scroll', () => {
+                updateInformationOnScroll(outerFrame);
+            });
+        }
+
+
+        frameContainer.append(utils.createElement('div', 'corner-sfumato'));
 
         fragment.appendChild(frameContainer);
 
-        frameContainer.append(
-          utils.createElement('div', `corner-sfumato`)
-        )
-
-        if (records.indexOf(record) === 0 ) {
-            frameContainer.classList.add('active');
-        }
-
+        // Ensure .disconnected frames are also processed correctly
         if (record.appears === 'no') {
-          frameContainer.classList.add('disconnected')
-          frameContainer.classList.add('hidden');
-          dotspan.classList.add('disconnected');
+            frameContainer.classList.add('disconnected');
+            frameContainer.classList.add('hidden');
+            dotspan.classList.add('disconnected');
+            console.log(`Frame-container ${recordIndex} is disconnected`);
+        } else {
+            console.log(`Frame-container ${recordIndex} is connected`);
         }
-
-        // attachArrowEventListeners(outerFrame);
     }
 
     parentElement.appendChild(fragment);
-
     allFramesGenerated = true;
 
     if (allFramesGenerated) {
-      toggleHidden();
-      // frameReplacement();
-      addnumber();
-      updateImageHeights();
-      // attachArrowEventListeners();
+        toggleHidden();
+        addNumber();
     }
-}
 
-function addnumber() {
-        let connected = Array.from(document.querySelectorAll('#images-container .dot')).filter(
-            (d) => !d.classList.contains('disconnected'));
-        connected.forEach((d) => {
-          d.innerHTML = (connected.indexOf(d) + 1)
-        });
-}
-
-
-// Function to update image heights based on the tallest image in each frame-container
-function updateImageHeights() {
-    let frameContainers = document.querySelectorAll('.frame-container');
-    frameContainers.forEach(container => {
-        let outerFrame = container.querySelector('.outer-frame');
-        let firstImage = outerFrame.querySelector('.img-container img');
-        if (firstImage) {
-            let firstImageHeightVh = firstImage.clientHeight / window.innerHeight * 100; // Convert to vh
-            setImageHeights(outerFrame, firstImageHeightVh);
+    // Ensure metadata and title are correctly set after all frames are loaded
+    metadataArray.forEach(meta => {
+        if (meta.metadata.idx === 0) {
+            updateTitle(meta.titleElement, meta.metadata.title);
+            updateMetadata(meta.photonumElement, meta.metadata.idx, meta.metadata.length);
         }
     });
 }
 
-// // Listen for resize event to update image heights
-window.addEventListener('resize', function updateImageHeights() {
-    let frameContainers = document.querySelectorAll('.outer-frame');
-    frameContainers.forEach(container => {
-        let images = Array.from(container.querySelectorAll('img'));
-        if (images) {
-        // console.log(images[0].clientHeight)
-        firstImageHeightVh = images[0].clientHeight / window.innerHeight * 100;
-        images.forEach(image => {
-          if (images.indexOf(image) !== 0) {
-        image.style.maxHeight = `${firstImageHeightVh}vh`;
-        image.style.height = `${firstImageHeightVh}vh`;
-      }
-      })
+// Function to update the fixed title bar
+function updateTitle(titleElement, title) {
+    if (titleElement) {
+        titleElement.textContent = title;
+        console.log(`Updated title: ${title}`);
     }
-  })
-})
+}
+
+function updateMetadata(photonumElement, idx, length) {
+    if (photonumElement) {
+        photonumElement.textContent = `(${idx + 1}/${length})`; // Displaying 1-based index
+        console.log(`Updated photonum: (${idx + 1}/${length})`);
+    }
+}
+
+// Function to update metadata based on scroll position
+function updateInformationOnScroll(outerFrame) {
+    let scrollLeft = outerFrame.scrollLeft;
+    let outerFrameWidth = outerFrame.clientWidth;
+    let frameElements = outerFrame.querySelectorAll('.frame');
+
+    let visibleFrameIdx = -1;
+    for (let i = 0; i < frameElements.length; i++) {
+        let frameElement = frameElements[i];
+        let rect = frameElement.getBoundingClientRect();
+        let frameLeft = rect.left + scrollLeft;
+
+        // Check if frame is within view
+        if (frameLeft >= scrollLeft && frameLeft < scrollLeft + outerFrameWidth) {
+            visibleFrameIdx = i;
+            frameElement.style.border = '2px solid red'; // Add border to the visible frame
+        } else {
+            frameElement.style.border = ''; // Remove border from non-visible frames
+        }
+    }
+
+    if (visibleFrameIdx !== -1) {
+        let metadata = metadataArray.find(meta => meta.outerFrame === outerFrame && meta.metadata.idx === visibleFrameIdx);
+        if (metadata) {
+            let titleElement = metadata.titleElement;
+            let photonumElement = metadata.photonumElement;
+            let arrowleftElement = metadata.arrowleftElement;
+            let arrowrightElement = metadata.arrowrightElement;
+
+            updateTitle(titleElement, metadata.metadata.title);
+            updateMetadata(photonumElement, metadata.metadata.idx, metadata.metadata.length);
+
+            console.log(`Scroll - Index: ${visibleFrameIdx}, Length: ${metadata.metadata.length}, RecordIndex: ${metadata.metadata.recordIndex}`); // Debug log
+
+            if (arrowleftElement && arrowrightElement) {
+                arrowleftElement.style.display = (metadata.metadata.idx === 0) ? 'none' : 'inline';
+                arrowrightElement.style.display = (metadata.metadata.idx === metadata.metadata.length - 1) ? 'none' : 'inline';
+            }
+        } else {
+            console.error(`Metadata not found for visibleFrameIdx: ${visibleFrameIdx} in outerFrame`);
+        }
+    } else {
+        console.error(`No visible frame found in outerFrame`);
+    }
+}
+
+function addNumber() {
+    let connected = Array.from(document.querySelectorAll('#images-container .dot')).filter(
+        (d) => !d.classList.contains('disconnected'));
+    connected.forEach((d) => {
+        d.innerHTML = (connected.indexOf(d) + 1);
+    });
+}
+
+function setImageHeights() {
+    let frameContainers = document.querySelectorAll('.frame-container');
+    frameContainers.forEach(container => {
+        let outerFrame = container.querySelector('.outer-frame');
+        let images = outerFrame.querySelectorAll('img');
+        images.forEach(image => {
+            image.style.maxHeight = `${firstImageHeightVh}vh`;
+        });
+    });
+}
+
+window.addEventListener('resize', setImageHeights);

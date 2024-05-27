@@ -150,7 +150,7 @@ let jsonData; // Define jsonData in the outer scope
 function textReplacement() {
   pages = Array.from(document.querySelectorAll('.page'));
   // console.log(pages)
-fetch('data.json')
+fetch('data/data.json')
     .then(response => response.json())
     .then(data => {
         jsonData = data; // Assign fetched JSON data to jsonData
@@ -173,7 +173,7 @@ fetch('data.json')
 }
 
 function frameReplacement() {
-    fetch('data.json')
+    fetch('data/data.json')
         .then(response => response.json())
         .then(data => {
             jsonData = data;
@@ -193,7 +193,7 @@ function frameReplacement() {
             // Add event listeners after replacing elements
             addEvent(jsonData);
             attachArrowEventListeners()
-            removeLoadingOverlay()
+            // removeLoadingOverlay()
         })
         .catch(error => console.error('Error fetching or parsing JSON:', error));
 }
@@ -270,8 +270,10 @@ function frameReplacement() {
         const scPhotos = document.getElementById("selection-counter-photo");
         const scText = document.getElementById("selection-counter-text");
         let wordsSelected = Array.from(document.querySelectorAll('.page .selected'));
+        let seriesofimages = Array.from(document.querySelectorAll('.frame-container')).filter(
+    (f) => f.querySelector('.selected'));
         let imgsSelected = Array.from(document.querySelectorAll('.frame .selected'));
-        scPhotos.innerHTML = imgsSelected.length + " photos";
+        scPhotos.innerHTML = imgsSelected.length + " photos in " + seriesofimages.length + " series" ;
         scText.innerHTML = wordsSelected.length + " text mentions";
 
           // Determine visibility of pages based on selected filter links
@@ -416,28 +418,28 @@ function frameReplacement() {
       })
      }
 
-function removeLoadingOverlay() {
-  console.log("la funzione è partita eh")
-
-  let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
-  let overlay = document.getElementById('overlay');
-  if (linksnumber && linksnumber > 100) {
-  console.log("ci siamo...")
-  overlay.classList.toggle('removed');
-
-    const overlaytimeout = setTimeout(() => {
-  document.getElementById('overlay').remove();
-      clearTimeout(overlaytimeout);
-    }, 1600);
-} else {
-  console.log("here we go again" + linksnumber)
-  const otheroverlaytimeout = setTimeout(() => {
-    removeLoadingOverlay()
-    // frameReplacement()
-    clearTimeout(otheroverlaytimeout);
-  }, 1000);
-}
-}
+// function removeLoadingOverlay() {
+//   console.log("la funzione è partita eh")
+//
+//   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
+//   let overlay = document.getElementById('overlay');
+//   if (linksnumber && linksnumber > 100) {
+//   console.log("ci siamo...")
+//   overlay.classList.toggle('removed');
+//
+//     const overlaytimeout = setTimeout(() => {
+//   document.getElementById('overlay').remove();
+//       clearTimeout(overlaytimeout);
+//     }, 1600);
+// } else {
+//   console.log("here we go again" + linksnumber)
+//   const otheroverlaytimeout = setTimeout(() => {
+//     removeLoadingOverlay()
+//     // frameReplacement()
+//     clearTimeout(otheroverlaytimeout);
+//   }, 1000);
+// }
+// }
          // function highlightFilter(checkbox) {
          //   let classname = checkbox.value + "-link";
          //   let elements = document.getElementsByClassName(classname);

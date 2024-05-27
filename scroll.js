@@ -68,6 +68,7 @@ function highlightDot(container, dot) {
 function scrollToDot(container, dot) {
     const column = container.parentNode;
     const position = dot.getBoundingClientRect().top + column.scrollTop;
+    // console.log("Position:", position + " dot:", dot);
     column.scrollTo({ top: position - 64, behavior: 'smooth' });
 }
 
@@ -106,23 +107,33 @@ export function scrollHandler(event) {
 }
 
 function dotClickHandler(event) {
-  let textColumn = document.getElementById('text-column');
-  let imagesColumn = document.getElementById('images-column');
+    let textColumn = document.getElementById('text-column');
+    let imagesColumn = document.getElementById('images-column');
 
-  let sourceContainer = textColumn.children[0];
-  let targetContainer = imagesColumn.children[0];
+    let sourceContainer = textColumn.children[0];
+    let targetContainer = imagesColumn.children[0];
 
-  let allDots = Array.from(sourceContainer.querySelectorAll('span.dot'));
-  let dotIndex = allDots.indexOf(event.target);
+    // Find the unique identifier of the clicked dot in the source container
+    let clickedDotId = event.target.dataset.dotId;
 
-  let matchingDot = findMatchingDot(targetContainer, (dotIndex-1));
+    // Scroll the source container to the clicked dot
+    scrollToDot(sourceContainer, event.target);
 
-  if (matchingDot) {
-      scrollToDot(targetContainer, matchingDot);
-      highlightDot(sourceContainer, event.target);
-      highlightDot(targetContainer, matchingDot);
+    // Highlight the clicked dot in the source container
+    highlightDot(sourceContainer, event.target);
+
+    // Find the matching dot in the target container based on the unique identifier
+    let matchingDot = targetContainer.querySelector(`span.dot[data-dot-id="${clickedDotId}"]`);
+
+    // If a matching dot is found in the target container, scroll the target container to it and highlight it
+    if (matchingDot) {
+        scrollToDot(targetContainer, matchingDot);
+        highlightDot(targetContainer, matchingDot);
+    }
 }
-}
+
+
+
 
 export function handleP5Scroll(element) {
     const scrollTop = element.scrollTop + 64;
@@ -139,7 +150,7 @@ export function handleP5Scroll(element) {
     }
 
     let targetDot = findMatchingDot(targetContainer, sourceDot.connected_index);
-    console.log(targetDot)
+    // console.log(targetDot)
 
     if (targetDot) {
         let targetContainerParent = targetDot.closest('.frame-container') || targetDot.closest('.page');
