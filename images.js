@@ -107,7 +107,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
             scrollHandles.append(arrowleft, photonum, arrowright);
             titlerow.append(scrollHandles);
 
-            // frameContainer.append(utils.createElement('div', 'sfumatura-sinistra'));
+            frameContainer.append(utils.createElement('div', 'sfumatura-sinistra'));
             frameContainer.append(utils.createElement('div', 'sfumatura-destra'));
 
             // Update the metadata array with the photonum element
