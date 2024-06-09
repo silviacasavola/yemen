@@ -141,7 +141,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
     if (allFramesGenerated) {
         toggleHidden();
-        addNumber();
+        // addNumber();
     }
 
     // Ensure metadata and title are correctly set after all frames are loaded
