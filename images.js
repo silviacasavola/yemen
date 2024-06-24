@@ -131,6 +131,10 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
             frameContainer.classList.add('hidden');
             dotspan.classList.add('disconnected');
         }
+
+        // if (recordIndex === 0) {
+        //     dotspan.classList.add('active');
+        //   }
     }
 
     parentElement.appendChild(fragment);
