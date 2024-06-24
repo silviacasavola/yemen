@@ -64,9 +64,18 @@ body {
   /* font-style: italic; */
 }
 
-#header span:hover {
-  cursor: pointer;
+#header a:hover, #theme-toggle:hover {
   color: var(--black);
+  text-decoration: underline;
+}
+
+#theme-toggle {
+  cursor: pointer;
+}
+
+#header a {
+  color: var(--black);
+  text-decoration: none;
 }
 
 #headline-section {

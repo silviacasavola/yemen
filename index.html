@@ -11,9 +11,9 @@
   </head>
   <body>
     <div id="header" class="hidden-header">
-      <span>⮌ Stereoscopic Journals</span>
+      <a href="home.html">⮌ Stereoscopic Journals</a>
       <span>YEMEN 1986</span>
-      <span id="theme-toggle">light mode</span>
+      <span id="theme-toggle">dark mode</span>
     </div>
 
     <div id="images-column" class="layout-column">
@@ -83,14 +83,14 @@
         root.style.setProperty('--grey', '#585858');
         root.style.setProperty('--dark-grey', '#E0E0E0');
         root.style.setProperty('--header-grey', '#000000');
-        this.textContent = 'dark mode';
+        this.textContent = 'light mode';
     } else {
         root.style.setProperty('--white', '#F8F8F8');
         root.style.setProperty('--black', '#101010');
         root.style.setProperty('--grey', '#E0E0E0');
         root.style.setProperty('--dark-grey', '#585858');
         root.style.setProperty('--header-grey', '#ebeaea');
-        this.textContent = 'light mode';
+        this.textContent = 'dark mode';
     }
 });
 </script>
