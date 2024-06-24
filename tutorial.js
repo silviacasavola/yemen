@@ -16,7 +16,7 @@ let savedContent;
     overlay2.style.backdropFilter = "none";
 
     object = document.querySelector('#images-column .dot');
-    text = "Filled the circles mark a connection between<br>text and a photo series. Empty circles markp<br>hoto series that were not mentioned in the text.";
+    text = "Filled circles mark a connection between<br>text and a photo series. Empty circles mark<br>photo series that were not mentioned in the text.";
     document.getElementById('arrowbtn').innerHTML = '↖'
     popup.style.top = '70px';
     popup.style.left ='50px';
@@ -35,7 +35,6 @@ let savedContent;
     object = document.querySelector('#images-column .disconnected');
     text = "Click on the collapsed elements<br>to make them unfold.";
     document.getElementById('arrowbtn').innerHTML = '↖';
-    // object.style.maxHeight = '7vh'
     popup.style.transform = 'translate(50%,0%)';
     savedContent = Array.from(object.querySelectorAll('div'));
     }
