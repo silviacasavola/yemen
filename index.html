@@ -11,9 +11,9 @@
   </head>
   <body>
     <div id="header" class="hidden-header">
-      <span>⮌ GraDim READER</span>
+      <span>⮌ Stereoscopic Journals</span>
       <span>YEMEN 1986</span>
-      <span>ABOUT</span>
+      <span id="theme-toggle">light mode</span>
     </div>
 
     <div id="images-column" class="layout-column">
@@ -43,17 +43,22 @@
     <div id="notes-container">
   </div>
 
-    <div id="selection-indicator">
-    <div id="name-selection"></div>
-    <div>
-  <span id="filter-type"></span> -
-  <span id="selection-counter-photo"></span> -
+  <div id="selection-indicator">
+  <span id="selection-counter-photo"></span>
+  <span id="name-selection"></span>
   <span id="selection-counter-text"><br></span>
 </div>
 </div>
 
-  <span id="backtotop" style="display:none">⭱</span>
-  <div id="overlay"><span>Loading...:-)</span></div>
+  <!-- <span id="backtotop" style="display:none">⭱</span> -->
+  <div id="overlay2">
+
+    <!-- <div class="tut-container"> -->
+      <img class="tut-box" style="top: 50vh; left: 50vw; transform:translate(-50%, -50%)" src="tutorial1.png">
+      <img class="tut-box" src="tutorial2.png">
+
+  </div>
+  <div id="overlay1"><span>loading...</span></div>
   </body>
 
   <!-- <script>
@@ -62,7 +67,31 @@
     // document.getElementById("header").classList.remove('hidden-header');
   })</script> -->
 
+  <script type="module" src="tutorial.js"></script>
   <script type="module" src="main.js"></script>
 <script src='filter.js'></script>
   <script type="module" src="graph.js"></script>
+
+  <script>
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+    const root = document.documentElement;
+    const white = getComputedStyle(root).getPropertyValue('--white').trim();
+
+    if (white === '#F8F8F8' || white === 'rgb(248, 248, 248)') {
+        root.style.setProperty('--white', '#0d0d0d');
+        root.style.setProperty('--black', '#f4f4f4');
+        root.style.setProperty('--grey', '#585858');
+        root.style.setProperty('--dark-grey', '#E0E0E0');
+        root.style.setProperty('--header-grey', '#000000');
+        this.textContent = 'dark mode';
+    } else {
+        root.style.setProperty('--white', '#F8F8F8');
+        root.style.setProperty('--black', '#101010');
+        root.style.setProperty('--grey', '#E0E0E0');
+        root.style.setProperty('--dark-grey', '#585858');
+        root.style.setProperty('--header-grey', '#ebeaea');
+        this.textContent = 'light mode';
+    }
+});
+</script>
 </html>

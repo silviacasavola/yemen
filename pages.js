@@ -9,7 +9,7 @@ export async function loadText(url) {
 let pageElement;
 
 function createPageElement(pageContent, index) {
-    pageElement = utils.createElement('div', 'page', `<span class="page-number">pg. ${index + 1}</span> ${pageContent}`);
+    pageElement = utils.createElement('div', 'page', `<span class="page-number">page ${index + 1}</span> ${pageContent}`);
     return pageElement;
 }
 

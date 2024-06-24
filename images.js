@@ -15,24 +15,29 @@ function createFrameElement(title, url, idx, people, place) {
     imageElement.onload = () => {
         if (!firstImageHeightVh) {
             firstImageHeightVh = imageElement.clientHeight / window.innerHeight * 100;
-            setImageHeights();
+            setImageHeights(firstImageHeightVh);
         }
     };
     imgContainer.append(imageElement);
+    imgContainer.append(utils.createElement('div', 'sfumatura-verticale'));
+
+
+    let titleRow = utils.createElement('div', 'title-row', title);
 
     let metadataLayoutElement = utils.createElement('div', 'metadata-layout');
+
     if (place) {
         metadataLayoutElement.append(
-            utils.createElement('span', 'place metadata-row', `<span class="lil-title">PLACE:</span> ${place}<br>`)
+            utils.createElement('span', 'place metadata-row', `Taken in ${place} `)
         );
     }
     if (people) {
         metadataLayoutElement.append(
-            utils.createElement('span', 'people metadata-row', `<span class="lil-title">PEOPLE:</span> ${people}<br>`)
+            utils.createElement('span', 'people metadata-row', `with ${people}`)
         );
     }
 
-    frameElement.append(imgContainer, metadataLayoutElement);
+    frameElement.append(imgContainer, titleRow, metadataLayoutElement);
     return frameElement;
 }
 
@@ -44,16 +49,12 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
     for (let recordIndex = 0; recordIndex < records.length; recordIndex++) {
         let record = records[recordIndex];
 
-        let frameContainer = utils.createElement('div', 'frame-container');
+        let frameContainer = utils.createElement('div', 'frame-container activator');
         let outerFrame = utils.createElement('div', 'outer-frame');
-
-        let titlerow = utils.createElement('div', 'title-row');
-        let titleElement = utils.createElement('span', 'title');
-        titlerow.append(titleElement);
 
         let dotspan = utils.createElement('span', 'dot');
 
-        frameContainer.append(titlerow, outerFrame, dotspan);
+        frameContainer.append(outerFrame, dotspan);
 
         let shotIndexes = utils.parseShotIndex(record.shot);
         let ids = utils.getIdsFromShots(shotIndexes);
@@ -72,10 +73,6 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                     record.place
                 );
 
-                if (i === 0) {
-                    titleElement.innerHTML = currentMetadata.Title;
-                }
-
                 // Append the frame element
                 outerFrame.appendChild(frameElement);
 
@@ -83,7 +80,6 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
                 metadataArray.push({
                     element: frameElement,
                     outerFrame: outerFrame,
-                    titleElement: titleElement,
                     photonumElement: null, // Placeholder, will be updated later if needed
                     arrowleftElement: null,
                     arrowrightElement: null,
@@ -105,7 +101,8 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
             let arrowright = utils.createElement('span', `arrow arrowright`, '→');
             let photonum = utils.createElement('span', 'photonum', `(1/${ids.length})`);
             scrollHandles.append(arrowleft, photonum, arrowright);
-            titlerow.append(scrollHandles);
+            frameContainer.append(scrollHandles);
+            // DA SISTEMARE!!!!!!!!!!!!!!!
 
             frameContainer.append(utils.createElement('div', 'sfumatura-sinistra'));
             frameContainer.append(utils.createElement('div', 'sfumatura-destra'));
@@ -124,7 +121,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
         }
 
 
-        frameContainer.append(utils.createElement('div', 'corner-sfumato'));
+        // frameContainer.append(utils.createElement('div', 'sfumatura-verticale'));
 
         fragment.appendChild(frameContainer);
 
@@ -141,24 +138,16 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
     if (allFramesGenerated) {
         toggleHidden();
-        // addNumber();
+        addNumber();
+        // setImageHeights();
     }
 
     // Ensure metadata and title are correctly set after all frames are loaded
     metadataArray.forEach(meta => {
         if (meta.metadata.idx === 0) {
-            updateTitle(meta.titleElement, meta.metadata.title);
             updateMetadata(meta.photonumElement, meta.metadata.idx, meta.metadata.length);
         }
     });
-}
-
-// Function to update the fixed title bar
-function updateTitle(titleElement, title) {
-    if (titleElement) {
-        titleElement.textContent = title;
-        // console.log(`Updated title: ${title}`);
-    }
 }
 
 function updateMetadata(photonumElement, idx, length) {
@@ -178,26 +167,21 @@ function updateInformationOnScroll(outerFrame) {
     for (let i = 0; i < frameElements.length; i++) {
         let frameElement = frameElements[i];
         let rect = frameElement.getBoundingClientRect();
-        let frameLeft = rect.left + scrollLeft;
+        let frameLeft = rect.left + scrollLeft -1;
 
         // Check if frame is within view
         if (frameLeft >= scrollLeft && frameLeft < scrollLeft + outerFrameWidth) {
             visibleFrameIdx = i;
-            // frameElement.style.border = '2px solid red'; // Add border to the visible frame
-        // } else {
-            // frameElement.style.border = ''; // Remove border from non-visible frames
         }
     }
 
     if (visibleFrameIdx !== -1) {
         let metadata = metadataArray.find(meta => meta.outerFrame === outerFrame && meta.metadata.idx === visibleFrameIdx);
         if (metadata) {
-            let titleElement = metadata.titleElement;
             let photonumElement = metadata.photonumElement;
             let arrowleftElement = metadata.arrowleftElement;
             let arrowrightElement = metadata.arrowrightElement;
 
-            updateTitle(titleElement, metadata.metadata.title);
             updateMetadata(photonumElement, metadata.metadata.idx, metadata.metadata.length);
 
             // console.log(`Scroll - Index: ${visibleFrameIdx}, Length: ${metadata.metadata.length}, RecordIndex: ${metadata.metadata.recordIndex}`); // Debug log
@@ -223,7 +207,7 @@ function addNumber() {
     });
 }
 
-function setImageHeights() {
+function setImageHeights(firstImageHeightVh) {
     let frameContainers = document.querySelectorAll('.frame-container');
     frameContainers.forEach(container => {
         let outerFrame = container.querySelector('.outer-frame');

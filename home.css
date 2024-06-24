@@ -45,7 +45,9 @@ body {
     flex-direction: column;
     /* flex-wrap: wrap; */
     background: var(--white);
-    padding: 3vw var(--margin) var(--margin) var(--margin);
+    /* padding: 3vw var(--margin) var(--margin) var(--margin); */
+    padding: calc(var(--margin)/2) var(--margin) var(--margin) var(--margin);
+    /* padding:var(--margin); */
     /* padding: var(--margin); */
     justify-content: space-between;
     flex: 1 0 auto;
@@ -62,7 +64,7 @@ body {
   justify-content: space-between;
   column-gap: 22vw;
   /* justify-content: space-between; */
-  z-index: 30;
+  z-index: 0;
   padding: var(--header-padding);
   line-height: 1.3em;
   background: linear-gradient(180deg, var(--header-grey) 50%, rgba(255, 255, 255, 0) 80%);
@@ -81,6 +83,8 @@ body {
   /* font-size: 10vw; */
   text-align: center;
   width: 100%;
+  z-index: 10;
+  line-height: 1;
 }
 
 #title img {

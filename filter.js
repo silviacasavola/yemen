@@ -234,7 +234,6 @@ function frameReplacement() {
 
     function addEvent(jsonData) {
       const selectionIndicator = document.getElementById("selection-indicator");
-      const filterType = document.getElementById("filter-type");
       const nameIndicator = document.getElementById("name-selection");
       const filterLinks = document.querySelectorAll('.filter-link');
 
@@ -250,7 +249,6 @@ function frameReplacement() {
               if (!isNaN(personIndex) && jsonData.people && jsonData.people[personIndex]) {
               const selectedPerson = jsonData.people[personIndex];
               officialIdentificator = selectedPerson.split('; ').map(person => person.trim())[0];
-              filterType.innerHTML = "filter type: person";
             }
           }
 
@@ -259,7 +257,6 @@ function frameReplacement() {
               if (!isNaN(placeIndex) && jsonData.places && jsonData.places[placeIndex]) {
               const selectedPlace = jsonData.places[placeIndex]
               officialIdentificator = selectedPlace.split('; ').map(place => place.trim())[0];
-              filterType.innerHTML = "filter type: place";
             }
           }
 
@@ -268,7 +265,6 @@ function frameReplacement() {
               if (!isNaN(keywordIndex) && jsonData.keywords && jsonData.keywords[keywordIndex]) {
               const selectedKeyword = jsonData.keywords[keywordIndex]
               officialIdentificator = selectedKeyword.split('; ').map(keyword => keyword.trim())[0]
-              filterType.innerHTML = "filter type: keyword";
             }
           }
 
@@ -303,8 +299,8 @@ function frameReplacement() {
         let seriesofimages = Array.from(document.querySelectorAll('.frame-container')).filter(
     (f) => f.querySelector('.selected'));
         let imgsSelected = Array.from(document.querySelectorAll('.frame .selected'));
-        scPhotos.innerHTML = imgsSelected.length + " photos in " + seriesofimages.length + " series" ;
-        scText.innerHTML = wordsSelected.length + " text mentions";
+        scPhotos.innerHTML = imgsSelected.length + " photos in " + seriesofimages.length + " series depict" ;
+        scText.innerHTML = " is mentioned " + wordsSelected.length + " times";
 
           // Determine visibility of pages based on selected filter links
           const selectedLinksContainers = new Set();
@@ -477,13 +473,13 @@ function removeLoadingOverlay() {
 
   let linksnumber = document.querySelectorAll('#images-column .filter-link').length;
   let imgsnumber = document.querySelectorAll('img').length;
-  let overlay = document.getElementById('overlay');
+  let overlay = document.getElementById('overlay1');
   if (linksnumber && imgsnumber && linksnumber > 100 && imgsnumber > 100) {
   // console.log("ci siamo...")
   overlay.classList.toggle('removed');
 
     const overlaytimeout = setTimeout(() => {
-  document.getElementById('overlay').remove();
+  document.getElementById('overlay1').remove();
       clearTimeout(overlaytimeout);
     }, 1600);
 } else {
