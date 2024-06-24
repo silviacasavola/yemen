@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stereoscopic Journals</title>
+    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="https://use.typekit.net/hsl8mqb.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  </head>
+  <body>
+    <div id="header" class="hidden-header">
+      <!-- <span></span> -->
+      <span>STEREOSCOPIC JOURNALS</span>
+      <!-- <span>ABOUT</span> -->
+      <span id="theme-toggle">light mode</span>
+    </div>
+
+
+    <div id="title">
+      <img id="title-img" src="cover/title.svg">
+    </div>
+
+    <div id="diaries-row">
+      <a href="index.html" class="diary-card" style="cursor: pointer;">
+        <div class="img-container"><div class="background"></div>
+        <img src="cover/yemen.png"></div>
+        <span class="diary-data">Yemen 1986</span>
+      </a>
+
+    <div class="diary-card">
+      <div class="img-container"><div class="background"></div>
+      <img src="cover/india.png"></div>
+      <span class="diary-data">India 1986</span>
+    </div>
+
+  <div class="diary-card">
+    <div class="img-container"><div class="background"></div>
+    <img src="cover/asia.png"></div>
+    <span class="diary-data">Central Asia 1987</span>
+  </div>
+
+<div class="diary-card">
+  <div class="img-container"><div class="background"></div>
+  <img src="cover/turkey.png"></div>
+  <span class="diary-data">Turkey 1989</span>
+</div>
+
+<div class="diary-card">
+  <div class="img-container"><div class="background"></div>
+  <img src="cover/italy.png"></div>
+  <span class="diary-data">Italy 1992</span>
+</div>
+</div>
+
+<div id="info-row">
+  <div class="main-text">...is the platform to experience the personal diaries of the Frédéric<br>Brenner Archive. Choose one to begin to follow the photographer's<br>
+journey through his thoughts and his photographs.</div>
+<div class="others">Design and development: Silvia Casavola<br>Supervisors: Gabriele Colombo<br>and Marian Dörk</div>
+<div class="others">Politecnico di Milano<br>MSc of Communication Design<br>July 2024</div>
+<div class="others">Stereoscopic Journals is part of the <a href="https://uclab.fh-potsdam.de/projects/gradim/">GraDiM project</a> of the <a href="https://uclab.fh-potsdam.de/">Urban Complexity Lab</a> of Fachhochschule Potsdam.</div>
+  </body>
+
+  <script>
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+    const root = document.documentElement;
+    const white = getComputedStyle(root).getPropertyValue('--white').trim();
+
+    if (white === '#F8F8F8' || white === 'rgb(248, 248, 248)') {
+        root.style.setProperty('--white', '#0d0d0d');
+        root.style.setProperty('--black', '#f4f4f4');
+        root.style.setProperty('--grey', '#E0E0E0');
+        root.style.setProperty('--dark-grey', '#E0E0E0');
+        root.style.setProperty('--header-grey', '#000000');
+        document.querySelector('body').style.background = 'var(--white)';
+        document.getElementById('title-img').src = 'cover/title-white.svg';
+        this.textContent = 'dark mode';
+    } else {
+        root.style.setProperty('--white', '#F8F8F8');
+        root.style.setProperty('--black', '#101010');
+        root.style.setProperty('--grey', '#E0E0E0');
+        root.style.setProperty('--dark-grey', '#585858');
+        root.style.setProperty('--header-grey', '#ebeaea');
+        this.textContent = 'light mode';
+        document.querySelector('body').style.background = 'linear-gradient(180deg, var(--header-grey) 20%, rgba(255, 255, 255, 0) 60%)';
+        document.getElementById('title-img').src = 'cover/title.svg';
+    }
+});
+</script>
+</html>

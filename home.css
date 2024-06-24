@@ -1,0 +1,206 @@
+:root {
+/* MARGINS */
+  --margin: 1.2vw;
+  --button-margin: var(--margin) calc(var(--margin)*2) var(--margin) calc(var(--margin)*2);
+  --header-padding: calc(var(--margin)/4) var(--margin) var(--margin) var(--margin);
+  --xlarge-text: 5vw;
+  --large-text: 1.2vw;
+  --medium-text: 0.9vw;
+  --small-text: 0.7vw;
+
+  --grey: #E0E0E0;
+  --dark-grey: #585858;
+  --white: #F8F8F8;
+  --black: #101010;
+
+  --header-grey: #ebeaea;
+
+  --main-column: 58.3333333333vw;
+  /* --minor-column: 41.6666666667vw; */
+  /* --minor-column: 40.6666666667vw; */
+  --minor-column: 40.6666666667vw;
+}
+
+/* GENERAL */
+
+body, html {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    max-width: 100vw;
+    max-height: 100vh;
+    font-family: 'source-code-pro';
+    box-sizing: border-box;
+    color:var(--black);
+}
+
+div {
+  box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+    background: var(--white);
+    padding: 3vw var(--margin) var(--margin) var(--margin);
+    /* padding: var(--margin); */
+    justify-content: space-between;
+    flex: 1 0 auto;
+    background: linear-gradient(180deg, var(--header-grey) 20%, rgba(255, 255, 255, 0) 60%);
+    transition: background 1s;
+    /* margin: 2vw 0 0 0; */
+    /* border: solid; */
+}
+
+#header {
+  display: flex;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  justify-content: space-between;
+  column-gap: 22vw;
+  /* justify-content: space-between; */
+  z-index: 30;
+  padding: var(--header-padding);
+  line-height: 1.3em;
+  background: linear-gradient(180deg, var(--header-grey) 50%, rgba(255, 255, 255, 0) 80%);
+  /* color: var(--dark-grey); */
+  font-size: var(--medium-text);
+  transition: top 1s;
+  /* font-style: italic; */
+}
+
+#header span:hover {
+  cursor: pointer;
+  color: var(--black);
+}
+
+#title {
+  /* font-size: 10vw; */
+  text-align: center;
+  width: 100%;
+}
+
+#title img {
+  width: 60%;
+  object-fit: contain;
+}
+
+#diaries-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  column-gap: calc(var(--margin)/2);
+  /* flex: 1 0 auto; */
+  overflow: hidden;
+  align-items: stretch;
+  justify-content: space-between;
+    /* flex: 1 0 auto; */
+}
+
+.diary-card {
+  display: inline-flex;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  justify-content: stretch;
+  font-size: var(--small-text);
+  cursor: not-allowed;
+  /* flex: 1 1 0; */
+  flex: 1 1 1;
+  min-width: 0;
+  min-width: 0;
+  row-gap: calc(var(--margin)/3);
+}
+
+.diary-card:hover .background {
+  background: var(--header-grey);
+  filter: blur(10px);
+}
+
+.diary-card:hover .img-container img {
+  transform:scale(102%);
+}
+
+.diary-card:hover .diary-data {
+  color: var(--black);
+}
+
+.background {
+  position: absolute;
+  top: calc(var(--margin)/1.5); bottom: 0; right: 0; left: 0;
+  z-index:0;
+}
+
+.img-container {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* border: solid; */
+  padding: var(--margin) calc(var(--margin)/2);
+  height: 100%;
+  /* flex: 1 1 0; */
+  flex: 1 1 auto;
+}
+
+#diaries-row img {
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  object-fit: scale-down;
+  position: relative;
+  z-index: 10;
+  max-height: 45vh;
+  max-width: 20vw;
+  /* transform:scale(0.95); */
+  transition: transform 1s;
+}
+
+.diary-data {
+  padding: 0 calc(var(--margin)/2) 0 calc(var(--margin)/2);
+  min-height: min-content;
+  color: var(--grey);
+}
+
+#info-row {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  justify-content: space-between;
+  column-gap: var(--margin);
+  align-items: end;
+  color: var(--dark-grey);
+  font-size: var(--small-text);
+  /* width: 40vw; */
+}
+
+#info-row div {
+  display: inline-block;
+  position: relative;
+  /* flex-grow: 1; */
+  /* width: 33%; */
+  /* flex: 0 0 0; */
+}
+.others {
+  width: 20%;
+}
+
+#diaries-row a {
+  text-decoration: none;
+}
+
+.main-text {
+font-size: var(--large-text);
+font-family: 'source-serif-pro';
+color: var(--black);
+width: 50%;
+}
+
+#info-row a {
+  color: var(--dark-grey);
+}
