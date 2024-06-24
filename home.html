@@ -11,9 +11,9 @@
   <body>
     <div id="header" class="hidden-header">
       <!-- <span></span> -->
-      <span>STEREOSCOPIC JOURNALS</span>
+      <span>Stereoscopic Journals</span>
       <!-- <span>ABOUT</span> -->
-      <span id="theme-toggle">light mode</span>
+      <span id="theme-toggle">dark mode</span>
     </div>
 
 
@@ -74,14 +74,14 @@ journey through his thoughts and his photographs.</div>
         root.style.setProperty('--header-grey', '#000000');
         document.querySelector('body').style.background = 'var(--white)';
         document.getElementById('title-img').src = 'cover/title-white.svg';
-        this.textContent = 'dark mode';
+        this.textContent = 'light mode';
     } else {
         root.style.setProperty('--white', '#F8F8F8');
         root.style.setProperty('--black', '#101010');
         root.style.setProperty('--grey', '#E0E0E0');
         root.style.setProperty('--dark-grey', '#585858');
         root.style.setProperty('--header-grey', '#ebeaea');
-        this.textContent = 'light mode';
+        this.textContent = 'dark mode';
         document.querySelector('body').style.background = 'linear-gradient(180deg, var(--header-grey) 20%, rgba(255, 255, 255, 0) 60%)';
         document.getElementById('title-img').src = 'cover/title.svg';
     }
