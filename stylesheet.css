@@ -73,7 +73,7 @@ body {
   cursor: pointer;
 }
 
-#header a {
+#header a, #header a:visited, #header a:active, #header a:after {
   color: var(--black);
   text-decoration: none;
 }
@@ -671,4 +671,35 @@ font-size: var(--small-text);
   position: fixed;
   width: 30vw;
   cursor: pointer;
+}
+
+#overlay3 {
+
+}
+
+#overlay3 {
+  font-size: var(--xlarge-text);
+  line-height: 1.5;
+  left: 0; right: 0;
+  top: 0; bottom: 0;
+  background: var(--white);
+  font-family: 'source-serif-pro';
+  position: fixed;
+  z-index:50;
+  align-items: center;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 1.5s ease;
+  display: none;
+}
+
+#overlay3 span {
+  text-align: center;
+  width: 100%;
+}
+
+@media (max-width: 991px) {
+#overlay3 {
+  display: flex;
+}
 }
