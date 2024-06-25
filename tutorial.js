@@ -76,6 +76,7 @@ let savedContent;
     object.style.filter = 'none';
     if (Array.isArray(savedContent)) {
     savedContent.forEach(element => {
+      console.log("ao?")
           element.style.filter = 'none';
         })
       } else {
