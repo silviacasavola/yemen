@@ -48,7 +48,7 @@ let savedContent;
     l = rect.left + window.scrollX;
     popup.style.top = `${t}px`;
     popup.style.left = `${l}px`;
-    popup.style.transform = 'translate(50%,-150%)';
+    popup.style.transform = 'translate(50%,-110%)';
     savedContent = Array.from(object.querySelectorAll('div'));
     }
 

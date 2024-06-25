@@ -136,7 +136,7 @@ export async function loadAndDisplayImages(records, metadataMain, parentId) {
 
         if (recordIndex === 0) {
             frameContainer.classList.add('active');
-            // dotspan.classList.add('active');
+            dotspan.classList.add('active');
           }
     }
 
