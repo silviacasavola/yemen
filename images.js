@@ -15,7 +15,7 @@ function createFrameElement(title, url, idx, people, place) {
     imageElement.onload = () => {
         if (!firstImageHeightVh) {
             firstImageHeightVh = imageElement.clientHeight / window.innerHeight * 100;
-            // setImageHeights(firstImageHeightVh);
+            setImageHeights(firstImageHeightVh);
         }
     };
     imgContainer.append(imageElement);

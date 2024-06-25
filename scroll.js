@@ -85,7 +85,7 @@ export function scrollHandler(event) {
         let sourceContainerParent = sourceDot.element.closest('.frame-container') || sourceDot.element.closest('.page');
 
         if (!targetContainerParent.classList.contains('hidden') && !sourceContainerParent.classList.contains('hidden')) {
-            scrollToElement(targetContainer, targetElement.element);
+            // scrollToElement(targetContainer, targetElement.element);
         }
 
         highlightElement(sourceContainer, sourceDot.element);
@@ -107,14 +107,14 @@ function dotClickHandler(event) {
 
     let clickedDotId = event.target.dataset.dotId;
 
-    scrollToElement(sourceContainer, event.target);
+    // scrollToElement(sourceContainer, event.target);
 
     highlightElement(sourceContainer, event.target);
 
     let matchingDot = targetContainer.querySelector(`span.dot[data-dot-id="${clickedDotId}"]`);
 
     if (matchingDot) {
-        scrollToElement(targetContainer, matchingDot);
+        // scrollToElement(targetContainer, matchingDot);
         highlightElement(targetContainer, matchingDot);
     }
 }
@@ -141,7 +141,7 @@ export function handleP5Scroll(element) {
         let sourceContainerParent = sourceDot.element.closest('.frame-container') || sourceDot.element.closest('.page');
 
         if (!targetContainerParent.classList.contains('hidden') && !sourceContainerParent.classList.contains('hidden')) {
-            scrollToElement(targetContainer, targetElement.element);
+            // scrollToElement(targetContainer, targetElement.element);
         }
 
         highlightElement(sourceContainer, sourceDot.element);

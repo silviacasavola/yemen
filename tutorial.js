@@ -17,38 +17,43 @@ let savedContent;
 
     object = document.querySelector('#images-column .dot');
     text = "Filled circles mark a connection between<br>text and a photo series. Empty circles mark<br>photo series that were not mentioned in the text.";
-    document.getElementById('arrowbtn').innerHTML = '↖'
-    popup.style.top = '70px';
-    popup.style.left ='50px';
-    popup.style.transform = 'translate(0%,0%)';
+    document.getElementById('arrowbtn').innerHTML = '↙'
+    popup.style.transform = 'translate(0%,-110%)';
     }
 
     if (i === 1) {
     object = document.querySelector('.page .filter-link');
     text = "Click on the highlighted entities<br>to follow their story-line.<br>Click on the X to disable them.";
     document.getElementById('arrowbtn').innerHTML = '→';
-    popup.style.transform = 'translate(-110%, -50%)';
+    popup.style.transform = 'translate(-110%, -10%)';
     savedContent = object.closest('.page');
     }
+
+        if (i < 2) {
+        const rect = object.getBoundingClientRect();
+          t = rect.top + window.scrollY;
+          l = rect.left + window.scrollX;
+          popup.style.top = `${t}px`;
+          popup.style.left = `${l}px`;
+        }
 
     if (i === 2) {
     object = document.querySelector('#images-column .disconnected');
     text = "Click on the collapsed elements<br>to make them unfold.";
     document.getElementById('arrowbtn').innerHTML = '↖';
-    popup.style.transform = 'translate(50%,0%)';
+    const rect = object.getBoundingClientRect();
+    b = rect.bottom;
+    document.getElementById('images-column').scrollTo({ top: t, behavior: 'smooth' });
+    t = rect.top + window.scrollY;
+    l = rect.left + window.scrollX;
+    popup.style.top = `${t}px`;
+    popup.style.left = `${l}px`;
+    popup.style.transform = 'translate(50%,-150%)';
     savedContent = Array.from(object.querySelectorAll('div'));
     }
 
-    if (i > 0 && i < 3) {
-
-    const rect = object.getBoundingClientRect();
-      t = rect.top + window.scrollY;
-      l = rect.left + window.scrollX;
-      popup.style.top = `${t}px`;
-      popup.style.left = `${l}px`;
-    }
-
     if (i === 3) {
+    document.getElementById('images-column').scrollTo({ top: 0, behavior: 'smooth' });
     object = document.querySelector('#images-column .disconnected');
     text = "Keep an eye on the scollbar<br>to keep track of the changes.";
     document.getElementById('arrowbtn').innerHTML = '→';
