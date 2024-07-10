@@ -1,26 +1,26 @@
-function getDotPositions(parent) {
+function getPositions(parent, selector) {
     const parentElement = document.getElementById(parent.id);
-    let allDots = Array.from(parentElement.querySelectorAll('span.dot'));
-    let connected = allDots.filter(
-        (d) => !d.classList.contains('disconnected') && !d.classList.contains('active')
+    let allElements = Array.from(parentElement.querySelectorAll(selector));
+    let connected = allElements.filter(
+        (el) => !el.classList.contains('active')
     );
     let scrollOffset = parentElement.parentNode.scrollTop;
 
-    let dotPositions = Array.from(allDots).map((dot, index) => ({
-        element: dot,
-        position: dot.getBoundingClientRect().top + scrollOffset,
+    let elementPositions = allElements.map((element, index) => ({
+        element: element,
+        position: element.getBoundingClientRect().top + scrollOffset - 10,
         all_index: index,
-        connected_index: connected.indexOf(dot)
+        connected_index: connected.indexOf(element)
     }));
 
-    return dotPositions;
+    return elementPositions;
 }
 
-function findClosestElement(positions, scrollTop, isImageColumn) {
-    return positions.reduce((closest, item, index) => {
+function findClosestElement(positions, scrollTop) {
+    return positions.reduce((closest, item) => {
         const distance = Math.abs(item.position - scrollTop);
         if (closest === null || distance < closest.distance) {
-            return { ...item, distance, index };
+            return { ...item, distance };
         }
         return closest;
     }, null);
@@ -39,112 +39,133 @@ function getSourceAndTargetContainers(event) {
     return { sourceContainer, targetContainer };
 }
 
-function findMatchingDot(container, index) {
-    let allDots = Array.from(container.querySelectorAll('span.dot'));
-    let connectedDots = allDots.filter(
-        (dot) => !dot.classList.contains('disconnected') && !dot.classList.contains('active'));
-    return connectedDots[index];
+function findMatchingElement(container, index, selector) {
+    let allElements = Array.from(container.querySelectorAll(selector));
+    let connectedElements = allElements.filter(
+        (el) => !el.classList.contains('active')
+    );
+    return connectedElements[index];
 }
 
 function highlightElement(container, element) {
-    let allDots = Array.from(container.querySelectorAll('span.dot'));
-    allDots.forEach((dot) => dot.classList.remove('active'));
+    let allElements = Array.from(container.querySelectorAll('.active'));
+    allElements.forEach((el) => el.classList.remove('active'));
     element.classList.add('active');
-
-    Array.from(document.querySelectorAll('.frame-container')).forEach(frameContainer => {
-        if (frameContainer.contains(element)) {
-            frameContainer.classList.add('active');
-        } else {
-            frameContainer.classList.remove('active');
-        }
-    });
 }
 
 function scrollToElement(container, element) {
     const column = container.parentNode;
     const position = element.getBoundingClientRect().top + column.scrollTop;
-    column.scrollTo({ top: position - 64, behavior: 'smooth' });
+    column.scrollTo({ top: position - 50, behavior: 'smooth' });
 }
 
 export function scrollHandler(event) {
-    const scrollTop = this.scrollTop + 64;
+    const scrollTop = this.scrollTop - 50;
 
     let { sourceContainer, targetContainer } = getSourceAndTargetContainers(event);
-    let sourceDotsPositions = getDotPositions(sourceContainer);
-    let sourceDot = findClosestElement(sourceDotsPositions, scrollTop, false);
 
-    if (sourceDot.element.classList.contains('disconnected') && sourceDot.element.classList.contains('active')) {
+    let sourceSelector = sourceContainer.closest('.layout-column').id === 'text-column' ? '.chrono-link' : '.frame-container.connected';
+    let targetSelector = sourceContainer.closest('.layout-column').id === 'text-column' ? '.frame-container.connected' : '.chrono-link';
+
+    let sourcePositions = getPositions(sourceContainer, sourceSelector);
+    let sourceElement = findClosestElement(sourcePositions, scrollTop);
+
+    if (sourceElement.element.classList.contains('active')) {
         return;
     }
 
-    let targetContainerPositions = getDotPositions(targetContainer);
-    let targetElement = findClosestElement(targetContainerPositions, sourceDot.position, true);
+    let targetElement = findMatchingElement(targetContainer, sourceElement.connected_index, targetSelector);
 
     if (targetElement) {
-        let targetContainerParent = targetElement.element.closest('.frame-container') || targetElement.element.closest('.page');
-        let sourceContainerParent = sourceDot.element.closest('.frame-container') || sourceDot.element.closest('.page');
+        let targetContainerParent = targetElement.closest('.frame-container') || targetElement.closest('.page');
+        let sourceContainerParent = sourceElement.element.closest('.frame-container') || sourceElement.element.closest('.page');
 
         if (!targetContainerParent.classList.contains('hidden') && !sourceContainerParent.classList.contains('hidden')) {
-            // scrollToElement(targetContainer, targetElement.element);
+            scrollToElement(targetContainer, targetElement);
         }
 
-        highlightElement(sourceContainer, sourceDot.element);
-        highlightElement(targetContainer, targetElement.element);
+        highlightElement(sourceContainer, sourceElement.element);
+        highlightElement(targetContainer, targetElement);
     }
-
-    let allDots = Array.from(document.querySelectorAll('.chrono-link .dot'));
-    allDots.forEach(dot => {
-        dot.addEventListener('click', dotClickHandler);
-    });
 }
 
-function dotClickHandler(event) {
+export function attachDotsEventListeners() {
+    setTimeout(() => {
+        let allDots = Array.from(document.querySelectorAll('.dot')).filter(
+            (d) => !d.classList.contains('disconnected')
+        );
+
+
+        allDots.forEach(dot => {
+            dot.addEventListener('click', function(event) {
+                elementClickHandler(event);
+            });
+        });
+    }, 1000);
+}
+
+function elementClickHandler(event) {
     let textColumn = document.getElementById('text-column');
     let imagesColumn = document.getElementById('images-column');
 
-    let sourceContainer = textColumn.children[0];
-    let targetContainer = imagesColumn.children[0];
+    let sourceColumn, targetColumn;
+    if (event.target.closest('#text-column')) {
+        sourceColumn = textColumn;
+        targetColumn = imagesColumn;
+    } else {
+        sourceColumn = imagesColumn;
+        targetColumn = textColumn;
+    }
 
-    let clickedDotId = event.target.dataset.dotId;
+    let sourceContainer = sourceColumn.children[0];
+    let targetContainer = targetColumn.children[0];
 
-    // scrollToElement(sourceContainer, event.target);
+    // let clickedElement = event.target.closest('.dot');
+    let dataSelector = event.target.getAttribute('data-dot-id');
 
-    highlightElement(sourceContainer, event.target);
+    if (dataSelector !== null) {
+        let matchingDot = targetContainer.querySelector(`.dot[data-dot-id="${dataSelector}"]`);
+        let matchingElement = matchingDot.closest('.frame-container.connected') || matchingDot.closest('.page') ;
+        console.log(matchingDot, matchingElement)
 
-    let matchingDot = targetContainer.querySelector(`span.dot[data-dot-id="${clickedDotId}"]`);
-
-    if (matchingDot) {
-        // scrollToElement(targetContainer, matchingDot);
-        highlightElement(targetContainer, matchingDot);
+        if (matchingElement) {
+            scrollToElement(sourceContainer, event.target);
+            scrollToElement(targetContainer, matchingElement);
+            highlightElement(sourceContainer, event.target);
+            highlightElement(targetContainer, matchingElement);
+        }
     }
 }
 
 export function handleP5Scroll(element) {
-    const scrollTop = element.scrollTop + 64;
+    const scrollTop = element.scrollTop - 50;
 
     let sourceContainer = element.children[0];
     let targetContainerId = element.id === 'text-column' ? 'images-column' : 'text-column';
     let targetContainer = document.getElementById(targetContainerId).children[0];
 
-    let sourceDotsPositions = getDotPositions(sourceContainer);
-    let sourceDot = findClosestElement(sourceDotsPositions, scrollTop, false);
+    let sourceSelector = element.id === 'text-column' ? '.chrono-link' : '.frame-container.connected';
+    let targetSelector = element.id === 'text-column' ? '.frame-container.connected' : '.chrono-link';
 
-    if (sourceDot.element.classList.contains('disconnected') && sourceDot.element.classList.contains('active')) {
+    let sourcePositions = getPositions(sourceContainer, sourceSelector);
+    let sourceElement = findClosestElement(sourcePositions, scrollTop);
+
+    if (sourceElement.element.classList.contains('active')) {
         return;
     }
 
-    let targetContainerPositions = getDotPositions(targetContainer);
-    let targetElement = findClosestElement(targetContainerPositions, sourceDot.position, true);
+    let targetElement = findMatchingElement(targetContainer, sourceElement.connected_index, targetSelector);
 
     if (targetElement) {
-        let targetContainerParent = targetElement.element.closest('.frame-container') || targetElement.element.closest('.page');
-        let sourceContainerParent = sourceDot.element.closest('.frame-container') || sourceDot.element.closest('.page');
+        let targetContainerParent = targetElement.closest('.frame-container') || targetElement.closest('.page');
+        let sourceContainerParent = sourceElement.element.closest('.frame-container') || sourceElement.element.closest('.page');
 
         if (!targetContainerParent.classList.contains('hidden') && !sourceContainerParent.classList.contains('hidden')) {
-            // scrollToElement(targetContainer, targetElement.element);
+            scrollToElement(targetContainer, targetElement);
+            scrollToElement(sourceContainer,  sourceElement.element);
         }
 
-        highlightElement(sourceContainer, sourceDot.element);
-        highlightElement(targetContainer, targetElement.element);
+        highlightElement(sourceContainer, sourceElement.element);
+        highlightElement(targetContainer, targetElement);
     }
 }

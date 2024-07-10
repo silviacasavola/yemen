@@ -18,7 +18,7 @@ await pages.loadAndDisplayPages(text, 'text-container').then(() => {
     graph.setupGraph();
     textReplacement();
     pages.notesindex();
-    // scroll.attachDotsEventListeners();
+    scroll.attachDotsEventListeners();
 });
 
 // await images.loadAndDisplayImages(records, pictureMetadata, 'images-container').then(() => {

@@ -3,85 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yemen 1986</title>
-    <link rel="stylesheet" href="stylesheet.css" />
+    <title>Stereoscopic Journals</title>
+    <link rel="stylesheet" href="home.css" />
     <link rel="stylesheet" href="https://use.typekit.net/hsl8mqb.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   </head>
   <body>
     <div id="header" class="hidden-header">
-      <a href="home.html">⮌ Stereoscopic Journals</a>
-      <span>YEMEN 1986</span>
+      <!-- <span></span> -->
+      <span></span>
+      <span></span>
       <span id="theme-toggle">dark mode</span>
     </div>
 
-    <div id="images-column" class="layout-column">
-      <div id="images-container" class="container"></div>
-    </div>
-    <div id="text-column"   class="layout-column">
-      <div id="text-container" class="container">
-          <div id="headline-section">
-          <div id="big-title">Yemen 1986</div>
 
-          <!-- <div id="big-title">Yemen</div> -->
-              <!-- <div>Words and photos:<br>Frédéric Brenner</div><br><br>
-              <div>Transcription and editing:<br>Carine Brenner</div><br><br>
-              <div>Translation:<br>Helga Abraham</div> -->
-
-
-      Words and photos:<br>Frédéric Brenner<br><br>
-      Transcription and editing:<br>Carine Brenner<br><br>
-      Translation:<br>Helga Abraham
-  <!-- <div id="big-title">1986</div> -->
-        </div>
-      </div>
+    <div id="title">
+      <img id="title-img" src="cover/title.svg">
     </div>
 
-    <div id="graph-column" class="layout-column"></div>
+    <div id="diaries-row">
+      <a href="yemen.html" class="diary-card" style="cursor: pointer;">
+        <div class="img-container"><div class="background"></div>
+        <img src="cover/yemen.png"></div>
+        <span class="diary-data">Yemen 1986</span>
+      </a>
 
-    <div id="notes-container">
+    <div class="diary-card">
+      <div class="img-container"><div class="background"></div>
+      <img src="cover/india.png"></div>
+      <span class="diary-data">India 1986</span>
+    </div>
+
+  <div class="diary-card">
+    <div class="img-container"><div class="background"></div>
+    <img src="cover/asia.png"></div>
+    <span class="diary-data">Central Asia 1987</span>
   </div>
 
-  <div id="selection-indicator">
-  <span id="selection-counter-photo"></span>
-  <span id="name-selection"></span>
-  <span id="selection-counter-text"><br></span>
+<div class="diary-card">
+  <div class="img-container"><div class="background"></div>
+  <img src="cover/turkey.png"></div>
+  <span class="diary-data">Turkey 1989</span>
+</div>
+
+<div class="diary-card">
+  <div class="img-container"><div class="background"></div>
+  <img src="cover/italy.png"></div>
+  <span class="diary-data">Italy 1992</span>
 </div>
 </div>
 
-  <!-- <span id="backtotop" style="display:none">⭱</span> -->
-  <div class="overlay" id="overlay2">
+<div id="info-row">
+  <div class="main-text">...is the platform to experience the personal diaries of the Frédéric<br>Brenner Archive. Choose one to begin to follow the photographer's<br>
+journey through his thoughts and his photographs.</div>
+<div class="others">Design and development: Silvia Casavola<br>Supervisors: Gabriele Colombo<br>and Marian Dörk</div>
+<div class="others">Politecnico di Milano<br>MSc of Communication Design<br>July 2024</div>
+<div class="others">Stereoscopic Journals is part of the <a href="https://uclab.fh-potsdam.de/projects/gradim/">GraDiM project</a> of the <a href="https://uclab.fh-potsdam.de/">Urban Complexity Lab</a> of Fachhochschule Potsdam.</div>
+</div>
 
-      <div id="tut-box" style="top: 50vh; left: 50vw; transform:translate(-50%, -50%)" src="tutorial1.png">
-        <div id="tutorial-bg"></div>
-        <div>TUTORIAL</div>
-        <div id="tutorial-text">Scroll through the text or the pictures<br>to follow Frédéric Brenner’s journey through<br>his thoughts and his photographs.</div>
-      <div id="tutorial-counter">1/5</div>
-      <div id="skipbtn">Skip</div>
-      <div id="nextbtn">Next</div>
-
-      <div id="arrowbtn"></div>
-    <!-- <div class="tut-container"> -->
-      <!-- <img class="tut-box" style="top: 50vh; left: 50vw; transform:translate(-50%, -50%)" src="tutorial1.png">
-      <img class="tut-box" src="tutorial2.png"> -->
-
-  </div>
-  <div class="overlay" id="overlay1"><span>loading...</span></div>
-
-  <div id="overlay3"><span>Please come back<br>from your computer!</span></div>
+<div id="overlay"></div>
   </body>
-
-  <!-- <script>
-  window.addEventListener("scroll", (event) => {
-    console.log("pronto?")
-    // document.getElementById("header").classList.remove('hidden-header');
-  })</script> -->
-
-  <script type="module" src="tutorial.js"></script>
-  <script type="module" src="main.js"></script>
-<script src='filter.js'></script>
-  <script type="module" src="graph.js"></script>
 
   <script>
   document.getElementById('theme-toggle').addEventListener('click', function() {
@@ -91,9 +72,11 @@
     if (white === '#F8F8F8' || white === 'rgb(248, 248, 248)') {
         root.style.setProperty('--white', '#0d0d0d');
         root.style.setProperty('--black', '#f4f4f4');
-        root.style.setProperty('--grey', '#585858');
+        root.style.setProperty('--grey', '#E0E0E0');
         root.style.setProperty('--dark-grey', '#E0E0E0');
         root.style.setProperty('--header-grey', '#000000');
+        document.querySelector('body').style.background = 'var(--white)';
+        document.getElementById('title-img').src = 'cover/title-white.svg';
         this.textContent = 'light mode';
     } else {
         root.style.setProperty('--white', '#F8F8F8');
@@ -102,7 +85,18 @@
         root.style.setProperty('--dark-grey', '#585858');
         root.style.setProperty('--header-grey', '#ebeaea');
         this.textContent = 'dark mode';
+        document.querySelector('body').style.background = 'linear-gradient(180deg, var(--header-grey) 20%, rgba(255, 255, 255, 0) 60%)';
+        document.getElementById('title-img').src = 'cover/title.svg';
     }
 });
+
+document.addEventListener("DOMContentLoaded", (event) => {
+document.getElementById('overlay').style.opacity = "0";
+
+          const overlaytimeout = setTimeout(() => {
+        document.getElementById('overlay').remove();
+            clearTimeout(overlaytimeout);
+          }, 1000);
+        })
 </script>
 </html>

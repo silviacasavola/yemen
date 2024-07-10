@@ -83,7 +83,7 @@ body {
   /* font-size: 10vw; */
   text-align: center;
   width: 100%;
-  z-index: 10;
+  z-index: 20;
   line-height: 1;
 }
 
@@ -207,4 +207,15 @@ width: 50%;
 
 #info-row a {
   color: var(--dark-grey);
+}
+
+#overlay {
+  left: 0; right: 0;
+  top: 0; bottom: 0;
+  background: var(--white);
+  position: fixed;
+  z-index:10;
+  opacity: 1;
+  background: linear-gradient(180deg, var(--header-grey) 20%, var(--white) 60%);
+  transition: opacity 1s;
 }

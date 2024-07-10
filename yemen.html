@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yemen 1986</title>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="stylesheet" href="https://use.typekit.net/hsl8mqb.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  </head>
+  <body>
+    <div id="header" class="hidden-header">
+      <a href="index.html">⮌ Stereoscopic Journals</a>
+      <span>YEMEN 1986</span>
+      <span id="theme-toggle">dark mode</span>
+    </div>
+
+    <div id="images-column" class="layout-column">
+      <div id="images-container" class="container"></div>
+    </div>
+    <div id="text-column"   class="layout-column">
+      <div id="text-container" class="container">
+          <div id="headline-section">
+          <div id="big-title">Yemen 1986</div>
+
+          <!-- <div id="big-title">Yemen</div> -->
+              <!-- <div>Words and photos:<br>Frédéric Brenner</div><br><br>
+              <div>Transcription and editing:<br>Carine Brenner</div><br><br>
+              <div>Translation:<br>Helga Abraham</div> -->
+
+
+      Words and photos:<br>Frédéric Brenner<br><br>
+      Transcription and editing:<br>Carine Brenner<br><br>
+      Translation:<br>Helga Abraham
+  <!-- <div id="big-title">1986</div> -->
+        </div>
+      </div>
+    </div>
+
+    <div id="graph-column" class="layout-column"></div>
+
+    <div id="notes-container">
+  </div>
+
+  <div id="selection-indicator">
+  <span id="selection-counter-photo"></span>
+  <span id="name-selection"></span>
+  <span id="selection-counter-text"><br></span>
+</div>
+</div>
+
+  <!-- <span id="backtotop" style="display:none">⭱</span> -->
+  <div class="overlay" id="overlay2">
+
+      <div id="tut-box" style="top: 50vh; left: 50vw; transform:translate(-50%, -50%)" src="tutorial1.png">
+        <div>TUTORIAL</div>
+        <div id="tutorial-text">Scroll through the text or the pictures<br>to follow Frédéric Brenner’s journey through<br>his thoughts and his photographs.</div>
+      <div id="tutorial-counter">1/5</div>
+      <div id="skipbtn">Skip</div>
+      <div id="nextbtn">Next</div>
+
+      <div id="arrowbtn"></div>
+  </div>
+</div>
+
+  <div class="overlay" id="overlay1"><span>loading...</span></div>
+
+  <div id="overlay3"><span>Please come back<br>from your computer!</span></div>
+  </body>
+
+  <!-- <script>
+  window.addEventListener("scroll", (event) => {
+    console.log("pronto?")
+    // document.getElementById("header").classList.remove('hidden-header');
+  })</script> -->
+
+  <script type="module" src="tutorial.js"></script>
+  <script type="module" src="main.js"></script>
+<script src='filter.js'></script>
+  <script type="module" src="graph.js"></script>
+
+  <script>
+
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+    const root = document.documentElement;
+    const white = getComputedStyle(root).getPropertyValue('--white').trim();
+
+    if (white === '#F8F8F8' || white === 'rgb(248, 248, 248)') {
+        root.style.setProperty('--white', '#0d0d0d');
+        root.style.setProperty('--black', '#f4f4f4');
+        root.style.setProperty('--grey', '#585858');
+        root.style.setProperty('--dark-grey', '#E0E0E0');
+        root.style.setProperty('--header-grey', '#000000');
+        this.textContent = 'light mode';
+    } else {
+        root.style.setProperty('--white', '#F8F8F8');
+        root.style.setProperty('--black', '#101010');
+        root.style.setProperty('--grey', '#E0E0E0');
+        root.style.setProperty('--dark-grey', '#585858');
+        root.style.setProperty('--header-grey', '#ebeaea');
+        this.textContent = 'dark mode';
+    }
+});
+</script>
+</html>

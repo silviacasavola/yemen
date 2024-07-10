@@ -7,6 +7,29 @@ let t, b, r, l;
 let text;
 let savedContent;
 
+// export function beginningtime() {
+//     const textContainer = document.getElementById('text-container');
+//     const imagesColumn = document.getElementById('images-column');
+//
+//     function smoothScroll(element, top, duration) {
+//         return new Promise(resolve => {
+//             element.scrollTo({ top, behavior: 'smooth' });
+//             setTimeout(resolve, duration);
+//         });
+//     }
+//
+//     async function executeScroll() {
+//         await smoothScroll(textContainer, 200, 250); // Scroll down to 200px over 1000ms
+//         await smoothScroll(textContainer, 0, 750);   // Scroll back to top over 1000ms
+//         await smoothScroll(imagesColumn, 200, 1250);  // Scroll down to 200px over 1000ms
+//         await smoothScroll(imagesColumn, 0, 1750);    // Scroll back to top over 1000ms
+//     }
+//
+//     executeScroll();
+// }
+
+
+
   document.getElementById('nextbtn').addEventListener('click', (event) => {
 
     if (i < 4) {
@@ -23,7 +46,7 @@ let savedContent;
 
     if (i === 1) {
     object = document.querySelector('.page .filter-link');
-    text = "Click on the highlighted entities<br>to follow their story-line.<br>Click on the X to disable them.";
+    text = "Click on the highlighted entities<br>both in the text and in the photo descriptions<br>to follow their story-line.<br>Click on the X to disable them.";
     document.getElementById('arrowbtn').innerHTML = '→';
     popup.style.transform = 'translate(-110%, -10%)';
     savedContent = object.closest('.page');
@@ -39,6 +62,7 @@ let savedContent;
 
     if (i === 2) {
     object = document.querySelector('#images-column .disconnected');
+    object.classList.toggle('fakehover')
     text = "Click on the collapsed elements<br>to make them unfold.";
     document.getElementById('arrowbtn').innerHTML = '↖';
     const rect = object.getBoundingClientRect();
@@ -46,16 +70,17 @@ let savedContent;
     document.getElementById('images-column').scrollTo({ top: t, behavior: 'smooth' });
     t = rect.top + window.scrollY;
     l = rect.left + window.scrollX;
-    popup.style.top = `${t}px`;
+    popup.style.bottom = `${b}px`;
     popup.style.left = `${l}px`;
     popup.style.transform = 'translate(50%,-110%)';
     savedContent = Array.from(object.querySelectorAll('div'));
     }
 
     if (i === 3) {
+    object.classList.toggle('fakehover')
     document.getElementById('images-column').scrollTo({ top: 0, behavior: 'smooth' });
     object = document.querySelector('#images-column .disconnected');
-    text = "Keep an eye on the scollbar<br>to keep track of the changes.";
+    text = "Keep an eye on the scollbar<br>to monitor the changes.";
     document.getElementById('arrowbtn').innerHTML = '→';
     popup.style.right = '2vw';
     popup.style.left = '';
